@@ -12,11 +12,8 @@ module.exports = (homeMarkup, request, Router) => {
     router.on('cabinet', ctx => {
         ctx.session.cabinet = { nextCondition: 'action' }
         const keyboard = ['Поменять группу', 'Сменить семестр', 'Кто я?', 'Назад']
-        // if (config.telegraph_users.includes(String(ctx.from.id))) {
-        if (ctx.session.user.telegraph_user) {
+        if (ctx.session.user.telegraph_user)
             keyboard.push('Загрузить лекцию')
-            // ctx.session.cabinet.allowUpload = true
-        }
 
         ctx.reply('Тут можешь притвориться кем-то другим', Markup
             .keyboard(keyboard, { columns: 2 }).resize().extra()

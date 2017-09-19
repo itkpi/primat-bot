@@ -1,7 +1,7 @@
 const { parseFragment } = require('parse5'),
       Abstract = require('../models/abstract'),
       User = require('../models/user'),
-      getReg = (num, quotes) => new RegExp(`{{[${num}]}}`, 'g'),
+      getReg = num => new RegExp(`{{[${num}]}}`, 'g'),
       replaceString = process.env.REPLACE_STRING
 
 async function createPage(bot, ph, ctx, name, page, photos = []) {

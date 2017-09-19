@@ -1,5 +1,4 @@
 const User = require('../models/user')
-  // telegraphUsers = config.telegraph_users
 
 module.exports = (bot, ph, request, homeMarkup) => {
   bot.use((ctx, next) => ctx.session.user ? next() : null)
@@ -22,7 +21,6 @@ module.exports = (bot, ph, request, homeMarkup) => {
 
   bot.command('/telegraph', async ctx => {
     const tgId = ctx.from.id
-    // if (telegraphUsers.includes(String(tgId))) {
     if (ctx.session.user.telegraph_user) {
       try {
         const user = await User.findOne({ tgId })

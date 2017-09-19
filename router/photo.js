@@ -17,8 +17,6 @@ module.exports = (bot, ph) => async ctx => {
       if (response) {
         ctx.reply(`Ты просто лучший! Только не забывай исправлять ошибки, вдруг что`)
         ctx.reply(response.url, homeMarkup)
-        // ctx.reply(`Ты просто лучший! Я оставил твою лекцию здесь: ${response.url}.\n`+
-        // `Только не забывай исправлять ошибки, вдруг что`, homeMarkup)
       }
       ctx.session.cabinet = null
     } else {

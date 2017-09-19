@@ -14,7 +14,7 @@ const mongoose = require('../modules/mongoose'),
     group: {
       type: String,
       lowercase: true,
-      match: /^[А-яіє]{2,4}-?[А-яіє]{0,2}[0-9]{2,3}[А-яіє]?\(?[А-яіє]*\)?\.?$/i,
+      match: /^[А-яіє]{2,4}-[А-яіє]{0,2}[0-9]{2,3}[А-яіє]?\(?[А-яіє]*\)?\.?$/i,
       trim: true
     },
     groupHubId: {

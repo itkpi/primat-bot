@@ -1,10 +1,3 @@
-// different interface for not primat people
-// add web interface
-// semester and 1hour update
-// add primat store
-// abstracts order ???
-// schedule update
-
 global.config = require('./config')
 
 const Telegraf = require('telegraf'),
@@ -34,7 +27,6 @@ const Telegraf = require('telegraf'),
       middleware = require('./middleware'),
       commandHandler = require('./commands'),
       router = require('./router'),
-      User = require('./models/user'),
       api = require('./api')
 
 

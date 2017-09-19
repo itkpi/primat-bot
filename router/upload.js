@@ -5,7 +5,6 @@ module.exports = (bot, homeMarkup, request, ph) => async ctx => {
     return
 
   if (!['text/html', 'text/plain'].includes(ctx.message.document.mime_type))
-  // if (!['text/html'].includes(ctx.message.document.mime_type))
     return ctx.reply('Я понимаю только html лекции')
 
   try {
