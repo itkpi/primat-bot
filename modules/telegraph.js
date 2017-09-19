@@ -34,11 +34,13 @@ async function createPage(bot, ph, ctx, name, page, photos = []) {
   abstract.save()
   const msg = `${abstract.author} сохранил лекцию по предмету ${abstract.subject}\n${abstract.telegraph_url}\n` + 
               `(/unsub чтобы отписаться)`,
-        users = await User.find({ flow, course })
-  users.forEach(user => 
-    user.tgId !== abstract.authorId && !user.unsubscriber 
-      ? bot.telegram.sendMessage(user.tgId, msg) : null
-  )
+        users = await User.find({
+          flow: 'кв',
+          course: 3, 
+          $or: [{ unsubscriber: {$exists: false} }, { unsubscriber: false }],
+          tgId: { $ne: abstract.authorId }
+        })
+  users.forEach(user => bot.telegram.sendMessage(user.tgId, msg) : null)
 
   return response
 }

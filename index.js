@@ -13,14 +13,14 @@ const Telegraf = require('telegraf'),
         host: process.env.REDIS_HOST,
         port: process.env.REDIS_PORT,
         password: process.env.REDIS_PASSWORD
-      }
+      },
 
       app = express(),
       ph = new Telegraph(),
       bot = new Telegraf(botToken),
       session = new RedisSession({ store: redisConfig }),
 
-      { cabinet, schedule, abstracts, timeleft } = config.btns
+      { cabinet, schedule, abstracts, timeleft } = config.btns,
       homeMarkup = Telegraf.Markup.keyboard([abstracts, schedule, cabinet, timeleft],
                     { columns: 2 }).resize().extra(),
 
