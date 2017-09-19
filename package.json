@@ -1,0 +1,25 @@
+{
+  "name": "telega",
+  "version": "1.0.0",
+  "description": "FAM telegram bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Fowi",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.3",
+    "mongodb": "^2.2.31",
+    "mongoose": "^4.11.4",
+    "parse5": "^3.0.2",
+    "request": "^2.81.0",
+    "telegraf": "^3.9.0",
+    "telegraf-session-redis": "^4.2.0",
+    "telegraph-node": "^1.0.4"
+  },
+  "engines": {
+    "node": "8.1.0"
+  }
+}

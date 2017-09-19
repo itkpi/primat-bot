@@ -1,0 +1,31 @@
+const getGroupId = require('./group-id')
+
+module.exports = async group => {
+  const result = { values: {} }
+  if (group.match(/^((КВ)|(КМ)|(КП))-[1-9]{2}.?$/i)) {
+    Object.assign(result.values, await parseGroup(group))
+    result.who = 'primat'
+  } else if (group.match(/^[А-яіє]{2,4}-[А-яіє]{0,2}[0-9]{2,3}[А-яіє]?\(?[А-яіє]*\)?\.?$/)) {
+    Object.assign(result.values, await parseGroup(group))
+    result.who = 'kpi'
+  } else if (group === 'я не студент кпи') {
+    result.values.date = new Date()
+    result.who = 'notstudent'
+  }
+  return result
+}
+
+async function parseGroup(group) {
+  const date = new Date(),
+    year = date.getFullYear() % 10,
+    month = date.getMonth() + 1,
+    flow = group.slice(0, 2),
+    groupYear = Number(group.slice(-2, -1)),
+    semester = month > 7 && month <= 12 ? 1 : 2,
+    course = month > 7 ? year - groupYear + 1 : year - groupYear
+  const groupHubId = await getGroupId(group)
+
+  if (course > 0 && course < 5 && group.length === 5 && groupHubId)
+    return { date, group, groupHubId, flow, semester, course }
+  return { date, group, groupHubId }
+}
