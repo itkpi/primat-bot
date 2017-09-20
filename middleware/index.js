@@ -7,9 +7,12 @@ module.exports = (bot, homeMarkup, session) => {
   bot.use((ctx, next) => {
     ctx.state.sessionKey = `${ctx.from.id}:${ctx.chat.id}`
     ctx.state.saveSession = () => session.saveSession(ctx.state.sessionKey, ctx.session)
-    ctx.state.error = e => {
+    ctx.state.clearRoutes = () => {
       config.routes.forEach(route => ctx.session[route] = null)
       ctx.state.saveSession()
+    }
+    ctx.state.error = e => {
+      ctx.state.clearRoutes()
       ctx.reply('Ой, что-то пошло не так :c', homeMarkup)
       console.error(e)
     }

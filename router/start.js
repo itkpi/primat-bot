@@ -3,6 +3,7 @@ const { Markup } = require('telegraf'),
 
 module.exports = (bot, homeMarkup) => async ctx => {
     if (ctx.session.user) {
+      ctx.state.clearRoutes()
       return ctx.reply('Хей, мы ведь уже знакомы', homeMarkup)
     } else {
       const user = await User.findOne({ tgId: ctx.from.id })

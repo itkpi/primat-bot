@@ -96,7 +96,7 @@ module.exports = (bot, ph, request, homeMarkup) => {
       const user = await User.findOne({ tgId: ctx.from.id })
       if (user) {
         ctx.session.user = user
-        config.routes.forEach(route => ctx.session[route] = null)
+        ctx.state.clearReoutes()
         ctx.state.saveSession()
         return ctx.reply('Оп, обновил', homeMarkup)
       }
