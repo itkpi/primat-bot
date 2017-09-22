@@ -33,13 +33,6 @@ const Telegraf = require('telegraf'),
 bot.telegram.setWebhook(`${config.url}/bot${botToken}`);
 app.use(bot.webhookCallback(`/bot${botToken}`));
 
-if (process.env.STATUS === 'dev') {
-  bot.use((ctx, next) => config.ownerId == ctx.from.id
-    ? next()
-    : ctx.reply('Соре, я пока кушаю бананы. Но скоро вернусь!')
-  )
-}
-
 middleware(bot, homeMarkup, session)
 
 router(bot, homeMarkup, request, ph)

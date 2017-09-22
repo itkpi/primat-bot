@@ -2,6 +2,14 @@ const User = require('../models/user')
 
 module.exports = (bot, homeMarkup, session) => {
   const start = require('../router/start')(homeMarkup)
+
+  if (process.env.STATUS === 'dev') {
+    bot.use((ctx, next) => config.ownerId == ctx.from.id
+      ? next()
+      : ctx.reply('Соре, я пока кушаю бананы. Но скоро вернусь!')
+    )
+  }
+
   bot.use(session.middleware())
 
   bot.use((ctx, next) => {
@@ -27,6 +35,7 @@ module.exports = (bot, homeMarkup, session) => {
           ctx.session.user = user
           config.session_fields.forEach(field => ctx.session[field] = user[field])
           ctx.session.semester = 1
+          ctx.state.clearRoutes()
           ctx.state.saveSession()
           return ctx.reply('Ой, я был занят обновлением твоей сессии и пропустил команду. ' +
             'Повтори, пожалуйста', homeMarkup)
