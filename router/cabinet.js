@@ -115,11 +115,9 @@ module.exports = (homeMarkup, request, Router) => {
             ctx.session.cabinet = null
             ctx.reply('В другой раз', homeMarkup)
         } else {
-            console.log('there')
             const group = ctx.message.text.trim().toLowerCase(),
                 groupInfo = await validGroup(group)
 
-            console.log('after valid')
             if (groupInfo.who !== 'kpi' && groupInfo.who !== 'primat') {
                 return ctx.reply('Впервые вижу такую группу. Попробуй еще')
             }
@@ -131,9 +129,7 @@ module.exports = (homeMarkup, request, Router) => {
                 : 'Добро пожаловать, но расписания по этой группе нет :c'
             ctx.reply(answer, homeMarkup)
         }
-        console.log('first state')
         ctx.state.saveSession()
-        console.log('after first state')
     })
 
     router.on('subject', ctx => {
