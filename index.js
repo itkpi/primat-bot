@@ -38,9 +38,10 @@ if (process.env.LOCATION === 'local') {
 
 middleware(bot, homeMarkup, session)
 
+commandHandler(bot, ph, request, homeMarkup)
+
 router(bot, homeMarkup, request, ph)
 
-commandHandler(bot, ph, request, homeMarkup)
 
 app.use('/api', require('./api'))
 
