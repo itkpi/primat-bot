@@ -35,8 +35,9 @@ app.use((req, res, next) => {
 })
 
 if (process.env.LOCATION === 'local') {
-  bot.startPolling()
-} else if (process.env.webhook === 'true') {
+  bot.telegram.deleteWebhook()
+  .then(() => bot.startPolling())
+} else {
   bot.telegram.setWebhook(`${process.env.URL}/bot${botToken}`);
   app.use(bot.webhookCallback(`/bot${botToken}`));
 }
