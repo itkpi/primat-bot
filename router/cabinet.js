@@ -180,7 +180,6 @@ module.exports = (homeMarkup, request, Router) => {
 
 async function getSubjects(request, groupId) {
     const response = await request(timetableUrl(groupId))
-    console.log(response.body)
     const timetable = JSON.parse(response.body).data
         weeks = [1, 2],
         days = [1, 2, 3, 4, 5, 6],

@@ -15,32 +15,35 @@ async function createPage(bot, ph, ctx, name, page, photos = []) {
     page = JSON.parse(page)
     console.log(page)
   }
+  const response = await ph.createPage(ctx.session.user.telegraph_token, name, page, { return_content: true })
+  
+  if (process.env.STATUS === 'prod') {
+    const { subject } = ctx.session.cabinet,
+          { course, flow, username: author } = ctx.session.user,
+          abstract = new Abstract({
+            flow,
+            name,
+            course,
+            author,
+            subject,
+            semester,
+            authorId: ctx.from.id,
+            telegraph_url: response.url,
+            telegraph_path: response.path,
+            telegraph_title: response.title
+          })
+    abstract.save()
 
-  const response = await ph.createPage(ctx.session.user.telegraph_token, name, page, { return_content: true }),
-        { subject } = ctx.session.cabinet,
-        { course, flow, username: author } = ctx.session.user,
-        abstract = new Abstract({
-          flow,
-          name,
-          course,
-          author,
-          subject,
-          semester,
-          authorId: ctx.from.id,
-          telegraph_url: response.url,
-          telegraph_path: response.path,
-          telegraph_title: response.title
-        })
-  abstract.save()
-  const msg = `${abstract.author} сохранил лекцию по предмету ${abstract.subject}\n${abstract.telegraph_url}\n` + 
-              `(/unsub чтобы отписаться)`,
-        users = await User.find({
-          flow,
-          course, 
-          $or: [{ unsubscriber: {$exists: false} }, { unsubscriber: false }],
-          tgId: { $ne: abstract.authorId }
-        })
-  users.forEach(user => bot.telegram.sendMessage(user.tgId, msg))
+    const msg = `${abstract.author} сохранил лекцию по предмету ${abstract.subject}\n${abstract.telegraph_url}\n` + 
+                `(/unsub чтобы отписаться)`,
+          users = await User.find({
+            flow,
+            course, 
+            $or: [{ unsubscriber: {$exists: false} }, { unsubscriber: false }],
+            tgId: { $ne: abstract.authorId }
+          })
+    users.forEach(({ tgId }) => bot.telegram.sendMessage(tgId, msg))
+  }
 
   return response
 }
