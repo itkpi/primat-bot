@@ -8,7 +8,7 @@ const Telegraf = require('telegraf'),
       request = util.promisify(require('request')),
 
       botToken = process.env.BOT_TOKEN,
-      port = process.env.PORT,
+      port = process.env.PORT || 3210,
       redisConfig = {
         host: process.env.REDIS_HOST,
         port: process.env.REDIS_PORT,
@@ -28,6 +28,11 @@ const Telegraf = require('telegraf'),
       commandHandler = require('./commands'),
       router = require('./router'),
       api = require('./api')
+
+app.use((req, res, next) => {
+  console.log(req.url)
+  next()
+})
 
 if (process.env.LOCATION === 'local') {
   bot.startPolling()

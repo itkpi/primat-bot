@@ -16,8 +16,8 @@ module.exports = (bot, homeMarkup, request, ph) => {
         cabinet  = require('./cabinet')(homeMarkup, request, Router),
         upload   = require('./upload')(bot, homeMarkup, request, ph),
         abstract = require('./abstract')(homeMarkup, Router),
+        photo    = require('./photo')(bot, ph, request),
         start    = require('./start')(bot, homeMarkup),
-        photo    = require('./photo')(bot, ph),
         timeleft = require('./timeleft')
 
   bot.on('text', registry, schedule, abstract, cabinet)

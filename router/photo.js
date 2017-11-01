@@ -1,12 +1,29 @@
-const { createPage } = require('../modules/telegraph')
+const picasa = new require('picasa'),
+      { createPage } = require('../modules/telegraph')
 
-module.exports = (bot, ph) => async ctx => {
+async function uploadPhoto(request, url, ctx) {
+  const response = await request({ encoding: null, url }),
+        { course, username, tgId } = ctx.session.user,
+        photoData = {
+          title: `${course} course. ${ctx.session.cabinet.subject} | ${new Date().toDateString()}`,
+          summary: `Created by ${username || tgId}. ${ctx.session.cabinet.lectureName}`,
+          contentType: 'image/jpg',
+          binary: response.body
+        }
+  console.log('UPLOAD PHOTO')
+  // picasa.postPhoto(accessToken)
+  return response
+}
+
+module.exports = (bot, ph, request) => async ctx => {
   if (!ctx.session.cabinet || ctx.session.cabinet.nextCondition !== 'photo')
     return
 
   try {
-    const link = await bot.telegram.getFileLink(ctx.message.photo[2].file_id)
-    ctx.session.cabinet.photoLinks.push(link)
+    const tgLink = await bot.telegram.getFileLink(ctx.message.photo[2].file_id)
+          // link = await uploadPhoto(request, tgLink, ctx)
+
+    ctx.session.cabinet.photoLinks.push(tgLink)
     ctx.session.cabinet.photosAmount--
 
     const amount = ctx.session.cabinet.photosAmount
