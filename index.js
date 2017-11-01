@@ -29,9 +29,12 @@ const Telegraf = require('telegraf'),
       router = require('./router'),
       api = require('./api')
 
-
-bot.telegram.setWebhook(`${config.url}/bot${botToken}`);
-app.use(bot.webhookCallback(`/bot${botToken}`));
+if (process.env.LOCATION === 'local') {
+  bot.startPolling()
+} else {
+  bot.telegram.setWebhook(`${config.url}/bot${botToken}`);
+  app.use(bot.webhookCallback(`/bot${botToken}`));
+}
 
 middleware(bot, homeMarkup, session)
 
