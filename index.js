@@ -32,7 +32,7 @@ const Telegraf = require('telegraf'),
 if (process.env.LOCATION === 'local') {
   bot.startPolling()
 } else {
-  bot.telegram.setWebhook(`${config.url}/bot${botToken}`);
+  bot.telegram.setWebhook(`${process.env.URL}/bot${botToken}`);
   app.use(bot.webhookCallback(`/bot${botToken}`));
 }
 

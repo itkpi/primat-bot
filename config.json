@@ -1,5 +1,4 @@
 {
-	"url": "https://primat-bot.herokuapp.com",
   "routes": ["abstract", "cabinet", "registry", "schedule"],
   "session_fields": ["group", "date", "flow", "course", "semester", "groupHubId"],
   "ownerId": "147615474",
