@@ -1,4 +1,6 @@
 const Telegraf = require('telegraf'),
+      Picasa = require('picasa'),
+      picasa = new Picasa(),
       Router = (name, invalid, route) => new Telegraf.Router(ctx => {
         if (invalid(ctx) || config.routes
                               .filter(route => ctx.session[route] && route !== name)
@@ -11,12 +13,12 @@ const Telegraf = require('telegraf'),
       
 
 module.exports = (bot, homeMarkup, request, ph) => {
-  const registry = require('./registry')(homeMarkup, request, Router),
+  const upload   = require('./upload')(bot, homeMarkup, request, ph, picasa),
+        registry = require('./registry')(homeMarkup, request, Router),
         schedule = require('./schedule')(homeMarkup, request, Router),
         cabinet  = require('./cabinet')(homeMarkup, request, Router),
-        upload   = require('./upload')(bot, homeMarkup, request, ph),
+        photo    = require('./photo')(bot, ph, request, picasa),
         abstract = require('./abstract')(homeMarkup, Router),
-        photo    = require('./photo')(bot, ph, request),
         start    = require('./start')(bot, homeMarkup),
         timeleft = require('./timeleft')
 

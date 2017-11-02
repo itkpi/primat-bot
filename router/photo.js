@@ -1,29 +1,14 @@
-const picasa = new require('picasa'),
-      { createPage } = require('../modules/telegraph')
+const { createPage } = require('../modules/telegraph')
 
-async function uploadPhoto(request, url, ctx) {
-  const response = await request({ encoding: null, url }),
-        { course, username, tgId } = ctx.session.user,
-        photoData = {
-          title: `${course} course. ${ctx.session.cabinet.subject} | ${new Date().toDateString()}`,
-          summary: `Created by ${username || tgId}. ${ctx.session.cabinet.lectureName}`,
-          contentType: 'image/jpg',
-          binary: response.body
-        }
-  console.log('UPLOAD PHOTO')
-  // picasa.postPhoto(accessToken)
-  return response
-}
-
-module.exports = (bot, ph, request) => async ctx => {
+module.exports = (bot, ph, request, picasa) => async ctx => {
   if (!ctx.session.cabinet || ctx.session.cabinet.nextCondition !== 'photo')
     return
 
   try {
-    const tgLink = await bot.telegram.getFileLink(ctx.message.photo[2].file_id)
-          // link = await uploadPhoto(request, tgLink, ctx)
+    const tgLink = await bot.telegram.getFileLink(ctx.message.photo[2].file_id),
+          link = await uploadPhoto(request, tgLink, picasa, ctx)
 
-    ctx.session.cabinet.photoLinks.push(tgLink)
+    ctx.session.cabinet.photoLinks.push(link)
     ctx.session.cabinet.photosAmount--
 
     const amount = ctx.session.cabinet.photosAmount
@@ -43,4 +28,23 @@ module.exports = (bot, ph, request) => async ctx => {
     return ctx.state.error(e)
   }
   ctx.state.saveSession()
+}
+
+async function uploadPhoto(request, url, picasa, ctx) {
+  const response = await request({ encoding: null, url }),
+        { course, username, tgId } = ctx.session.user,
+        { subject, lectureName, picasaToken } = ctx.session.cabinet
+
+        photoData = {
+          title: `${course} course. ${subject} | ${new Date().toDateString()}`,
+          summary: `${lectureName}. Created by ${username || tgId}.`,
+          contentType: 'image/jpg',
+          binary: response.body
+        }
+
+  return new Promise((resolve, reject) => {
+    picasa.postPhoto(picasaToken, config.album_id, photoData, 
+      (err, { content }) => err ? reject(err) : resolve(content.src))
+  })
+  return response
 }
