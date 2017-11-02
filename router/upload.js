@@ -1,6 +1,6 @@
 const { createPage, parse } = require('../modules/telegraph')
 
-module.exports = (bot, homeMarkup, request, ph) => async ctx => {
+module.exports = (bot, homeMarkup, request, ph, picasa) => async ctx => {
   if (!ctx.session.cabinet || ctx.session.cabinet.nextCondition !== 'upload')
     return
 
@@ -13,13 +13,16 @@ module.exports = (bot, homeMarkup, request, ph) => async ctx => {
           { page, photosAmount, lectureName } = parse(response.body)
 
     if (photosAmount > 0) {
+      const picasaToken = await getAccessToken(picasa)
+
       ctx.session.cabinet = {
         page,
         lectureName,
+        picasaToken,
         photosAmount,
         photoLinks: [],
         nextCondition: 'photo',
-        subject: ctx.session.cabinet.subject
+        subject: ctx.session.cabinet.subject,
       }
       ctx.replyWithHTML(`Словил! Но, вижу, твоей лекции не хватает фотографий. ` +
         `Вот их количество, которое я от тебя жду, чтобы вклеить все на свои места: `+
@@ -40,4 +43,16 @@ module.exports = (bot, homeMarkup, request, ph) => async ctx => {
   }
 
   ctx.state.saveSession()
+}
+
+function getAccessToken(picasa) {
+  return new Promise((resolve, reject) => {
+    const params = {
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET
+    }
+
+    picasa.renewAccessToken(params, process.env.PICASA_REFRESH_TOKEN, 
+      (err, token) => err ? reject(err) : resolve(token))
+  })
 }
