@@ -40,8 +40,7 @@ async function createPage(bot, ph, ctx, name, page, photos = []) {
             flow,
             course, 
             $or: [{ unsubscriber: {$exists: false} }, { unsubscriber: false }],
-            // tgId: { $ne: abstract.authorId },
-            tgId: config.ownerId
+            tgId: { $ne: abstract.authorId }
           })
     users.forEach(({ tgId }) => bot.telegram.sendMessage(tgId, msg))
   }
