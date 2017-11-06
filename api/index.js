@@ -10,11 +10,15 @@ app.use((req, res, next) => {
 })
 
 router.get('/meta', async (req, res) => {
-  const data = await Abstract.aggregate(
-    [{ $group: { _id: { course: "$course", semester: "$semester", flow: "$flow" } } }]
-  )
-  console.log(data)
-  res.json({ data })
+  try {
+    const data = await Abstract.aggregate(
+      [{ $group: { _id: { course: "$course", semester: "$semester", flow: "$flow" } } }]
+    )
+    res.json({ data })
+  } catch(e) {
+    console.error(e)
+    res.status(500).json({ error: '500 shit happens' })
+  }
 })
 
 router.get('/abstracts/:id?', async (req, res) => {

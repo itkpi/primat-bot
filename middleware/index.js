@@ -13,9 +13,12 @@ module.exports = (bot, homeMarkup, session) => {
   bot.use(session.middleware())
 
   bot.use((ctx, next) => {
-    console.log(ctx.session)
     if (ctx.session && ctx.session.user) {
-      console.log(`${ctx.session.username}ctx.message.text`)
+      const { username, tgId, group } = ctx.session.user,
+            route = config.routes.reduce((res, route) => res || ctx.session[route] && route || null, null)
+
+      console.log(`${username || tgId}${group ? `, ${group}` : ''} has written ${ctx.message.text}` + 
+        `${route ? ` [${route} |> ${ctx.session[route].nextCondition} -> ${ctx.message.text}]` : ''}`)
     }
     next()
   })
@@ -56,9 +59,6 @@ module.exports = (bot, homeMarkup, session) => {
         return ctx.state.error(e)
       }
     } else {
-      // console.log(ctx.session.user)
-      // config.routes.forEach(route => ctx.session[route] ? (console.log(route), console.log(ctx.session[route])) : null)
-      // console.log()
       next()
     }
   })
