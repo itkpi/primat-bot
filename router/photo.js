@@ -42,9 +42,6 @@ async function uploadPhoto(request, url, picasa, ctx) {
           binary: response.body
         }
 
-  return new Promise((resolve, reject) => {
-    picasa.postPhoto(picasaToken, config.album_id, photoData, 
-      (err, { content }) => err ? reject(err) : resolve(content.src))
-  })
-  return response
+  return new Promise((resolve, reject) => picasa.postPhoto(picasaToken, config.album_id, photoData, 
+      (err, { content }) => err ? reject(err) : resolve(content.src)))
 }

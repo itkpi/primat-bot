@@ -9,6 +9,14 @@ app.use((req, res, next) => {
   next()
 })
 
+router.get('/meta', async (req, res) => {
+  const data = await Abstract.aggregate(
+    [{ $group: { _id: { course: "$course", semester: "$semester", flow: "$flow" } } }]
+  )
+  console.log(data)
+  res.json({ data })
+})
+
 router.get('/abstracts/:id?', async (req, res) => {
   try {
     if (req.params.id) {
