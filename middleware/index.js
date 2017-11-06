@@ -13,17 +13,29 @@ module.exports = (bot, homeMarkup, session) => {
   bot.use(session.middleware())
 
   bot.use((ctx, next) => {
+    console.log(ctx.session)
+    if (ctx.session && ctx.session.user) {
+      console.log(`${ctx.session.username}ctx.message.text`)
+    }
+    next()
+  })
+
+  bot.use((ctx, next) => {
     ctx.state.sessionKey = `${ctx.from.id}:${ctx.chat.id}`
+
     ctx.state.saveSession = () => session.saveSession(ctx.state.sessionKey, ctx.session)
+
     ctx.state.clearRoutes = () => {
       config.routes.forEach(route => ctx.session[route] = null)
       ctx.state.saveSession()
     }
+
     ctx.state.error = e => {
       ctx.state.clearRoutes()
       ctx.reply('Ой, что-то пошло не так :c', homeMarkup)
       console.error(e)
     }
+
     next()
   })
 
@@ -44,9 +56,9 @@ module.exports = (bot, homeMarkup, session) => {
         return ctx.state.error(e)
       }
     } else {
-      console.log(ctx.session.user)
-      config.routes.forEach(route => ctx.session[route] ? (console.log(route), console.log(ctx.session[route])) : null)
-      console.log()
+      // console.log(ctx.session.user)
+      // config.routes.forEach(route => ctx.session[route] ? (console.log(route), console.log(ctx.session[route])) : null)
+      // console.log()
       next()
     }
   })

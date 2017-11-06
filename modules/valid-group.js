@@ -17,15 +17,16 @@ module.exports = async group => {
 
 async function parseGroup(group) {
   const date = new Date(),
-    year = date.getFullYear() % 10,
-    month = date.getMonth() + 1,
-    flow = group.slice(0, 2),
-    groupYear = Number(group.slice(-2, -1)),
-    semester = month > 7 && month <= 12 ? 1 : 2,
-    course = month > 7 ? year - groupYear + 1 : year - groupYear
-  const groupHubId = await getGroupId(group)
+        year = date.getFullYear() % 10,
+        month = date.getMonth() + 1,
+        flow = group.slice(0, 2),
+        groupYear = Number(group.slice(-2, -1)),
+        semester = month > 7 && month <= 12 ? 1 : 2,
+        course = month > 7 ? year - groupYear + 1 : year - groupYear,
+        groupHubId = await getGroupId(group)
 
   if (course > 0 && course < 5 && group.length === 5 && groupHubId)
     return { date, group, groupHubId, flow, semester, course }
-  return { date, group, groupHubId }
+
+  return { date, group, groupHubId, semester, flow: null, course: null }
 }

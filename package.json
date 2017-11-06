@@ -17,7 +17,8 @@
     "request": "^2.81.0",
     "telegraf": "^3.9.0",
     "telegraf-session-redis": "^4.2.0",
-    "telegraph-node": "^1.0.4"
+    "telegraph-node": "^1.0.4",
+    "tiny_request": "^1.0.13"
   },
   "engines": {
     "node": "8.1.0"

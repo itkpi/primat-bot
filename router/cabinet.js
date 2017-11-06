@@ -86,7 +86,7 @@ module.exports = (homeMarkup, request, Router) => {
                 if (ctx.session.user.group !== ctx.session.group && 
                     ctx.session.group && ctx.session.semester) {
                     answer += `Но сейчас ты в гостях у <b>${ctx.session.group.toUpperCase()}</b> ` +
-                        `в ${ctx.session.semester}-ом семестре`
+                        `в ${ctx.session.semester}-ом семестре.`
                 } else if (ctx.session.semester) {
                     answer += ` Сейчас ты в ${ctx.session.semester}-ом семестре. `+
                         `Может, хочешь зайти к кому-то в гости?`

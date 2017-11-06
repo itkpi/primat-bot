@@ -2,7 +2,7 @@ const User = require('../models/user'),
   { Markup } = require('telegraf'),
   validGroup = require('../modules/valid-group')
 
-module.exports = (homeMarkup, request, Router) => {
+module.exports = (homeMarkup, request, Router, bot) => {
   const router = Router('registry', ctx => !ctx.session.registry, ctx => ctx.session.registry.nextCondition)
 
   router.on('group', async ctx => {
@@ -16,7 +16,8 @@ module.exports = (homeMarkup, request, Router) => {
 
       if (!'who' in groupInfo) return ctx.reply('Мне такая группа не знакома. Попробуй еще или жми кнопку')
 
-      if (!(('course', 'flow') in userObj) && groupInfo.who !== 'notstudent') {
+      // if (!(('course', 'flow') in userObj) && groupInfo.who !== 'notstudent') {
+      if (!userObj.course && !userObj.flow && groupInfo.who !== 'notstudent') {
           ctx.session = groupInfo.values
           ctx.session.registry = Object.assign({}, userObj, { nextCondition: 'flow' })
           ctx.state.saveSession()
@@ -25,8 +26,10 @@ module.exports = (homeMarkup, request, Router) => {
 
       const user = new User(userObj)
       user.save()
-      console.log(`New user ${user.username || user.tgId} has registered!`)
-      console.log(user)
+
+      const msg = `New user ${user.username || user.tgId} from ${userObj.group} has registered!`
+      bot.telegram.sendMessage(config.ownerId, msg)
+      console.log(msg)
 
       Object.assign(ctx.session, groupInfo.values)
       ctx.session.user = user
@@ -67,6 +70,7 @@ module.exports = (homeMarkup, request, Router) => {
     if (course > 0 && course < 7) {
       try {
         ctx.session.registry.date = new Date()
+        console.log(ctx.session.registry)
         const user = new User(ctx.session.registry)
         user.save()
         console.log(`New user ${user.username || user.tgId} has registered!`)
@@ -83,7 +87,7 @@ module.exports = (homeMarkup, request, Router) => {
         ctx.state.error(e)
       }
     } else
-      ctx.reply('Кто-то кроме тебя учится там? Попробуй еще')
+      ctx.reply('Кто-то кроме тебя учится на этом курсе? Попробуй еще')
   })
 
   return router.middleware()
