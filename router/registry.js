@@ -1,8 +1,10 @@
-const User = require('../models/user'),
-  { Markup } = require('telegraf'),
-  validGroup = require('../modules/valid-group')
+const validGroup = require('../modules/valid-group'),
+      { bot, request } = require('../modules/utils'),
+      User = require('../models/user'),
 
-module.exports = (homeMarkup, request, Router, bot) => {
+      { Markup } = require('telegraf')
+
+module.exports = Router => {
   const router = Router('registry', ctx => !ctx.session.registry, ctx => ctx.session.registry.nextCondition)
 
   router.on('group', async ctx => {
@@ -27,10 +29,6 @@ module.exports = (homeMarkup, request, Router, bot) => {
       const user = new User(userObj)
       user.save()
 
-      const msg = `New user ${user.username || user.tgId} from ${userObj.group} has registered!`
-      bot.telegram.sendMessage(config.ownerId, msg)
-      console.log(msg)
-
       Object.assign(ctx.session, groupInfo.values)
       ctx.session.user = user
 
@@ -50,7 +48,7 @@ module.exports = (homeMarkup, request, Router, bot) => {
 
       ctx.session.registry = null
       ctx.state.saveSession()
-      ctx.reply(answer, homeMarkup)
+      ctx.reply(answer, ctx.state.homeMarkup)
     } catch (e) {
       ctx.state.error(e)
     }
@@ -70,13 +68,10 @@ module.exports = (homeMarkup, request, Router, bot) => {
     if (course > 0 && course < 7) {
       try {
         ctx.session.registry.date = new Date()
-        console.log(ctx.session.registry)
         const user = new User(ctx.session.registry)
         user.save()
-        console.log(`New user ${user.username || user.tgId} has registered!`)
-        console.log(user)
 
-        ctx.reply('Добро пожаловать!', homeMarkup)
+        ctx.reply('Добро пожаловать!', ctx.state.homeMarkup)
 
         ctx.session.user = user
         ctx.session.coruse = course

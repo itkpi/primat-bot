@@ -4,10 +4,7 @@ const Telegraf = require('telegraf'),
       Telegraph = require('telegraph-node'),
       RedisSession = require('telegraf-session-redis')
       express = require('express'),
-      util = require('util'),
-      request = util.promisify(require('request')),
 
-      botToken = process.env.BOT_TOKEN,
       port = process.env.PORT || 3210,
       redisConfig = {
         host: process.env.REDIS_HOST,
@@ -17,15 +14,12 @@ const Telegraf = require('telegraf'),
 
       app = express(),
       ph = new Telegraph(),
-      bot = new Telegraf(botToken),
       session = new RedisSession({ store: redisConfig }),
-
-      { cabinet, schedule, abstracts, timeleft } = config.btns,
-      homeMarkup = Telegraf.Markup.keyboard([abstracts, schedule, cabinet, timeleft],
-                    { columns: 2 }).resize().extra(),
 
       middleware = require('./middleware'),
       commandHandler = require('./commands'),
+
+      { bot } = require('./modules/utils'),
       router = require('./router'),
       api = require('./api')
 
@@ -37,16 +31,17 @@ app.use((req, res, next) => {
 if (process.env.LOCATION === 'local') {
   bot.telegram.deleteWebhook()
   .then(() => bot.startPolling())
+  .catch(console.error)
 } else {
-  bot.telegram.setWebhook(`${process.env.URL}/bot${botToken}`);
-  app.use(bot.webhookCallback(`/bot${botToken}`));
+  bot.telegram.setWebhook(`${process.env.URL}/bot${process.env.BOT_TOKEN}`);
+  app.use(bot.webhookCallback(`/bot${process.env.BOT_TOKEN}`));
 }
 
-middleware(bot, homeMarkup, session)
+middleware(session)
 
-commandHandler(bot, ph, request, homeMarkup)
+commandHandler(ph)
 
-router(bot, homeMarkup, request, ph)
+router(ph)
 
 
 app.use('/api', require('./api'))

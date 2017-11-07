@@ -1,8 +1,12 @@
-const User = require('../models/user')
+const start = require('../router/start'),
+      User = require('../models/user'),
+      { bot } = require('../modules/utils'),
+      
+      Telegraf = require('telegraf'),
 
-module.exports = (bot, homeMarkup, session) => {
-  const start = require('../router/start')(homeMarkup)
+      { cabinet, schedule, abstracts, timeleft } = config.btns
 
+module.exports = session => {
   if (process.env.STATUS === 'dev') {
     bot.use((ctx, next) => config.ownerId == ctx.from.id
       ? next()
@@ -24,6 +28,10 @@ module.exports = (bot, homeMarkup, session) => {
   })
 
   bot.use((ctx, next) => {
+    ctx.state.homeMarkup = Telegraf.Markup
+      .keyboard([abstracts, schedule, cabinet, timeleft], { columns: 2 })
+      .resize().extra()
+
     ctx.state.sessionKey = `${ctx.from.id}:${ctx.chat.id}`
 
     ctx.state.saveSession = () => session.saveSession(ctx.state.sessionKey, ctx.session)
@@ -35,7 +43,7 @@ module.exports = (bot, homeMarkup, session) => {
 
     ctx.state.error = e => {
       ctx.state.clearRoutes()
-      ctx.reply('Ой, что-то пошло не так :c', homeMarkup)
+      ctx.reply('Ой, что-то пошло не так :c', ctx.state.homeMarkup)
       console.error(e)
     }
 
@@ -53,7 +61,7 @@ module.exports = (bot, homeMarkup, session) => {
           ctx.state.clearRoutes()
           ctx.state.saveSession()
           return ctx.reply('Ой, я был занят обновлением твоей сессии и пропустил команду. ' +
-            'Повтори, пожалуйста', homeMarkup)
+            'Повтори, пожалуйста', ctx.state.homeMarkup)
         } else start(ctx)
       } catch(e) {
         return ctx.state.error(e)

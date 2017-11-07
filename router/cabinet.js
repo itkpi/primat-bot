@@ -1,10 +1,12 @@
 const { Markup } = require('telegraf'),
         validGroup = require('../modules/valid-group'),
         getGroupId = require('../modules/group-id'),
+        { request } = require('../modules/utils'),
+        
         timetableUrl = groupId => 
             encodeURI(`https://api.rozklad.hub.kpi.ua/groups/${groupId}/timetable`)
 
-module.exports = (homeMarkup, request, Router) => {
+module.exports = Router => {
     const router = Router('cabinet',
         ctx => ctx.message.text !== config.btns.cabinet && !ctx.session.cabinet,
         ctx => ctx.session.cabinet && ctx.session.cabinet.nextCondition || 'cabinet')
@@ -100,7 +102,7 @@ module.exports = (homeMarkup, request, Router) => {
                 ctx.replyWithHTML(answer)
                 break
             case 'Назад':
-                ctx.reply('Ну ладно', homeMarkup)
+                ctx.reply('Ну ладно', ctx.state.homeMarkup)
                 ctx.session.cabinet = null
                 break
             default:
@@ -113,7 +115,7 @@ module.exports = (homeMarkup, request, Router) => {
     router.on('changeGroup', async ctx => {
         if (ctx.state.btnVal === 'Назад') {
             ctx.session.cabinet = null
-            ctx.reply('В другой раз', homeMarkup)
+            ctx.reply('В другой раз', ctx.state.homeMarkup)
         } else {
             const group = ctx.message.text.trim().toLowerCase(),
                 groupInfo = await validGroup(group)
@@ -127,7 +129,7 @@ module.exports = (homeMarkup, request, Router) => {
             const answer = groupInfo.values.groupHubId
                 ? 'Все готово'
                 : 'Добро пожаловать, но расписания по этой группе нет :c'
-            ctx.reply(answer, homeMarkup)
+            ctx.reply(answer, ctx.state.homeMarkup)
         }
         ctx.state.saveSession()
     })
@@ -136,20 +138,19 @@ module.exports = (homeMarkup, request, Router) => {
         if (ctx.state.btnVal === 'Отмена') {
             ctx.session.cabinet = null
             ctx.state.saveSession()
-            return ctx.reply('Возвращайся скорее!', homeMarkup)
+            return ctx.reply('Возвращайся скорее!', ctx.state.homeMarkup)
         }
 
-        console.log(ctx.session.cabinet)
         if (ctx.session.cabinet.subjects.includes(ctx.state.btnVal)) {
             ctx.session.cabinet.subject = ctx.state.btnVal
-            ctx.reply('Понял-принял. Скидывай свой файл с лекцией', Markup.keyboard(['Отмена'])
-                .resize()
-                .extra()
-            )
             ctx.session.cabinet.nextCondition = 'upload'
+            ctx.reply('Понял-принял. Скидывай свой файл с лекцией', Markup.keyboard(['Отмена'])
+                .resize().extra()
+            )
         } else {
             ctx.reply('Не нахожу такого предмета :c')
         }
+        
         ctx.state.saveSession()
     })
 
@@ -158,7 +159,7 @@ module.exports = (homeMarkup, request, Router) => {
         if (ctx.state.btnVal === 'Отмена') {
             ctx.session.cabinet = null
             ctx.state.saveSession()
-            ctx.reply('Очень жаль, я так люблю читать ваши лекции :c', homeMarkup)
+            ctx.reply('Очень жаль, я так люблю читать ваши лекции :c', ctx.state.homeMarkup)
         } else {
             reply('Ну мне сложно принять это за файл')
         }
@@ -169,7 +170,7 @@ module.exports = (homeMarkup, request, Router) => {
         if (ctx.state.btnVal === 'Отмена') {
             ctx.session.cabinet = null
             ctx.state.saveSession()
-            ctx.reply('Очень жаль, я так люблю читать ваши лекции :c', homeMarkup)
+            ctx.reply('Очень жаль, я так люблю читать ваши лекции :c', ctx.state.homeMarkup)
         } else {
             reply('Фотография выглядит как изображение, если что')
         }  

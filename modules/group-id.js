@@ -1,5 +1,5 @@
 const util = require('util'),
-      request = util.promisify(require('request')),
+      { request } = require('./utils'),
       searchUrl = 'https://api.rozklad.hub.kpi.ua/groups/?search='
 
 module.exports = async (group, ctx) => {

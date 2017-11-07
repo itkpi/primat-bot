@@ -45,6 +45,6 @@ module.exports = ctx => {
         }
     }
 
-    flag ? ctx.reply(response, homeMarkup) 
-         : ctx.reply('Тебе повезло, ты не на паре', homeMarkup)
+    flag ? ctx.reply(response, ctx.state.homeMarkup) 
+         : ctx.reply('Тебе повезло, ты не на паре', ctx.state.homeMarkup)
 }

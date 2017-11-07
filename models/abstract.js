@@ -1,4 +1,6 @@
-const mongoose = require('../modules/mongoose')
+const mongoose = require('../modules/mongoose'),
+    User = require('./user'),
+    { telegram } = require('../modules/utils').bot
 
 const Schema = mongoose.Schema,
 
@@ -16,5 +18,17 @@ const Schema = mongoose.Schema,
         flow: { type: String, required: true },
         date: { type: Date, default: Date.now }
     })
+
+Abstract.post('save', async ({ flow, course, authorId, author, subject, telegraph_url }) => {
+    const msg = `${author} сохранил лекцию по предмету ${subject}\n${telegraph_url}\n(/unsub чтобы отписаться)`,
+      users = await User.find({
+        flow,
+        course, 
+        $or: [{ unsubscriber: {$exists: false} }, { unsubscriber: false }],
+        tgId: { $ne: authorId }
+      })
+
+    users.forEach(({ tgId }) => telegram.sendMessage(tgId, msg))
+})
 
 module.exports = mongoose.model('Abstract', Abstract)

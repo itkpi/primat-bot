@@ -1,10 +1,11 @@
 const { parseFragment } = require('parse5'),
+      { bot } = require('../modules/utils'),
       Abstract = require('../models/abstract'),
       User = require('../models/user'),
       getReg = num => new RegExp(`{{[${num}]}}`, 'g'),
       replaceString = process.env.REPLACE_STRING
 
-async function createPage(bot, ph, ctx, name, page, photos = []) {
+async function createPage(ph, ctx, name, page, photos = []) {
   const date      = new Date(),
         month     = date.getMonth() + 1,
         semester  = month > 7 && month <= 12 ? 1 : 2
@@ -13,7 +14,6 @@ async function createPage(bot, ph, ctx, name, page, photos = []) {
     page = JSON.stringify(page)
     photos.forEach((link, indx) => page = page.replace(`${indx + 1}${replaceString}`, link))
     page = JSON.parse(page)
-    console.log(page)
   }
   const response = await ph.createPage(ctx.session.user.telegraph_token, name, page, { return_content: true })
   
@@ -33,16 +33,6 @@ async function createPage(bot, ph, ctx, name, page, photos = []) {
             telegraph_title: response.title
           })
     abstract.save()
-
-    const msg = `${abstract.author} сохранил лекцию по предмету ${abstract.subject}\n${abstract.telegraph_url}\n` + 
-                `(/unsub чтобы отписаться)`,
-          users = await User.find({
-            flow,
-            course, 
-            $or: [{ unsubscriber: {$exists: false} }, { unsubscriber: false }],
-            tgId: { $ne: abstract.authorId }
-          })
-    users.forEach(({ tgId }) => bot.telegram.sendMessage(tgId, msg))
   }
 
   return response

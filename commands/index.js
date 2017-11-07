@@ -1,17 +1,17 @@
-const User = require('../models/user'),
-      start = require('../router/start')
+const { bot, request } = require('../modules/utils'),
+      User = require('../models/user')
 
-module.exports = (bot, ph, request, homeMarkup) => {
+module.exports = ph => {
   bot.command('start', async ctx => {
     if (ctx.session.user) {
       ctx.state.clearRoutes()
-      return ctx.reply('Хей, мы ведь уже знакомы', homeMarkup)
+      return ctx.reply('Хей, мы ведь уже знакомы', ctx.state.homeMarkup)
     } else {
       const user = await User.findOne({ tgId: ctx.from.id })
       if (user) {
         ctx.session.user = user
         ctx.state.saveSession()
-        ctx.reply('С возвращением!', homeMarkup)
+        ctx.reply('С возвращением!', ctx.state.homeMarkup)
       } else {
         ctx.session.registry = { nextCondition: 'group' }  
         ctx.state.saveSession()
@@ -27,38 +27,46 @@ module.exports = (bot, ph, request, homeMarkup) => {
   bot.use((ctx, next) => ctx.session.user ? next() : null)
 
 
-  bot.command('/deleteself', ctx => {
+  bot.command('/deleteself', async ctx => {
     if (config.ownerId == ctx.from.id) {
-      User.remove({ tgId: ctx.from.id })
-        .then(e => console.log('user removed'))
-        .catch(e => console.log(e))
-      ctx.reply('user has removed')
+      try {      
+        await User.remove({ tgId: ctx.from.id })
+        const { username, tgId } = ctx.session.user
+        console.log(`${username || tgId} has removed his document from the db`)
+        ctx.reply('Your document in the db has removed')
+      } catch(e) {
+        ctx.state.error(e)
+      }
     }
   })
   bot.command('/deletesession', ctx => {
     if (config.ownerId == ctx.from.id) {
       ctx.session = null
       ctx.state.saveSession()
-      ctx.reply('session has deleted', homeMarkup)
+      ctx.reply('session has deleted', ctx.state.homeMarkup)
     }
   })
 
   bot.command('/telegraph', async ctx => {
-    const tgId = ctx.from.id
     if (ctx.session.user.telegraph_user) {
       try {
-        const user = await User.findOne({ tgId })
+        const tgId = ctx.from.id,
+              user = await User.findOne({ tgId })
+
         if (user && !user.telegraph_token) {
           const account = await ph.createAccount('eee fam', {
             short_name: ctx.from.first_name,
             author_name: ctx.session.user.username
           })
+
+          await User.update({ tgId }, {
+            telegraph_token: account.access_token,
+            telegraph_authurl: account.auth_url
+          })
+
           ctx.reply(
             `Все, теперь ты в теме. Вот линк для авторизации, если вдруг потеряешь акканут: ${account.auth_url}`
           )
-          user.telegraph_token = account.access_token
-          user.telegraph_authurl = account.auth_url
-          user.save()
           
           ctx.session.user = user
           ctx.state.saveSession()
@@ -98,16 +106,14 @@ module.exports = (bot, ph, request, homeMarkup) => {
   bot.command('/phupdate', async ctx => {
     try {
       const user = await User.findOne({ tgId: ctx.from.id })
-      console.log(user)
+
       if (user.telegraph_authurl && user.telegraph_token) {
-        const url = `https://api.telegra.ph/getAccountInfo?access_token=${user.telegraph_token}&fields=["short_name","page_count", "auth_url"]`
-        request(url, (err, data) => {
-          if (err) throw new Error(err)
-          const { auth_url } = JSON.parse(data.body).result
-          user.telegraph_authurl = auth_url
-          user.save()
-          ctx.reply(`Отлично. Вот новая ссылка: ${user.telegraph_authurl}`)
-        })
+        const url = `https://api.telegra.ph/getAccountInfo?access_token=${user.telegraph_token}&fields=["short_name","page_count", "auth_url"]`,
+              { body } = await request(url),
+              { auth_url } = JSON.parse(body).result
+
+        await User.update({ tgId: ctx.from.id }, { telegraph_authurl: auth_url })
+        ctx.reply(`Отлично. Вот новая ссылка для авторизации: ${auth_url}`)
       }
     } catch (e) {
       ctx.state.error(e)

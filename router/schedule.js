@@ -1,8 +1,9 @@
 const { Markup } = require('telegraf'),
-    WeekInfo = require('../models/week-info'),
-    Schedule = require('../models/schedule')
+      WeekInfo = require('../models/week-info'),
+      Schedule = require('../models/schedule'),
+      { request } = require('../modules/utils')
 
-module.exports = (homeMarkup, request, Router) => {
+module.exports = Router => {
   const router = Router('schedule', 
       ctx => ctx.message.text !== config.btns.schedule && !ctx.session.schedule,
       ctx => ctx.session.schedule && ctx.session.schedule.nextCondition || 'schedule')
@@ -18,8 +19,7 @@ module.exports = (homeMarkup, request, Router) => {
       ctx.reply('Давай посмотрим какие у тебя там пары', Markup
           .keyboard(['Сегодня', 'Завтра', 'Вчера', 'Эта неделя', 'Следующая неделя', 'Расписание пар', 'Отмена'],
               { columns: 2 })
-          .resize()
-          .extra()
+          .resize().extra()
       )
       ctx.state.saveSession()
     } else {
@@ -31,7 +31,7 @@ module.exports = (homeMarkup, request, Router) => {
     if (ctx.state.btnVal === 'Отмена') {
       ctx.session.schedule = null
       ctx.state.saveSession()
-      return ctx.reply('эх', homeMarkup)
+      return ctx.reply('эх', ctx.state.homeMarkup)
     }
     try {
       const weekInfo = await WeekInfo.findOne({}),
@@ -72,7 +72,7 @@ module.exports = (homeMarkup, request, Router) => {
         case 'Расписание пар':
             ctx.session.schedule = null
             ctx.state.saveSession()
-            return ctx.replyWithHTML(getTimeSch(), homeMarkup)
+            return ctx.replyWithHTML(getTimeSch(), ctx.state.homeMarkup)
             break
         default:
             ctx.session.schedule = { nextCondition: 'show' }
@@ -133,9 +133,9 @@ module.exports = (homeMarkup, request, Router) => {
           if (fewDaysFlag)
               answer = `${lessons[0].week}-я неделя\n` + answer
 
-          ctx.replyWithHTML(answer, homeMarkup)
+          ctx.replyWithHTML(answer, ctx.state.homeMarkup)
       } else {
-          ctx.reply('По-видимому, в это время пар у тебя нет. Отдыхай!', homeMarkup)
+          ctx.reply('По-видимому, в это время пар у тебя нет. Отдыхай!', ctx.state.homeMarkup)
       }
 
       ctx.session.schedule = null

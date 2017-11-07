@@ -1,16 +1,17 @@
 const { Markup } = require('telegraf'),
-      User = require('../models/user')
+      User = require('../models/user'),
+      { bot } = require('../modules/utils')
 
-module.exports = (bot, homeMarkup) => async ctx => {
+module.exports = async ctx => {
     if (ctx.session.user) {
       ctx.state.clearRoutes()
-      return ctx.reply('Хей, мы ведь уже знакомы', homeMarkup)
+      return ctx.reply('Хей, мы ведь уже знакомы', ctx.state.homeMarkup)
     } else {
       const user = await User.findOne({ tgId: ctx.from.id })
       if (user) {
         ctx.session.user = user
         ctx.state.saveSession()
-        ctx.reply('С возвращением!', homeMarkup)
+        ctx.reply('С возвращением!', ctx.state.homeMarkup)
       } else {
         ctx.session.registry = { nextCondition: 'group' }  
         ctx.state.saveSession()

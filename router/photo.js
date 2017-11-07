@@ -1,6 +1,7 @@
-const { createPage } = require('../modules/telegraph')
+const { createPage } = require('../modules/telegraph'),
+      { request, bot } = require('../modules/utils')
 
-module.exports = (bot, ph, request, picasa) => async ctx => {
+module.exports = (ph, picasa) => async ctx => {
   if (!ctx.session.cabinet || ctx.session.cabinet.nextCondition !== 'photo')
     return
 
@@ -14,11 +15,11 @@ module.exports = (bot, ph, request, picasa) => async ctx => {
     const amount = ctx.session.cabinet.photosAmount
     if (amount === 0) {
       const { lectureName, page, photoLinks } = ctx.session.cabinet,
-            response = await createPage(bot, ph, ctx, lectureName, page, photoLinks)
+            response = await createPage(ph, ctx, lectureName, page, photoLinks)
 
       if (response) {
         ctx.reply(`Ты просто лучший! Только не забывай исправлять ошибки, вдруг что`)
-        ctx.reply(response.url, homeMarkup)
+        ctx.reply(response.url, ctx.state.homeMarkup)
       }
       ctx.session.cabinet = null
     } else {

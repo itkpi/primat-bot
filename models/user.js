@@ -1,4 +1,5 @@
 const mongoose = require('../modules/mongoose'),
+      { telegram } = require('../modules/utils').bot,
 
   Schema = mongoose.Schema,
 
@@ -44,5 +45,11 @@ const mongoose = require('../modules/mongoose'),
     telegraph_user: Boolean,
     unsubscriber: Boolean
   })
+
+User.post('save', ({ username, tgId, group }) => {
+  const msg = `New user ${username || tgId}${group ? ` from ${group}` : ''} has registered!`
+  telegram.sendMessage(config.ownerId, msg)
+  console.log(msg)
+})
 
 module.exports = mongoose.model('User', User)
