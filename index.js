@@ -24,7 +24,8 @@ const Telegraf = require('telegraf'),
       api = require('./api')
 
 app.use((req, res, next) => {
-  console.log(req.method, req.url)
+  if (req.url !== `/bot${process.env.BOT_TOKEN}`)
+    console.log(req.method, req.url)
   next()
 })
 
