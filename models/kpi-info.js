@@ -1,6 +1,8 @@
 const mongoose = require('../modules/mongoose')
 
-const kpiInfo = new Schema({
+const Schema = mongoose.Schema,
+
+      kpiInfo = new Schema({
         name: { type: String, unique: true },
         flows: [{ type: String }]
       })

@@ -1,5 +1,6 @@
 const router = require('express').Router(),
-      Abstract = require('../models/abstract')
+      Abstract = require('../models/abstract'),
+      KpiInfo = require('../models/kpi-info')
 
 app.use((req, res, next) => {
   res.set({
@@ -7,6 +8,16 @@ app.use((req, res, next) => {
     'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
   })
   next()
+})
+
+router.get('/flows', async (req, res) => {
+  try {
+    const { flows } = await KpiInfo.findOne({ name: 'flows' })
+    res.json({ data: flows })
+  } catch(e) {
+    console.error(e)
+    res.status(500).json({ error: '500 shit happens' })
+  }
 })
 
 router.get('/meta', async (req, res) => {
