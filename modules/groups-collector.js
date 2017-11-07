@@ -1,0 +1,15 @@
+const { request } = require('./utils')
+
+module.exports = async () => {
+  async function get(url, result = []) {
+    const response = JSON.parse((await request(url)).body)
+
+    result = response.results.reduce((acc, group) => {
+      const flow = group.name.split('-')[0]
+      return acc.includes(flow) ? acc : acc.concat(flow)
+    }, result)
+    return response.next ? get(response.next, result) : result
+  }
+
+  return await get('http://api.rozklad.hub.kpi.ua/groups?limit=100')
+}

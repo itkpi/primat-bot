@@ -1,4 +1,7 @@
 const { bot, request } = require('../modules/utils'),
+      getGroups = require('../modules/groups-collector'),
+      getFlows = require('../modules/groups-collector'),
+      KpiInfo = requir('../models/kpi-info'),
       User = require('../models/user')
 
 module.exports = ph => {
@@ -44,6 +47,17 @@ module.exports = ph => {
       ctx.session = null
       ctx.state.saveSession()
       ctx.reply('session has deleted', ctx.state.homeMarkup)
+    }
+  })
+  bot.command('/updflows', async ctx => {
+    if (config.ownerId == ctx.from.id) {
+      try {
+        const flows = await getFlows()
+        await KpiInfo.findOneAndUpdate({ name: 'flows' }, { flows })
+        ctx.reply('updated')
+      } catch(e) {
+        ctx.state.error(e)
+      }
     }
   })
 
