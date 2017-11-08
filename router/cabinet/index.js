@@ -1,7 +1,7 @@
 const { Markup } = require('telegraf'),
-        validGroup = require('../modules/valid-group'),
-        getGroupId = require('../modules/group-id'),
-        { request } = require('../modules/utils'),
+        validGroup = require('../../modules/valid-group'),
+        getGroupId = require('../../modules/group-id'),
+        { request } = require('../../modules/utils'),
         
         timetableUrl = groupId => 
             encodeURI(`https://api.rozklad.hub.kpi.ua/groups/${groupId}/timetable`)
@@ -161,7 +161,7 @@ module.exports = Router => {
             ctx.state.saveSession()
             ctx.reply('Очень жаль, я так люблю читать ваши лекции :c', ctx.state.homeMarkup)
         } else {
-            reply('Ну мне сложно принять это за файл')
+            ctx.reply('Ну мне сложно принять это за файл')
         }
     })
 
@@ -172,7 +172,7 @@ module.exports = Router => {
             ctx.state.saveSession()
             ctx.reply('Очень жаль, я так люблю читать ваши лекции :c', ctx.state.homeMarkup)
         } else {
-            reply('Фотография выглядит как изображение, если что')
+            ctx.reply('Фотография выглядит как изображение, если что')
         }  
     })
 

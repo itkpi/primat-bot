@@ -16,12 +16,12 @@ const Telegraf = require('telegraf'),
       
 
 module.exports = ph => {
-  const upload   = require('./upload')(ph, picasa),
+  const upload   = require('./cabinet/upload')(ph, picasa),
+        photo    = require('./cabinet/photo')(ph, picasa),
         registry = require('./registry')(Router),
         schedule = require('./schedule')(Router),
-        cabinet  = require('./cabinet')(Router),
-        photo    = require('./photo')(ph, picasa),
         abstract = require('./abstract')(Router),
+        cabinet  = require('./cabinet')(Router),
         timeleft = require('./timeleft')
 
   bot.on('text', registry, schedule, abstract, cabinet)

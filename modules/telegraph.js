@@ -33,6 +33,9 @@ async function createPage(ph, ctx, name, page, photos = []) {
             telegraph_title: response.title
           })
     abstract.save()
+    console.log(
+      `${author || ctx.from.id} has saved new lecture [${flow}, ${course} course, ${semester} semester]: ${subject} | ${name}`
+    )
   }
 
   return response

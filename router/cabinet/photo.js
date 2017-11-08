@@ -1,5 +1,5 @@
-const { createPage } = require('../modules/telegraph'),
-      { request, bot } = require('../modules/utils')
+const { createPage } = require('../../modules/telegraph'),
+      { request, bot } = require('../../modules/utils')
 
 module.exports = (ph, picasa) => async ctx => {
   if (!ctx.session.cabinet || ctx.session.cabinet.nextCondition !== 'photo')
