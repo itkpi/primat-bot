@@ -1,10 +1,7 @@
 const { Markup } = require('telegraf'),
         validGroup = require('../../modules/valid-group'),
         getGroupId = require('../../modules/group-id'),
-        { request } = require('../../modules/utils'),
-        
-        timetableUrl = groupId => 
-            encodeURI(`https://api.rozklad.hub.kpi.ua/groups/${groupId}/timetable`)
+        { request } = require('../../modules/utils')
 
 module.exports = Router => {
     const router = Router('cabinet',
@@ -28,31 +25,26 @@ module.exports = Router => {
             case 'Поменять группу':
                 ctx.reply('К кому пойдем?', Markup
                     .keyboard(['Назад'])
-                    .resize()
-                    .oneTime()
-                    .extra()
+                    .resize().oneTime().extra()
                 )
                 ctx.session.cabinet.nextCondition = 'changeGroup'
                 break
             case 'Загрузить лекцию': {
                 if (ctx.session.user.telegraph_user) {
                     if (!ctx.session.user.telegraph_token)
-                        return ctx.reply('У тебя пока нет аккаунта\nЭто тебе должно помочь: /telegraph')
+                        return ctx.reply('У тебя пока нет аккаунта\nТебе поможет команда /telegraph')
                     try {
-                        let subjects
-                        if (!ctx.session.subjects) {
-                            subjects = await getSubjects(request, ctx.session.user.groupHubId)
-                            ctx.session.subjects = subjects
-                        } else {
-                            subjects = ctx.session.subjects
-                        }
+                        const subjects = ctx.session.subjects
+                                ? ctx.session.subjects
+                                : await getSubjects(request, ctx.session.user.groupHubId)
+
+                        ctx.session.subjects = subjects
 
                         const amount = subjects.length
                         if (amount > 0) {
                             ctx.reply('По какому предмету?',
                                 Markup.keyboard(subjects.concat('Отмена'), { columns: 3 })
-                                    .resize()
-                                    .extra()
+                                    .resize().extra()
                             )
                             ctx.session.cabinet.subjects = subjects
                             ctx.session.cabinet.nextCondition = 'subject'
@@ -180,7 +172,7 @@ module.exports = Router => {
 }
 
 async function getSubjects(request, groupId) {
-    const response = await request(timetableUrl(groupId))
+    const response = await request(encodeURI(`${config.hub_groups_url}${groupId}/timetable`))
     const timetable = JSON.parse(response.body).data
         weeks = [1, 2],
         days = [1, 2, 3, 4, 5, 6],

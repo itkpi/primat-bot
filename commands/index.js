@@ -1,10 +1,10 @@
-const { bot, request } = require('../modules/utils'),
+const { bot, request, ph } = require('../modules/utils'),
       getGroups = require('../modules/groups-collector'),
       getFlows = require('../modules/groups-collector'),
       KpiInfo = require('../models/kpi-info'),
       User = require('../models/user')
 
-module.exports = ph => {
+module.exports = () => {
   bot.command('start', async ctx => {
     if (ctx.session.user) {
       ctx.state.clearRoutes()

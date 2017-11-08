@@ -1,6 +1,6 @@
 const Telegraf = require('telegraf'),
       Picasa = require('picasa'),
-      { bot } = require('../modules/utils'),
+      { bot, ph } = require('../modules/utils'),
 
       picasa = new Picasa(),
       
@@ -13,17 +13,17 @@ const Telegraf = require('telegraf'),
         ctx.state.btnVal = ctx.message.text
         return Promise.resolve({ route: route(ctx) })
       })
-      
 
-module.exports = ph => {
-  const upload   = require('./cabinet/upload')(ph, picasa),
-        photo    = require('./cabinet/photo')(ph, picasa),
-        registry = require('./registry')(Router),
-        schedule = require('./schedule')(Router),
-        abstract = require('./abstract')(Router),
-        cabinet  = require('./cabinet')(Router),
-        timeleft = require('./timeleft')
 
+const upload   = require('./cabinet/upload')(ph, picasa),
+      photo    = require('./cabinet/photo')(ph, picasa),
+      registry = require('./registry')(Router),
+      schedule = require('./schedule')(Router),
+      abstract = require('./abstract')(Router),
+      cabinet  = require('./cabinet')(Router),
+      timeleft = require('./timeleft')
+
+module.exports = () => {
   bot.on('text', registry, schedule, abstract, cabinet)
 
   // part of cabinet router

@@ -2,11 +2,19 @@ const start = require('../router/start'),
       User = require('../models/user'),
       { bot } = require('../modules/utils'),
       
+      RedisSession = require('telegraf-session-redis'),
       Telegraf = require('telegraf'),
 
+      redisConfig = {
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT,
+        password: process.env.REDIS_PASSWORD
+      },
+
+      session = new RedisSession({ store: redisConfig }),
       { cabinet, schedule, abstracts, timeleft } = config.btns
 
-module.exports = session => {
+module.exports = () => {
   if (process.env.STATUS === 'dev') {
     bot.use((ctx, next) => config.ownerId == ctx.from.id
       ? next()

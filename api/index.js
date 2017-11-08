@@ -2,7 +2,7 @@ const router = require('express').Router(),
       Abstract = require('../models/abstract'),
       KpiInfo = require('../models/kpi-info')
 
-app.use((req, res, next) => {
+router.use((req, res, next) => {
   res.set({
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'

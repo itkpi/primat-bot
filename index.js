@@ -1,27 +1,18 @@
 global.config = require('./config')
 
 const Telegraf = require('telegraf'),
-      Telegraph = require('telegraph-node'),
-      RedisSession = require('telegraf-session-redis')
       express = require('express'),
 
-      port = process.env.PORT || 3210,
-      redisConfig = {
-        host: process.env.REDIS_HOST,
-        port: process.env.REDIS_PORT,
-        password: process.env.REDIS_PASSWORD
-      },
+      { bot } = require('./modules/utils'),
+      
+      commandHandler = require('./commands'),
+      middleware = require('./middleware'),
+      router = require('./router'),
+
+      api = require('./api'),
 
       app = express(),
-      ph = new Telegraph(),
-      session = new RedisSession({ store: redisConfig }),
-
-      middleware = require('./middleware'),
-      commandHandler = require('./commands'),
-
-      { bot } = require('./modules/utils'),
-      router = require('./router'),
-      api = require('./api')
+      port = process.env.PORT || 3210
 
 app.use((req, res, next) => {
   if (req.url !== `/bot${process.env.BOT_TOKEN}`)
@@ -38,14 +29,14 @@ if (process.env.LOCATION === 'local') {
   app.use(bot.webhookCallback(`/bot${process.env.BOT_TOKEN}`));
 }
 
-middleware(session)
+middleware()
 
-commandHandler(ph)
+commandHandler()
 
-router(ph)
+router()
 
 
-app.use('/api', require('./api'))
+app.use('/api', api)
 
 // app.get('/*', (req, res) => res.end(`<h1>I'm a telegram bot, not a web application. So, visit me <a href="https://t.me/primat_bot">there</a></h1>`))
 

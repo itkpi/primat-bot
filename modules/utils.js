@@ -1,7 +1,9 @@
 const Telegraf = require('telegraf'),
+      Telegraph = require('telegraph-node'),
       util = require('util'),
 
-      bot = new Telegraf(process.env.BOT_TOKEN)
-      request = util.promisify(require('request'))
+      request = util.promisify(require('request')),
+      bot = new Telegraf(process.env.BOT_TOKEN),
+      ph = new Telegraph()
 
-module.exports = { request, bot }
+module.exports = { request, bot, ph }
