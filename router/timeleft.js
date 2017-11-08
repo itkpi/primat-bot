@@ -28,15 +28,9 @@ module.exports = ctx => {
             
             let ending
             if (m % 10 == 1)
-                if (m == 11)
-                    ending = 'минуточек'
-                else
-                    ending = 'минуточка'
+                ending = m == 11 ? 'минуточек' : 'минуточка'
             else if (m % 10 < 5 && m % 10 != 0)
-                if (m > 10 && m < 15)
-                    ending = 'минуточек'
-                else
-                    ending = 'минуточки'
+                ending = m > 10 && m < 15 ? 'минуточек' : 'минуточки'
             else
                 ending = 'минуточек'
 
