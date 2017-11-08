@@ -1,11 +1,10 @@
 const util = require('util'),
-      { request } = require('./utils'),
-      searchUrl = 'https://api.rozklad.hub.kpi.ua/groups/?search='
+      { request } = require('./utils')
 
 module.exports = async (group, ctx) => {
   let response
   try {
-    response = await request(encodeURI(searchUrl + group))
+    response = await request(encodeURI(`${config.hub_groups_url}?search=${group}`))
   } catch(e) {
     return ctx.state.error(e)
   }

@@ -70,7 +70,7 @@ module.exports = ph => {
         if (user && !user.telegraph_token) {
           const account = await ph.createAccount('eee fam', {
             short_name: ctx.from.first_name,
-            author_name: ctx.session.user.username
+            author_name: ctx.session.user.username || ctx.session.user.tgId
           })
 
           await User.update({ tgId }, {
@@ -99,7 +99,7 @@ module.exports = ph => {
 
   bot.command('/unsub', async ctx => {
     try {
-      await User.update({ tgId: ctx.from.id }, { $set: { unsubscriber: true } })
+      await User.update({ tgId: ctx.from.id }, { unsubscriber: true })
       ctx.reply('Больше никаких уведомлений! (чтобы подписаться - /sub)')
     } catch (e) {
       ctx.state.error(e)
@@ -122,7 +122,8 @@ module.exports = ph => {
       const user = await User.findOne({ tgId: ctx.from.id })
 
       if (user.telegraph_authurl && user.telegraph_token) {
-        const url = `https://api.telegra.ph/getAccountInfo?access_token=${user.telegraph_token}&fields=["short_name","page_count", "auth_url"]`,
+        const url = `${config.telegraph_account_info_url}` +
+                    `?access_token=${user.telegraph_token}&fields=["short_name","page_count", "auth_url"]`,
               { body } = await request(url),
               { auth_url } = JSON.parse(body).result
 
@@ -141,7 +142,7 @@ module.exports = ph => {
         ctx.session.user = user
         ctx.state.clearRoutes()
         ctx.state.saveSession()
-        return ctx.reply('Оп, обновил', homeMarkup)
+        return ctx.reply('Оп, обновил', ctx.state.homeMarkup)
       }
     } catch(e) {
       return ctx.state.error(e)

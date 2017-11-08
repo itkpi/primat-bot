@@ -8,5 +8,9 @@
     "abstracts": "📝 Лекции",
     "schedule": "📜 Расписание",
     "timeleft": "🕐 Время до конца пары"
-  }
+  },
+
+  "telegraph_account_info_url": "https://api.telegra.ph/getAccountInfo",
+  "hub_groups_url": "https://api.rozklad.hub.kpi.ua/groups/",
+  "hub_lessons_url": "https://api.rozklad.hub.kpi.ua/lessons/"
 }

@@ -23,7 +23,7 @@ router.get('/flows', async (req, res) => {
 router.get('/meta', async (req, res) => {
   try {
     const data = await Abstract.aggregate(
-      [{ $group: { _id: { course: "$course", semester: "$semester", flow: "$flow" } } }]
+      [{ $group: { _id: { course: '$course', semester: '$semester', flow: '$flow' } } }]
     )
     res.json({ data })
   } catch(e) {

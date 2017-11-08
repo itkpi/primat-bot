@@ -37,8 +37,7 @@ module.exports = Router => {
       const weekInfo = await WeekInfo.findOne({}),
             date = new Date,
             day = date.getDay(),
-            week = weekInfo.currWeek,
-            url = 'https://api.rozklad.hub.kpi.ua/lessons/?limit=100&'
+            week = weekInfo.currWeek
 
       /***************heroku costil*****************/
       if (day === 1 && weekInfo.flag) {
@@ -51,92 +50,19 @@ module.exports = Router => {
       }
       /*********************************************/
 
-      let query
-      switch (ctx.state.btnVal) {
-        case 'Сегодня':
-            query = `groups=${ctx.session.groupHubId}&day=${day}&week=${week}`
-            break
-        case 'Завтра':
-            const d = (day + 1) % 8
-            query = `groups=${ctx.session.groupHubId}&day=${d ? d : 1}&week=${week}`
-            break
-        case 'Вчера':
-            query = `groups=${ctx.session.groupHubId}&day=${day - 1}&week=${week}`
-            break
-        case 'Эта неделя':
-            query = `groups=${ctx.session.groupHubId}&week=${week}`
-            break
-        case 'Следующая неделя':
-            query = `groups=${ctx.session.groupHubId}&week=${week === 1 ? 2 : 1}`
-            break
-        case 'Расписание пар':
-            ctx.session.schedule = null
-            ctx.state.saveSession()
-            return ctx.replyWithHTML(getTimeSch(), ctx.state.homeMarkup)
-            break
-        default:
-            ctx.session.schedule = { nextCondition: 'show' }
-            return ctx.reply('Это когда?')
-            break
+      if (ctx.state.btnVal === 'Расписание пар') {
+        ctx.session.schedule = null
+        ctx.state.saveSession()
+        return ctx.replyWithHTML(getTimeSch(), ctx.state.homeMarkup)        
       }
-        const schedule = await Schedule.findOne({ groupHubId: ctx.session.groupHubId, query })
-        let lessons = schedule ? schedule.lessons : null
 
-        if (!lessons) {
-          const response = await request(encodeURI(url + query)),
-                body = response.body,
-                data = JSON.parse(response.body).results.sort(sortCb),
-                fields = ['day', 'week', 'rooms_full_names', 'teachers_short_names', 'type', 'number', 'discipline_name']
-          lessons = data.map(lesson => {
-            res = {}
-            // 'type' is reserved word in mongoose Schema
-            fields.forEach(field => res[`${field === 'type' ? 'lessonType' : field}`] = lesson[field])
-            return res
-          })
-          const schedule = new Schedule({ lessons, query, groupHubId: ctx.session.groupHubId })
-          schedule.save()
-        }
+      const query = getScheduleQuery(ctx, day, week),
+            lessons = await getLessons(ctx, query)
 
-      if (lessons.length > 0) {
-          const types = ['лек', 'прак', 'лаб']
-          let answer = `--<b>${getDayName(lessons[0].day)}</b>--\n`,
-              day = lessons[0].day,
-              fewDaysFlag = false
-
-          lessons.forEach((lesson, indx) => {
-              if (lesson.day !== day) {
-                  fewDaysFlag = true
-                  day = lesson.day
-                  answer += `\n--<b>${getDayName(day)}</b>--\n`
-              }
-              const place = lesson.rooms_full_names[0] || '',
-                    teacher = lesson.teachers_short_names[0] || '',
-                    type = types[lesson.lessonType]
-
-
-              answer += `<b>${lesson.number}</b>. ${lesson.discipline_name}\n`
-              if (!place && teacher)
-                  answer += `   ${teacher}`
-              else if (!teacher && place)
-                  answer += `   ${place}`
-              else if (place && teacher)
-                  answer += `   ${place}, ${teacher}`
-              if (type) 
-                answer += `  <i>${type}</i>`
-              if (type || place || teacher)
-                answer += '\n'
-              else if (lessons[indx]) {
-                lessons[indx].day !== day
-                answer += '\n'
-              } 
-          })
-          if (fewDaysFlag)
-              answer = `${lessons[0].week}-я неделя\n` + answer
-
-          ctx.replyWithHTML(answer, ctx.state.homeMarkup)
-      } else {
-          ctx.reply('По-видимому, в это время пар у тебя нет. Отдыхай!', ctx.state.homeMarkup)
-      }
+      if (lessons)
+        ctx.replyWithHTML(lessons, ctx.state.homeMarkup)
+      else
+        ctx.reply('По-видимому, в это время пар у тебя нет. Отдыхай!', ctx.state.homeMarkup)
 
       ctx.session.schedule = null
       ctx.state.saveSession()
@@ -148,16 +74,8 @@ module.exports = Router => {
   return router.middleware()
 }
 
-function sortCb(a, b) {
-    if (a.day > b.day) return 1
-    if (a.day < b.day) return -1
-    if (a.number > b.number) return 1
-    if (a.number < b.number) return -1
-}
 
-function getDayName(num) {
-    return ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Cуббота'][num - 1]
-}
+
 
 function getTimeSch() {
     return `<b>1.</b> 8:30 - 10:05
@@ -165,4 +83,86 @@ function getTimeSch() {
 <b>3.</b> 12:20 - 13:55
 <b>4.</b> 14:15 - 15:50
 <b>5.</b> 16:10 - 17:45`
+}
+
+function getScheduleQuery(ctx, day, week) {
+  const cases = {
+    'Сегодня': `groups=${ctx.session.groupHubId}&day=${day}&week=${week}`,
+    'Завтра': `groups=${ctx.session.groupHubId}&day=${(day + 1) % 8 ? (day + 1) % 8 : 1}&week=${week}`,
+    'Вчера': `groups=${ctx.session.groupHubId}&day=${day - 1}&week=${week}`,
+    'Эта неделя': `groups=${ctx.session.groupHubId}&week=${week}`,
+    'Следующая неделя': `groups=${ctx.session.groupHubId}&week=${week === 1 ? 2 : 1}`
+  }
+
+  return cases[ctx.state.btnVal]
+}
+
+async function getLessons(ctx, query) {
+  const sortCb = (a, b) => {
+    if (a.day > b.day) return 1
+    if (a.day < b.day) return -1
+    if (a.number > b.number) return 1
+    if (a.number < b.number) return -1    
+  }
+  const getDayName = num => ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Cуббота'][num - 1]
+
+  const schedule = await Schedule.findOne({ groupHubId: ctx.session.groupHubId, query }),
+        url = `${config.hub_lessons_url}?limit=100&`
+
+  let lessons = schedule ? schedule.lessons : null
+
+  // if it's not cached
+  if (!lessons) {
+    const response = await request(encodeURI(url + query)),
+          body = response.body,
+          data = JSON.parse(response.body).results.sort(sortCb),
+          fields = ['day', 'week', 'rooms_full_names', 'teachers_short_names', 'type', 'number', 'discipline_name']
+    lessons = data.map(lesson => {
+      res = {}
+      // 'type' is reserved word in mongoose Schema
+      fields.forEach(field => res[`${field === 'type' ? 'lessonType' : field}`] = lesson[field])
+      return res
+    })
+    const schedule = new Schedule({ lessons, query, groupHubId: ctx.session.groupHubId })
+    schedule.save()
+  }
+
+  if (lessons.length > 0) {
+    const types = ['лек', 'прак', 'лаб']
+    let answer = `--<b>${getDayName(lessons[0].day)}</b>--\n`,
+        day = lessons[0].day,
+        fewDaysFlag = false
+
+    lessons.forEach((lesson, indx) => {
+        if (lesson.day !== day) {
+            fewDaysFlag = true
+            day = lesson.day
+            answer += `\n--<b>${getDayName(day)}</b>--\n`
+        }
+        const place = lesson.rooms_full_names[0] || '',
+              teacher = lesson.teachers_short_names[0] || '',
+              type = types[lesson.lessonType]
+
+
+        answer += `<b>${lesson.number}</b>. ${lesson.discipline_name}\n`
+        if (!place && teacher)
+            answer += `   ${teacher}`
+        else if (!teacher && place)
+            answer += `   ${place}`
+        else if (place && teacher)
+            answer += `   ${place}, ${teacher}`
+        if (type) 
+          answer += `  <i>${type}</i>`
+        if (type || place || teacher)
+          answer += '\n'
+        else if (lessons[indx]) {
+          lessons[indx].day !== day
+          answer += '\n'
+        } 
+    })
+    if (fewDaysFlag)
+        answer = `${lessons[0].week}-я неделя\n` + answer
+
+    return answer
+  }
 }

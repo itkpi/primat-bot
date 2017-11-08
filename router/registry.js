@@ -18,7 +18,6 @@ module.exports = Router => {
 
       if (!'who' in groupInfo) return ctx.reply('Мне такая группа не знакома. Попробуй еще или жми кнопку')
 
-      // if (!(('course', 'flow') in userObj) && groupInfo.who !== 'notstudent') {
       if (!userObj.course && !userObj.flow && groupInfo.who !== 'notstudent') {
           ctx.session = groupInfo.values
           ctx.session.registry = Object.assign({}, userObj, { nextCondition: 'flow' })
@@ -74,7 +73,7 @@ module.exports = Router => {
         ctx.reply('Добро пожаловать!', ctx.state.homeMarkup)
 
         ctx.session.user = user
-        ctx.session.coruse = course
+        ctx.session.course = course
         ctx.session.registry.course = course
         ctx.session.registry.nextCondition = null
         ctx.state.saveSession()

@@ -11,5 +11,5 @@ module.exports = async () => {
     return response.next ? get(response.next, result) : result
   }
 
-  return await get('http://api.rozklad.hub.kpi.ua/groups?limit=100')
+  return await get(config.hub_groups_url + '?limit=100')
 }
