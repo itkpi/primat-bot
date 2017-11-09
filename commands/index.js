@@ -1,5 +1,4 @@
 const { bot, request, ph } = require('../modules/utils'),
-      getGroups = require('../modules/groups-collector'),
       getFlows = require('../modules/groups-collector'),
       KpiInfo = require('../models/kpi-info'),
       User = require('../models/user')

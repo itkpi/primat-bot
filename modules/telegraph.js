@@ -1,5 +1,4 @@
 const { parseFragment } = require('parse5'),
-      { bot } = require('../modules/utils'),
       Abstract = require('../models/abstract'),
       User = require('../models/user'),
       getReg = num => new RegExp(`{{[${num}]}}`, 'g'),
