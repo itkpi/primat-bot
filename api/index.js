@@ -31,6 +31,39 @@ router.get('/meta', async (req, res) => {
     res.status(500).json({ error: '500 shit happens' })
   }
 })
+router.get('/meta2', async (req, res) => {
+  try {
+    const result = await Abstract.aggregate(
+      [{ $group: { _id: { course: '$course', semester: '$semester', flow: '$flow' } } }]
+    )
+    const data = result
+    .reduce((acc, { _id: item }) => {
+      const flow = acc.find(({ name }) => name === item.flow)
+      if (flow) {
+        const course = flow.courses.find(({ num }) => num === item.course)
+        if (!course)
+          flow.courses.push({ num: item.course, semesters: [item.semester] })
+        else
+          course.semesters = courses.semesters.includes(item.semester)
+                              ? courses.semesters
+                              : courses.semesters.concat(item.semester)
+      } else {
+        acc.push({
+          name: item.flow,
+          courses: [{ num: item.course, semesters: [item.semester] }]
+        })
+        // flow.name = item.flow
+        // flow.courses = [{ num: item.course, semesters: [item.semester] }]
+      }
+      return acc
+    }, [])
+    console.log(data)
+    res.json({ data })
+  } catch(e) {
+    console.error(e)
+    res.status(500).json({ error: '500 shit happens' })
+  }
+})
 
 router.get('/abstracts/:id?', async (req, res) => {
   try {
