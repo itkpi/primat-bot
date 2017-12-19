@@ -1,4 +1,5 @@
 /node_modules
 wtch.sh
 set-env.sh
+test-set-env.sh
 test-lecture.html

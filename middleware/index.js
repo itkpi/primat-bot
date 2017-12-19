@@ -1,9 +1,11 @@
 const start = require('../router/start'),
       User = require('../models/user'),
       { bot } = require('../modules/utils'),
+
+      logger = require('./logger'),
+      init = require('./init'),
       
       RedisSession = require('telegraf-session-redis'),
-      Telegraf = require('telegraf'),
 
       redisConfig = {
         host: process.env.REDIS_HOST,
@@ -11,8 +13,7 @@ const start = require('../router/start'),
         password: process.env.REDIS_PASSWORD
       },
 
-      session = new RedisSession({ store: redisConfig }),
-      { cabinet, schedule, abstracts, timeleft } = config.btns
+      session = new RedisSession({ store: redisConfig })
 
 module.exports = () => {
   if (process.env.STATUS === 'dev') {
@@ -24,43 +25,9 @@ module.exports = () => {
 
   bot.use(session.middleware())
 
-  bot.use((ctx, next) => {
-    if (ctx.session && ctx.session.user) {
-      const { username, tgId, group } = ctx.session.user,
-            route = config.routes.reduce((res, route) => res || ctx.session[route] && route || null, null)
+  bot.use(logger)
 
-      const usrTxt = Object.values(config.btns).includes(ctx.message.text)
-                        ? ctx.message.text.slice(3)
-                        : ctx.message.text ? ctx.message.text : 'or uploaded smth'
-
-      console.log(`${username || tgId}${group ? `, ${group}` : ''} has written ${usrTxt}` + 
-        `${route ? ` [${route} |> ${ctx.session[route].nextCondition} -> ${usrTxt}]` : ''}`)
-    }
-    next()
-  })
-
-  bot.use((ctx, next) => {
-    ctx.state.homeMarkup = Telegraf.Markup
-      .keyboard([abstracts, schedule, cabinet, timeleft], { columns: 2 })
-      .resize().extra()
-
-    ctx.state.sessionKey = `${ctx.from.id}:${ctx.chat.id}`
-
-    ctx.state.saveSession = () => session.saveSession(ctx.state.sessionKey, ctx.session)
-
-    ctx.state.clearRoutes = () => {
-      config.routes.forEach(route => ctx.session[route] = null)
-      ctx.state.saveSession()
-    }
-
-    ctx.state.error = e => {
-      ctx.state.clearRoutes()
-      ctx.reply('Ой, что-то пошло не так :c', ctx.state.homeMarkup)
-      console.error(e)
-    }
-
-    next()
-  })
+  bot.use(init(session))
 
   bot.use(async (ctx, next) => {
     if (!ctx.session.user && !ctx.session.registry) {
