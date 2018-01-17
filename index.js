@@ -1,7 +1,6 @@
 global.config = require('./config')
 
-const Telegraf = require('telegraf'),
-      express = require('express'),
+const express = require('express'),
 
       { bot } = require('./modules/utils'),
       

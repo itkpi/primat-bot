@@ -1,5 +1,5 @@
 const validGroup = require('../modules/valid-group'),
-      { bot, request } = require('../modules/utils'),
+      { request } = require('../modules/utils'),
       User = require('../models/user'),
 
       { Markup } = require('telegraf')

@@ -1,6 +1,5 @@
 const { Markup } = require('telegraf'),
-      User = require('../models/user'),
-      { bot } = require('../modules/utils')
+      User = require('../models/user')
 
 module.exports = async ctx => {
     if (ctx.session.user) {

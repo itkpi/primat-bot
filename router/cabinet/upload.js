@@ -1,5 +1,5 @@
 const { createPage, parse } = require('../../modules/telegraph'),
-      { bot, request } = require('../../modules/utils')
+      { request } = require('../../modules/utils')
 
 module.exports = (ph, picasa) => async ctx => {
   if (!ctx.session.cabinet || ctx.session.cabinet.nextCondition !== 'upload')
@@ -9,7 +9,7 @@ module.exports = (ph, picasa) => async ctx => {
     return ctx.reply('Я понимаю только html лекции')
 
   try {
-    const link = await bot.telegram.getFileLink(ctx.message.document.file_id),
+    const link = await ctx.telegram.getFileLink(ctx.message.document.file_id),
           response = await request(link),
           { page, photosAmount, lectureName } = parse(response.body)
 

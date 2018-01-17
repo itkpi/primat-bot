@@ -5,9 +5,7 @@ module.exports = Router => {
     const router = Router(
         'abstract',
         ctx => ctx.message.text !== config.btns.abstracts && !ctx.session.abstract,
-        ctx =>
-            (ctx.session.abstract && ctx.session.abstract.nextCondition) ||
-            'abstract'
+        ctx => (ctx.session.abstract && ctx.session.abstract.nextCondition) || 'abstract'
     )
 
     router.on('abstract', async ctx => {
