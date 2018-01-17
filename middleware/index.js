@@ -1,21 +1,21 @@
-const start = require('../router/start'),
+const start = require('../commands/start'),
       User = require('../models/user'),
-      { bot } = require('../modules/utils'),
+      { bot, stage } = require('../modules/utils'),
+      sceneSession = require('../modules/sceneSession'),
 
       logger = require('./logger'),
       init = require('./init'),
       
       RedisSession = require('telegraf-session-redis'),
-
       redisConfig = {
         host: process.env.REDIS_HOST,
         port: process.env.REDIS_PORT,
         password: process.env.REDIS_PASSWORD
       },
-
       session = new RedisSession({ store: redisConfig })
 
 module.exports = () => {
+
   if (process.env.STATUS === 'dev') {
     bot.use((ctx, next) => config.ownerId == ctx.from.id
       ? next()
@@ -23,6 +23,7 @@ module.exports = () => {
     )
   }
 
+  bot.use(sceneSession())
   bot.use(session.middleware())
 
   bot.use(logger)

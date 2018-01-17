@@ -15,14 +15,16 @@ module.exports = Router => {
           tgId: ctx.from.id,
           username: ctx.from.username
         }, groupInfo.values)
-
       if (!'who' in groupInfo) return ctx.reply('Мне такая группа не знакома. Попробуй еще или жми кнопку')
 
       if (!userObj.course && !userObj.flow && groupInfo.who !== 'notstudent') {
           ctx.session = groupInfo.values
           ctx.session.registry = Object.assign({}, userObj, { nextCondition: 'flow' })
           ctx.state.saveSession()
-          return ctx.reply('Оке, но не могу разобрать... Можешь назвать свой поток? (КВ, к примеру)', Markup.keyboard([' ']).resize().extra())
+          return ctx.reply(
+            'Оке, но не могу разобрать... Можешь назвать свой поток? (КВ, к примеру)',
+            Markup.keyboard([' ']).resize().extra()
+          )
       }
 
       const user = new User(userObj)
@@ -67,14 +69,14 @@ module.exports = Router => {
     if (course > 0 && course < 7) {
       try {
         ctx.session.registry.date = new Date()
+        ctx.session.registry.course = course
         const user = new User(ctx.session.registry)
         user.save()
 
         ctx.reply('Добро пожаловать!', ctx.state.homeMarkup)
 
         ctx.session.user = user
-        ctx.session.course = course
-        ctx.session.registry.course = course
+        ctx.session.course = course        
         ctx.session.registry.nextCondition = null
         ctx.state.saveSession()
       } catch(e) {

@@ -75,8 +75,6 @@ module.exports = Router => {
 }
 
 
-
-
 function getTimeSch() {
     return `<b>1.</b> 8:30 - 10:05
 <b>2.</b> 10:25 - 12:00
@@ -142,7 +140,6 @@ async function getLessons(ctx, query) {
         const place = lesson.rooms_full_names[0] || '',
               teacher = lesson.teachers_short_names[0] || '',
               type = types[lesson.lessonType]
-
 
         answer += `<b>${lesson.number}</b>. ${lesson.discipline_name}\n`
         if (!place && teacher)
