@@ -10,6 +10,7 @@
   "author": "Fowi",
   "license": "ISC",
   "dependencies": {
+    "encoding": "^0.1.12",
     "express": "^4.15.3",
     "latest": "^0.2.0",
     "mongoose": "^4.11.4",
