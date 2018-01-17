@@ -10,6 +10,7 @@ module.exports = async group => {
     result.who = 'kpi'
   } else if (group === 'я не студент кпи') {
     result.values.date = new Date()
+    result.values.semester = 1
     result.who = 'notstudent'
   }
   return result

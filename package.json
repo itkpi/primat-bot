@@ -11,11 +11,12 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.15.3",
+    "latest": "^0.2.0",
     "mongoose": "^4.11.4",
     "parse5": "^3.0.2",
     "picasa": "^1.0.6",
     "request": "^2.81.0",
-    "telegraf": "^3.9.0",
+    "telegraf": "^3.17.2",
     "telegraf-session-redis": "^4.2.0",
     "telegraph-node": "^1.0.4"
   },

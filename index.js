@@ -21,23 +21,19 @@ app.use((req, res, next) => {
 
 if (process.env.LOCATION === 'local') {
   bot.telegram.deleteWebhook()
-  .then(() => bot.startPolling())
-  .catch(console.error)
+    .then(() => bot.startPolling())
+    .catch(console.error)
 } else {
   bot.telegram.setWebhook(`${process.env.URL}/bot${process.env.BOT_TOKEN}`);
   app.use(bot.webhookCallback(`/bot${process.env.BOT_TOKEN}`));
 }
 
 middleware()
-
-commandHandler()
-
 router()
-
+commandHandler()
 
 app.use('/api', api)
 
-// app.get('/*', (req, res) => res.end(`<h1>I'm a telegram bot, not a web application. So, visit me <a href="https://t.me/primat_bot">there</a></h1>`))
 
 app.use((req, res, next) => {
   res.status(404).end('404 Error :c')

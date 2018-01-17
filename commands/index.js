@@ -1,33 +1,14 @@
 const { bot, request, ph } = require('../modules/utils'),
       getFlows = require('../modules/groups-collector'),
       KpiInfo = require('../models/kpi-info'),
-      User = require('../models/user')
+      User = require('../models/user'),
+
+      start = require('./start')
 
 module.exports = () => {
-  bot.command('start', async ctx => {
-    if (ctx.session.user) {
-      ctx.state.clearRoutes()
-      return ctx.reply('Хей, мы ведь уже знакомы', ctx.state.homeMarkup)
-    } else {
-      const user = await User.findOne({ tgId: ctx.from.id })
-      if (user) {
-        ctx.session.user = user
-        ctx.state.saveSession()
-        ctx.reply('С возвращением!', ctx.state.homeMarkup)
-      } else {
-        ctx.session.registry = { nextCondition: 'group' }  
-        ctx.state.saveSession()
-        return ctx.replyWithHTML(`Привет, <b>${ctx.from.first_name}</b>!\nЯ бот-примат. ` + 
-          `Для нашего хорошего общения мне нужно лучше тебя узнать. ` +
-          `Твое имя я уже знаю, но из какой ты группы?`, Markup
-            .keyboard(['Я не студент КПИ']).resize().extra()
-        )
-      }    
-    }
-  })
+  bot.command('start', start)
 
   bot.use((ctx, next) => ctx.session.user ? next() : null)
-
 
   bot.command('/deleteself', async ctx => {
     if (config.ownerId == ctx.from.id) {
