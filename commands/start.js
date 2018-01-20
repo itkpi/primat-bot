@@ -1,6 +1,7 @@
 const { Markup } = require('telegraf'),
       User = require('../models/user')
 
+
 module.exports = async ctx => {
   if (ctx.session.user) {
     ctx.state.clearRoutes()
