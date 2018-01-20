@@ -77,7 +77,7 @@ module.exports = Router => {
 
         ctx.session.user = user
         ctx.session.course = course        
-        ctx.session.registry.nextCondition = null
+        ctx.session.registry = null
         ctx.state.saveSession()
       } catch(e) {
         ctx.state.error(e)
