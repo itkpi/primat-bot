@@ -17,7 +17,7 @@ module.exports = async ctx => {
       ctx.state.saveSession()
       return ctx.replyWithHTML(`Привет, <b>${ctx.from.first_name}</b>!\nЯ бот-примат. ` + 
         `Для нашего хорошего общения мне нужно лучше тебя узнать. ` +
-        `Твое имя я уже знаю, но из какой ты группы?`, Markup
+        `Твое имя я уже знаю, но из какой ты группы (напиши ее на украинском)?`, Markup
           .keyboard(['Я не студент КПИ']).resize().extra()
       )
     }    

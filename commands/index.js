@@ -23,11 +23,9 @@ module.exports = () => {
     }
   })
   bot.command('/deletesession', ctx => {
-    if (config.ownerId == ctx.from.id) {
-      ctx.session = null
-      ctx.state.saveSession()
-      ctx.reply('session has deleted', ctx.state.homeMarkup)
-    }
+    ctx.session = null
+    ctx.state.saveSession()
+    ctx.reply('session has deleted', ctx.state.homeMarkup)
   })
   bot.command('/updflows', async ctx => {
     if (config.ownerId == ctx.from.id) {

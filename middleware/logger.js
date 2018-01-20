@@ -1,5 +1,7 @@
 module.exports = (ctx, next) => {
-  if (ctx.session && ctx.session.user) {
+  if (ctx.session && ctx.session.registry) {
+    // console.log(`[registry] ${ctx.from}`)    
+  } else if (ctx.session && ctx.session.user) {
     const { username, tgId, group } = ctx.session.user,
           route = config.routes.reduce((res, route) => res || ctx.session[route] && route || null, null)
 
@@ -7,7 +9,7 @@ module.exports = (ctx, next) => {
                       ? ctx.message.text.slice(3)
                       : ctx.message.text ? ctx.message.text : 'or uploaded smth'
 
-    console.log(`${username || tgId}${group ? `, ${group}` : ''} has written ${usrTxt}` + 
+    console.log(`${username || tgId}${group ? `, ${group}` : ''}: ${usrTxt}` + 
       `${route ? ` [${route} |> ${ctx.session[route].nextCondition} -> ${usrTxt}]` : ''}`)
   }
 

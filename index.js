@@ -29,8 +29,8 @@ if (process.env.LOCATION === 'local') {
 }
 
 middleware()
-router()
 commandHandler()
+router()
 
 app.use('/api', api)
 
