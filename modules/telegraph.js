@@ -1,14 +1,13 @@
 const { parseFragment } = require('parse5'),
       Abstract = require('../models/abstract'),
       User = require('../models/user'),
+      currSem = require('../modules/curr-sem'),
+
       getReg = num => new RegExp(`{{[${num}]}}`, 'g'),
       replaceString = process.env.REPLACE_STRING
 
-async function createPage(ph, ctx, name, page, photos = []) {
-  const date      = new Date(),
-        month     = date.getMonth() + 1,
-        semester  = month > 7 && month <= 12 ? 1 : 2
 
+async function createPage(ph, ctx, name, page, photos = []) {
   if (photos.length > 0) {
     page = JSON.stringify(page)
     photos.forEach((link, indx) => page = page.replace(`${indx + 1}${replaceString}`, link))
@@ -19,6 +18,8 @@ async function createPage(ph, ctx, name, page, photos = []) {
   if (process.env.STATUS === 'prod') {
     const { subject } = ctx.session.cabinet,
           { course, flow, username: author } = ctx.session.user,
+          semester = currSem(),
+
           abstract = new Abstract({
             flow,
             name,
@@ -31,6 +32,7 @@ async function createPage(ph, ctx, name, page, photos = []) {
             telegraph_path: response.path,
             telegraph_title: response.title
           })
+
     abstract.save()
     console.log(
       `${author || ctx.from.id} has saved new lecture [${flow}, ${course} course, ${semester} semester]: ${subject} | ${name}`

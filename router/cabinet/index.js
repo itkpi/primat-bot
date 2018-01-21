@@ -173,7 +173,7 @@ module.exports = Router => {
 
 async function getSubjects(request, groupId) {
     const response = await request(encodeURI(`${config.hub_groups_url}${groupId}/timetable`))
-    const timetable = JSON.parse(response.body).data
+    const timetable = JSON.parse(response.body).data,
         weeks = [1, 2],
         days = [1, 2, 3, 4, 5, 6],
         nums = [1, 2, 3, 4, 5],

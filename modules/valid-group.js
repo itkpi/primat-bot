@@ -1,4 +1,5 @@
-const getGroupId = require('./group-id')
+const getGroupId = require('./group-id'),
+      currSem = require('./curr-sem')
 
 module.exports = async group => {
   const result = { values: {} }
@@ -10,7 +11,7 @@ module.exports = async group => {
     result.who = 'kpi'
   } else if (group === 'я не студент кпи') {
     result.values.date = new Date()
-    result.values.semester = 1
+    result.values.semester = currSem()
     result.who = 'notstudent'
   }
   return result
@@ -22,7 +23,7 @@ async function parseGroup(group) {
         month = date.getMonth() + 1,
         flow = group.slice(0, 2),
         groupYear = Number(group.slice(-2, -1)),
-        semester = month > 7 && month <= 12 ? 1 : 2,
+        semester = currSem(date),
         course = month > 7 ? year - groupYear + 1 : year - groupYear,
         groupHubId = await getGroupId(group)
 
