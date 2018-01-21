@@ -15,9 +15,9 @@ module.exports = async ctx => {
     } else {
       ctx.session.registry = { nextCondition: 'group' }  
       ctx.state.saveSession()
-      return ctx.replyWithHTML(`Привет, <b>${ctx.from.first_name}</b>!\nЯ бот-примат. ` + 
+      return ctx.replyWithHTML(`Привет, <b>${ctx.from.first_name}</b>!\nЯ могу многим с тобой поделиться. ` + 
         `Для нашего хорошего общения мне нужно лучше тебя узнать. ` +
-        `Твое имя я уже знаю, но из какой ты группы (напиши ее на украинском)?`, Markup
+        `Твое имя я уже знаю, но из какой ты группы? Используй украинский язык и подобный формат: кв-51`, Markup
           .keyboard(['Я не студент КПИ']).resize().extra()
       )
     }    
