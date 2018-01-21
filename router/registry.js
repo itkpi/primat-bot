@@ -8,6 +8,7 @@ module.exports = Router => {
   const router = Router('registry', ctx => !ctx.session.registry, ctx => ctx.session.registry.nextCondition)
 
   router.on('group', async ctx => {
+    console.log('asdss')
     try {
       const group = ctx.message.text.trim().toLowerCase(),
         groupInfo = await validGroup(group),

@@ -8,7 +8,10 @@ const { bot, request, ph } = require('../modules/utils'),
 module.exports = () => {
   bot.command('start', start)
 
-  bot.use((ctx, next) => ctx.session.user ? next() : null)
+  bot.use((ctx, next) => ctx.session.user || ctx.session.registry 
+    ? next()
+    : null
+  )
 
   bot.command('/deleteself', async ctx => {
     if (config.ownerId == ctx.from.id) {
