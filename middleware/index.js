@@ -40,8 +40,7 @@ module.exports = () => {
           ctx.session.semester = 1
           ctx.state.clearRoutes()
           ctx.state.saveSession()
-          return ctx.reply('Ой, я был занят обновлением твоей сессии и пропустил команду. ' +
-            'Повтори, пожалуйста', ctx.state.homeMarkup)
+          return ctx.reply('Ой, засмотрелся. Повтори, пожалуйста', ctx.state.homeMarkup)
         } else start(ctx)
       } catch(e) {
         return ctx.state.error(e)
