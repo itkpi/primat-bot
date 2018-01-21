@@ -5,21 +5,25 @@ const { Markup } = require('telegraf'),
 module.exports = async ctx => {
   if (ctx.session.user) {
     ctx.state.clearRoutes()
-    return ctx.reply('Хей, мы ведь уже знакомы', ctx.state.homeMarkup)
+    const msg = 'Хей, мы ведь уже знакомы'
+    console.log(`[start bot-msg] ${ctx.from.username}: ${msg}`)
+    return ctx.reply(msg, ctx.state.homeMarkup)
   } else {
     const user = await User.findOne({ tgId: ctx.from.id })
     if (user) {
       ctx.session.user = user
       ctx.state.saveSession()
-      ctx.reply('С возвращением!', ctx.state.homeMarkup)
+      const msg = 'С возвращением!'
+      console.log(`[start bot-msg] ${ctx.from.username}: ${msg}`)
+      return ctx.reply(msg, ctx.state.homeMarkup)
     } else {
       ctx.session.registry = { nextCondition: 'group' }  
       ctx.state.saveSession()
-      return ctx.replyWithHTML(`Привет, <b>${ctx.from.first_name}</b>!\nЯ могу многим с тобой поделиться. ` + 
+      const msg = `Привет, <b>${ctx.from.first_name}</b>!\nЯ могу многим с тобой поделиться. ` + 
         `Для нашего хорошего общения мне нужно лучше тебя узнать. ` +
-        `Твое имя я уже знаю, но из какой ты группы? Используй украинский язык и подобный формат: кв-51`, Markup
-          .keyboard(['Я не студент КПИ']).resize().extra()
-      )
+        `Твое имя я уже знаю, но из какой ты группы? Используй украинский язык и подобный формат: кв-51`
+      console.log(`[start bot-msg] ${ctx.from.username}: ${msg.split('\n')[0]}`)
+      return ctx.replyWithHTML(msg, Markup.keyboard(['Я не студент КПИ']).resize().extra())
     }    
   }
 }
