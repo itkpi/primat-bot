@@ -15,7 +15,7 @@ module.exports = (ph, picasa) => async ctx => {
     if (amount === 0) {
       const { lectureName, page } = ctx.session.cabinet,
             msgInfo = await ctx.reply('Секундочку, делаю всю магию...'),
-            picasaLinks = await uploadPhotos(request, picasa, ctx),
+            picasaLinks = await uploadPhotos(picasa, ctx),
             response = await createPage(ph, ctx, lectureName, page, picasaLinks)
 
         ctx.telegram.deleteMessage(msgInfo.chat.id, msgInfo.message_id)
@@ -31,7 +31,7 @@ module.exports = (ph, picasa) => async ctx => {
   ctx.state.saveSession()
 }
 
-async function uploadPhotos(request, picasa, ctx) {
+async function uploadPhotos(picasa, ctx) {
   const { course, username, tgId } = ctx.session.user,
         { subject, lectureName, picasaToken, photoLinks: tgLinks } = ctx.session.cabinet,
 

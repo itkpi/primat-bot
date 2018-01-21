@@ -14,9 +14,10 @@ const express = require('express'),
       port = process.env.PORT || 3210
 
 app.use((req, res, next) => {
-  if (req.url !== `/bot${process.env.BOT_TOKEN}`)
-    console.log(req.method, req.url)
-  next()
+  if ([`/bot${process.env.BOT_TOKEN}`, '/'].includes(req.url))
+    return next()
+
+  console.log(req.method, req.url)
 })
 
 if (process.env.LOCATION === 'local') {

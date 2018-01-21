@@ -23,7 +23,7 @@ module.exports = (ph, picasa) => async ctx => {
         photosAmount,
         photoLinks: [],
         nextCondition: 'photo',
-        subject: ctx.session.cabinet.subject,
+        subject: ctx.session.cabinet.subject
       }
       ctx.replyWithHTML(`Словил! Но, вижу, твоей лекции не хватает фотографий. ` +
         `Вот их количество, которое я от тебя жду, чтобы вклеить все на свои места: `+

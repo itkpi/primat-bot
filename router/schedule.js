@@ -1,6 +1,7 @@
 const { Markup } = require('telegraf'),
       WeekInfo = require('../models/week-info'),
       Schedule = require('../models/schedule'),
+      currSem = require('../modules/curr-sem'),
       { request } = require('../modules/utils')
 
 module.exports = Router => {
@@ -9,9 +10,7 @@ module.exports = Router => {
       ctx => ctx.session.schedule && ctx.session.schedule.nextCondition || 'schedule')
 
   router.on('schedule', ctx => {
-    const month = new Date().getMonth() + 1,
-          currSemester = month > 7 && month <= 12 ? 1 : 2
-    if (currSemester !== ctx.session.semester)
+    if (currSem() !== ctx.session.semester)
       return ctx.reply(`Расписание за ${ctx.session.semester}-й семестр тебе вряд ли кто-то скажет, можешь сменить его`)
 
     if (ctx.session.groupHubId) {

@@ -2,6 +2,7 @@ const start = require('../commands/start'),
       User = require('../models/user'),
       { bot, stage } = require('../modules/utils'),
       sceneSession = require('../modules/sceneSession'),
+      currSem = require('../modules/curr-sem'),
 
       logger = require('./logger'),
       init = require('./init'),
@@ -37,7 +38,7 @@ module.exports = () => {
         if (user) {
           ctx.session.user = user
           config.session_fields.forEach(field => ctx.session[field] = user[field])
-          ctx.session.semester = 1
+          ctx.session.semester = currSem()
           ctx.state.clearRoutes()
           ctx.state.saveSession()
           return ctx.reply('Ой, засмотрелся. Повтори, пожалуйста', ctx.state.homeMarkup)
