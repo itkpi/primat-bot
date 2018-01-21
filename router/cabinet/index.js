@@ -34,10 +34,7 @@ module.exports = Router => {
                     if (!ctx.session.user.telegraph_token)
                         return ctx.reply('У тебя пока нет аккаунта\nТебе поможет команда /telegraph')
                     try {
-                        const subjects = ctx.session.subjects
-                                ? ctx.session.subjects
-                                : await getSubjects(request, ctx.session.user.groupHubId)
-
+                        const subjects = ctx.session.subjects || await getSubjects(ctx.session.user.groupHubId)
                         ctx.session.subjects = subjects
 
                         const amount = subjects.length
@@ -171,9 +168,9 @@ module.exports = Router => {
     return router.middleware()
 }
 
-async function getSubjects(request, groupId) {
-    const response = await request(encodeURI(`${config.hub_groups_url}${groupId}/timetable`))
-    const timetable = JSON.parse(response.body).data,
+async function getSubjects(groupId) {
+    const response = await request(encodeURI(`${config.hub_groups_url}${groupId}/timetable`)),
+        timetable = JSON.parse(response.body).data,
         weeks = [1, 2],
         days = [1, 2, 3, 4, 5, 6],
         nums = [1, 2, 3, 4, 5],
