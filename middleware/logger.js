@@ -7,6 +7,7 @@ module.exports = (ctx, next) => {
           route = config.routes.reduce((res, route) => res || ctx.session[route] && route || null, null)
 
     console.log(ctx)
+    console.log(ctx.message)
     const usrTxt = Object.values(config.btns).includes(ctx.message.text)
                       ? ctx.message.text.slice(3)
                       : ctx.message.text ? ctx.message.text : 'or uploaded smth'
