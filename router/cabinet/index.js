@@ -2,7 +2,7 @@ const { Markup } = require('telegraf'),
         validGroup = require('../../modules/valid-group'),
         getGroupId = require('../../modules/group-id'),
         { request } = require('../../modules/utils'),
-        Teacher = require('../../../test/teacher')
+        Teacher = require('../../models/teacher')
 
 module.exports = Router => {
     const router = Router('cabinet',
