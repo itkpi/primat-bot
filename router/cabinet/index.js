@@ -160,11 +160,9 @@ module.exports = Router => {
 
       const teachers = await Teacher.find({ last_name: ctx.state.btnVal })
       if (teachers.length > 0) {
-        const answer = teachers.reduce((acc, val) => {
-          if (val.phone_number)
-            acc += `${val.full_name} - ${val.phone_number}\n`
-          return acc
-        }, '')
+        const answer = teachers.reduce((acc, val) => acc += val.phone_number
+          ? `${val.full_name} - ${val.phone_number}\n`
+          : '', '')
         ctx.reply(answer || 'Номер этого преподавателя мне не известен :c')
       } else {
         ctx.reply('Не нашел такого преподавателя, попробуй еще раз')
