@@ -1,7 +1,8 @@
 const { Markup } = require('telegraf'),
         validGroup = require('../../modules/valid-group'),
         getGroupId = require('../../modules/group-id'),
-        { request } = require('../../modules/utils')
+        { request } = require('../../modules/utils'),
+        Teacher = require('../../../test/teacher')
 
 module.exports = Router => {
     const router = Router('cabinet',
@@ -10,7 +11,7 @@ module.exports = Router => {
 
     router.on('cabinet', ctx => {
         ctx.session.cabinet = { nextCondition: 'action' }
-        const keyboard = ['Поменять группу', 'Сменить семестр', 'Кто я?', 'Назад']
+        const keyboard = ['Поменять группу', 'Сменить семестр', 'Кто я?', 'Телефоны', 'Назад']
         if (ctx.session.user.telegraph_user)
             keyboard.push('Загрузить лекцию')
 
@@ -90,6 +91,13 @@ module.exports = Router => {
 
                 ctx.replyWithHTML(answer)
                 break
+            case 'Телефоны':
+              ctx.session.cabinet.nextCondition = 'teacher'
+              ctx.reply(
+                'Введи фамилию преподаватеоя (на украинском), номер которого ты хочешь узнать',
+                Markup.keyboard(['Домой']).resize().extra()
+              )
+              break
             case 'Назад':
                 ctx.reply('Ну ладно', ctx.state.homeMarkup)
                 ctx.session.cabinet = null
@@ -141,6 +149,26 @@ module.exports = Router => {
         }
         
         ctx.state.saveSession()
+    })
+
+    router.on('teacher', async ctx => {
+      if (ctx.state.btnVal === 'Домой') {
+          ctx.session.cabinet = null
+          ctx.state.saveSession()
+          return ctx.reply('Удачи!', ctx.state.homeMarkup)
+      }
+
+      const teachers = await Teacher.find({ last_name: ctx.state.btnVal })
+      if (teachers.length > 0) {
+        const answer = teachers.reduce((acc, val) => {
+          if (val.phone_number)
+            acc += `${val.full_name} - ${val.phone_number}\n`
+          return acc
+        }, '')
+        ctx.reply(answer || 'Номер этого преподавателя мне не известен :c')
+      } else {
+        ctx.reply('Не нашел такого преподавателя, попробуй еще раз')
+      }
     })
 
     // this router triggers only when user has sent text message instead of document
