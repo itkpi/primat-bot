@@ -8,22 +8,33 @@ module.exports = Router => {
   const router = Router('registry', ctx => !ctx.session.registry, ctx => ctx.session.registry.nextCondition)
 
   router.on('group', async ctx => {
-    console.log('asdss')
     try {
       const group = ctx.message.text.trim().toLowerCase(),
         groupInfo = await validGroup(group),
+        { groupHubId } = groupInfo.values,
         userObj = Object.assign({
           tgId: ctx.from.id,
           username: ctx.from.username
         }, groupInfo.values)
-      if (!'who' in groupInfo) return ctx.reply('Мне такая группа не знакома. Попробуй еще или жми кнопку')
+
+      if (Array.isArray(groupHubId)) {
+        const msg = groupHubId.reduce((acc, val) => {
+          acc += `${val.name}\n`
+          return acc
+        }, 'Я не нашел конкретной группы, но попробуй кое-что похожее:\n')
+        return ctx.reply(msg)
+      }
+      console.log('validGroup: ')
+      console.log(userObj)
+
+      if (!groupInfo.who) return ctx.reply('Мне такая группа не знакома. Попробуй еще или жми кнопку')
 
       if (!userObj.course && !userObj.flow && groupInfo.who !== 'notstudent') {
           ctx.session = groupInfo.values
           ctx.session.registry = Object.assign({}, userObj, { nextCondition: 'flow' })
           ctx.state.saveSession()
           return ctx.reply(
-            'Оке, но не могу разобрать... Можешь назвать свой поток? (КВ, к примеру)',
+            'Оке, но не могу разобрать... Можешь сказать название своего потока? (КВ, к примеру)',
             Markup.keyboard([' ']).resize().extra()
           )
       }
@@ -43,7 +54,7 @@ module.exports = Router => {
           'Диплом уже готов?'
         ]
         answer = phrases[user.course - 1]
-        answer += groupInfo.values.groupHubId ? '' : '\nКстати, расписание твоей группы еще не завезли :c'
+        answer += groupHubId ? '' : '\nКстати, расписание твоей группы еще не завезли :c'
       } else {
         answer = 'Давно, конечно, я такой грустной новости не слышал. Но ничего, мы тут всех любим!'
       }
