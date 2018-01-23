@@ -3,7 +3,7 @@ const { parseFragment } = require('parse5'),
       User = require('../models/user'),
       currSem = require('../modules/curr-sem'),
 
-      getReg = num => new RegExp(`{{[${num}]}}`, 'g'),
+      getReg = num => new RegExp(`[${num}]`, 'g'),
       replaceString = process.env.REPLACE_STRING
 
 
