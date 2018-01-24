@@ -158,7 +158,7 @@ module.exports = Router => {
           return ctx.reply('Удачи!', ctx.state.homeMarkup)
       }
 
-      const teachers = await Teacher.find({ last_name: ctx.state.btnVal })
+      const teachers = await Teacher.find({ last_name: ctx.state.btnVal.toLowerCase() })
       if (teachers.length > 0) {
         const answer = teachers.reduce((acc, val) => acc += val.phone_number
           ? `${val.full_name} - ${val.phone_number}\n`
