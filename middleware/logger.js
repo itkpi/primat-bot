@@ -2,7 +2,7 @@ module.exports = (ctx, next) => {
   if (ctx.session && ctx.session.registry) {
     console.log(`[registry] ${ctx.from.username}: ${ctx.message.text}`)
     console.log(ctx.session.registry)
-  } else if (ctx.session && ctx.session.user) {
+  } else if (ctx.session && ctx.session.user && ctx.message) {
     const { username, tgId, group } = ctx.session.user,
           route = config.routes.reduce((res, route) => res || ctx.session[route] && route || null, null)
 
