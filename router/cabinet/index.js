@@ -122,7 +122,6 @@ module.exports = Router => {
                 return ctx.reply('Впервые вижу такую группу. Попробуй еще')
             }
 
-            console.log(groupInfo)
             if (Array.isArray(groupHubId)) {
               const msg = groupHubId.reduce((acc, val) => {
                 acc += `${val.name}\n`
@@ -170,7 +169,7 @@ module.exports = Router => {
       const teachers = await Teacher.find({ last_name: ctx.state.btnVal.toLowerCase() })
       if (teachers.length > 0) {
         const answer = teachers.reduce((acc, val) => acc += val.phone_number
-          ? `${val.full_name}: ${formatPhoneNumber(val.phone_number)}\n`
+          ? `${val.full_name}:\n${formatPhoneNumber(val.phone_number)}\n`
           : '', '')
         ctx.reply(answer || 'Номер этого преподавателя мне не известен :c')
       } else {
