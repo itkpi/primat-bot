@@ -55,8 +55,8 @@ module.exports = Router => {
         return ctx.replyWithHTML(getTimeSch(), ctx.state.homeMarkup)        
       }
 
-      const query = getScheduleQuery(ctx, day, week),
-            lessons = await getLessons(ctx, query)
+      // const query = getScheduleQuery(ctx, day, week),
+      const lessons = await getLessons(ctx, day, week)
 
       if (lessons)
         ctx.replyWithHTML(lessons, ctx.state.homeMarkup)
@@ -82,38 +82,38 @@ function getTimeSch() {
 <b>5.</b> 16:10 - 17:45`
 }
 
-function getScheduleQuery(ctx, day, week) {
+function getScheduleQuery(option, groupHubId, day, week) {
   const cases = {
-    'Сегодня': `groups=${ctx.session.groupHubId}&day=${day}&week=${week}`,
-    'Завтра': `groups=${ctx.session.groupHubId}&day=${(day + 1) % 8 ? (day + 1) % 8 : 1}&week=${week}`,
-    'Вчера': `groups=${ctx.session.groupHubId}&day=${day - 1}&week=${week}`,
-    'Эта неделя': `groups=${ctx.session.groupHubId}&week=${week}`,
-    'Следующая неделя': `groups=${ctx.session.groupHubId}&week=${week === 1 ? 2 : 1}`
+    'Сегодня': `groups=${groupHubId}&day=${day}&week=${week}`,
+    'Завтра': `groups=${groupHubId}&day=${(day + 1) % 8 ? (day + 1) % 8 : 1}&week=${week}`,
+    'Вчера': `groups=${groupHubId}&day=${day - 1}&week=${week}`,
+    'Эта неделя': `groups=${groupHubId}&week=${week}`,
+    'Следующая неделя': `groups=${groupHubId}&week=${week === 1 ? 2 : 1}`
   }
 
-  return cases[ctx.state.btnVal]
+  return cases[option]
 }
 
-async function getLessons(ctx, query) {
+async function getLessons(ctx, day, week) {
   const sortCb = (a, b) => {
     if (a.day > b.day) return 1
     if (a.day < b.day) return -1
     if (a.number > b.number) return 1
     if (a.number < b.number) return -1    
   }
-  const getDayName = num => ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Cуббота'][num - 1]
-
-  const schedule = await Schedule.findOne({ groupHubId: ctx.session.groupHubId, query }),
-        url = `${config.hub_lessons_url}?limit=100&`
+  const getDayName = num => ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Cуббота'][num - 1],
+        query = getScheduleQuery(ctx.state.btnVal, ctx.session.groupHubId, day, week),
+        schedule = await Schedule.findOne({ groupHubId: ctx.session.groupHubId, query })
 
   let lessons = schedule ? schedule.lessons : null
 
   // if it's not cached
   if (!lessons) {
-    const response = await request(encodeURI(url + query)),
+    const response = await request(encodeURI(`${config.hub_lessons_url}?limit=100&` + query)),
           body = response.body,
           data = JSON.parse(response.body).results.sort(sortCb),
           fields = ['day', 'week', 'rooms_full_names', 'teachers_short_names', 'type', 'number', 'discipline_name']
+          
     lessons = data.map(lesson => {
       res = {}
       // 'type' is reserved word in mongoose Schema

@@ -115,17 +115,25 @@ module.exports = Router => {
             ctx.reply('В другой раз', ctx.state.homeMarkup)
         } else {
             const group = ctx.message.text.trim().toLowerCase(),
-                groupInfo = await validGroup(group)
+                groupInfo = await validGroup(group),
+                { groupHubId } = groupInfo.values
 
             if (groupInfo.who !== 'kpi' && groupInfo.who !== 'primat') {
                 return ctx.reply('Впервые вижу такую группу. Попробуй еще')
             }
 
+            if (Array.isArray(groupHubId)) {
+              const msg = groupHubId.reduce((acc, val) => {
+                acc += `${val.name}\n`
+                return acc
+              }, 'Я не нашел конкретной группы, но попробуй кое-что похожее:\n')
+              return ctx.reply(msg)
+            }
+
             ctx.session.cabinet = null
             Object.assign(ctx.session, groupInfo.values)
-            const answer = groupInfo.values.groupHubId
-                ? 'Все готово'
-                : 'Добро пожаловать, но расписания по этой группе нет :c'
+            const answer = groupHubId ? 'Все готово'
+                                      : 'Добро пожаловать, но расписания по этой группе нет :c'
             ctx.reply(answer, ctx.state.homeMarkup)
         }
         ctx.state.saveSession()
@@ -160,11 +168,9 @@ module.exports = Router => {
 
       const teachers = await Teacher.find({ last_name: ctx.state.btnVal.toLowerCase() })
       if (teachers.length > 0) {
-        const answer = teachers.reduce((acc, val) => {
-          if (val.phone_number)
-            acc += `${val.full_name} - ${val.phone_number}\n`
-          return acc
-        }, '')
+        const answer = teachers.reduce((acc, val) => acc += val.phone_number
+          ? `${val.full_name}:\n${formatPhoneNumber(val.phone_number)}\n`
+          : '', '')
         ctx.reply(answer || 'Номер этого преподавателя мне не известен :c')
       } else {
         ctx.reply('Не нашел такого преподавателя, попробуй еще раз')
@@ -220,4 +226,15 @@ async function getSubjects(groupId) {
   }))
 
   return subjects
+}
+
+function formatPhoneNumber(number) {
+    array = number.split('')
+
+    array.splice(2, 0, ' (')
+    array.splice(6, 0, ') ')
+    array.splice(10, 0, ' ')
+    array.splice(13, 0, ' ')
+
+    return '+' + array.join('')
 }
