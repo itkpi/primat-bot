@@ -1,5 +1,12 @@
-const { Markup } = require('telegraf'),
-    Abstract = require('../models/abstract')
+const Abstract = require('../models/abstract'),
+    { bot, ph } = require('../modules/utils'),
+    { serialize } = require('parse5'),
+
+    { JSDOM } = require('jsdom'),
+    { window } = new JSDOM(`<!DOCTYPE html><html></html>`),
+
+    Telegraf = require('telegraf'),
+    { Markup, Extra } = Telegraf
 
 module.exports = Router => {
     const router = Router(
@@ -7,6 +14,26 @@ module.exports = Router => {
         ctx => ctx.message.text !== config.btns.abstracts && !ctx.session.abstract,
         ctx => (ctx.session.abstract && ctx.session.abstract.nextCondition) || 'abstract'
     )
+
+    const loadLecture = new Telegraf.Router(ctx => {
+        if (!ctx.callbackQuery.data) return
+
+        return { route: 'load', state: { path: ctx.callbackQuery.data } }
+    })
+
+    loadLecture.on('load', async ctx => {
+        try {
+            const page = await ph.getPage(ctx.state.path, { return_content: true })
+            // console.log(page.content)
+            // console.log(nodeToDom(page.content[0]))
+            // console.log(page)
+            console.log(serialize(page.content[0]))
+            return ctx.answerCbQuery('Читай на здоровье!', true)
+        } catch(e) {
+            console.error(e)
+            return ctx.answerCbQuery('Ошибочка :c', true)
+        }
+    })
 
     router.on('abstract', async ctx => {
         try {
@@ -82,6 +109,8 @@ module.exports = Router => {
         }
 
         try {
+            const getAbstractMarkup = id => Extra.markup(m => m.inlineKeyboard([m.callbackButton('Завантажити в pdf', id)]))
+
             const abstracts = await Abstract.find({
                 subject: ctx.session.abstract.subject,
                 course: ctx.session.course,
@@ -100,12 +129,13 @@ module.exports = Router => {
                 //     chain = chain.then(ctx.reply(abstract.telegraph_url))
 
                 let timer = 100
-                abstracts.forEach(i =>
-                    setTimeout(ctx.reply, (timer += 100), i.telegraph_url)
+                abstracts.forEach(abstract =>
+                    setTimeout(ctx.reply, (timer += 100), abstract.telegraph_url, getAbstractMarkup(abstract.telegraph_path))
                 )
             } else {
-                if (abstracts[ctx.state.btnVal - 1])
-                    ctx.reply(abstracts[ctx.state.btnVal - 1].telegraph_url)
+                const abstract = abstracts[ctx.state.btnVal - 1]
+                if (abstract)
+                    ctx.reply(abstract.telegraph_url, getAbstractMarkup(abstract.telegraph_path))
                 else return ctx.reply('Лекции под таким номером нет')
             }
 
@@ -120,5 +150,52 @@ module.exports = Router => {
         }
     })
 
+    bot.on('callback_query', loadLecture)
+
     return router.middleware()
 }
+
+function nodeToDom(node) {
+  if (typeof node === 'string' || node instanceof String) {
+    return window.document.createTextNode(node);
+  }
+  if (node.tag) {
+    var domNode = window.document.createElement(node.tag);
+    if (node.attrs) {
+      for (var name in node.attrs) {
+        var value = node.attrs[name];
+        domNode.setAttribute(name, value);
+      }
+    }
+  } else {
+    var domNode = window.document.createDocumentFragment();
+  }
+  if (node.children) {
+    for (var i = 0; i < node.children.length; i++) {
+      var child = node.children[i];
+      domNode.appendChild(nodeToDom(child));
+    }
+  }
+  return domNode;
+}
+
+// var article = document.getElementById('article');
+// var content = domToNode(article).children;
+// $.ajax('https://api.telegra.ph/createPage', {
+//   data: {
+//     access_token:   '%access_token%',
+//     title:          'Title of page',
+//     content:        JSON.stringify(content),
+//     return_content: true
+//   },
+//   type: 'POST',
+//   dataType: 'json',
+//   success: function(data) {
+//     if (data.content) {
+//       while (article.firstChild) {
+//         article.removeChild(article.firstChild);
+//       }
+//       article.appendChild(nodeToDom({children: data.content}));
+//     }
+//   }
+// });

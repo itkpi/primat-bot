@@ -16,7 +16,7 @@ module.exports = (ph, picasa) => async ctx => {
       const { lectureName, page } = ctx.session.cabinet,
             msgInfo = await ctx.reply('Секундочку, делаю всю магию...'),
             picasaLinks = await uploadPhotos(picasa, ctx),
-            response = await createPage(ph, ctx, lectureName, page, picasaLinks)
+            response = await createPage(ctx, lectureName, page, picasaLinks)
 
         ctx.telegram.deleteMessage(msgInfo.chat.id, msgInfo.message_id)
         ctx.reply(`Ты просто лучший! Только не забывай исправлять ошибки, вдруг что`)

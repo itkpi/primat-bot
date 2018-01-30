@@ -29,7 +29,7 @@ module.exports = (ph, picasa) => async ctx => {
         `Вот их количество, которое я от тебя жду, чтобы вклеить все на свои места: `+
         `<b>${photosAmount}</b>`)
     } else {
-      const response = await createPage(ph, ctx, lectureName, page)
+      const response = await createPage(ctx, lectureName, page)
       if (response) {
         ctx.reply(`Ты просто лучший! Только не забывай исправлять ошибки, вдруг что`)
         ctx.reply(response.url, ctx.state.homeMarkup)

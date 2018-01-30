@@ -2,12 +2,13 @@ const { parseFragment } = require('parse5'),
       Abstract = require('../models/abstract'),
       User = require('../models/user'),
       currSem = require('../modules/curr-sem'),
+      { ph } = require('../modules/utils'),
 
       getReg = num => new RegExp(`[${num}]`, 'g'),
       replaceString = process.env.REPLACE_STRING
 
 
-async function createPage(ph, ctx, name, page, photos = []) {
+async function createPage(ctx, name, page, photos = []) {
   if (photos.length > 0) {
     page = JSON.stringify(page)
     photos.forEach((link, indx) => page = page.replace(`${indx + 1}${replaceString}`, link))
