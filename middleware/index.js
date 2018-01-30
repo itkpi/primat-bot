@@ -1,7 +1,6 @@
 const start = require('../commands/start'),
       User = require('../models/user'),
       { bot, stage } = require('../modules/utils'),
-      sceneSession = require('../modules/sceneSession'),
       currSem = require('../modules/curr-sem'),
 
       logger = require('./logger'),
@@ -24,7 +23,6 @@ module.exports = () => {
     )
   }
 
-  bot.use(sceneSession())
   bot.use(session.middleware())
 
   bot.use(logger)
