@@ -13,10 +13,10 @@ module.exports = (ph, picasa) => async ctx => {
     ctx.session.cabinet.photoLinks.push(tgLink)
 
     if (amount === 0) {
-      const { lectureName, page } = ctx.session.cabinet,
+      const { lectureName, page, source } = ctx.session.cabinet,
             msgInfo = await ctx.reply('Секундочку, делаю всю магию...'),
             picasaLinks = await uploadPhotos(picasa, ctx),
-            response = await createPage(ctx, lectureName, page, picasaLinks)
+            response = await createPage(ctx, lectureName, page, source, picasaLinks)
 
         ctx.telegram.deleteMessage(msgInfo.chat.id, msgInfo.message_id)
         ctx.reply(`Ты просто лучший! Только не забывай исправлять ошибки, вдруг что`)

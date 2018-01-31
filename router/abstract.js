@@ -1,9 +1,11 @@
 const Abstract = require('../models/abstract'),
     { bot, ph } = require('../modules/utils'),
-    { serialize } = require('parse5'),
+    // { serialize } = require('parse5'),
 
-    { JSDOM } = require('jsdom'),
-    { window } = new JSDOM(`<!DOCTYPE html><html></html>`),
+    // { JSDOM } = require('jsdom'),
+    // { window } = new JSDOM(`<!DOCTYPE html><html></html>`),
+    pdf = require('html-pdf'),
+    { telegram } = require('../modules/utils').bot,
 
     Telegraf = require('telegraf'),
     { Markup, Extra } = Telegraf
@@ -18,16 +20,26 @@ module.exports = Router => {
     const loadLecture = new Telegraf.Router(ctx => {
         if (!ctx.callbackQuery.data) return
 
-        return { route: 'load', state: { path: ctx.callbackQuery.data } }
+        console.log(ctx.callbackQuery.data)
+        // const { source, name } = JSON.parse(ctx.callbackQuery.data)
+        return { route: 'load', state: 'asd' }
     })
 
     loadLecture.on('load', async ctx => {
         try {
-            const page = await ph.getPage(ctx.state.path, { return_content: true })
-            // console.log(page.content)
-            // console.log(nodeToDom(page.content[0]))
-            // console.log(page)
-            console.log(serialize(page.content[0]))
+            const createPdf = (source, name) => new Promise((resolve, reject) => {
+                pdf.create(source).toFile(`./public/${name}.pdf`, (err, res) => {
+                    if (err) reject(err)
+                    resolve(res)
+                })
+            })
+
+            // const { source, name } = ctx.state
+            // const r = await createPdf(source, name)
+            // console.log(r)
+            // console.log()
+            // telegram.sendDocument(ctx.from.id, r)
+
             return ctx.answerCbQuery('Читай на здоровье!', true)
         } catch(e) {
             console.error(e)
@@ -109,7 +121,8 @@ module.exports = Router => {
         }
 
         try {
-            const getAbstractMarkup = id => Extra.markup(m => m.inlineKeyboard([m.callbackButton('Завантажити в pdf', id)]))
+            const getAbstractMarkup = (source, name) => source && 
+                Extra.markup(m => m.inlineKeyboard([m.callbackButton('Завантажити в pdf', JSON.stringify({ source, name }))]))
 
             const abstracts = await Abstract.find({
                 subject: ctx.session.abstract.subject,
@@ -130,12 +143,12 @@ module.exports = Router => {
 
                 let timer = 100
                 abstracts.forEach(abstract =>
-                    setTimeout(ctx.reply, (timer += 100), abstract.telegraph_url, getAbstractMarkup(abstract.telegraph_path))
+                    setTimeout(ctx.reply, (timer += 100), abstract.telegraph_url, getAbstractMarkup(abstract.source, abstract.name))
                 )
             } else {
                 const abstract = abstracts[ctx.state.btnVal - 1]
                 if (abstract)
-                    ctx.reply(abstract.telegraph_url, getAbstractMarkup(abstract.telegraph_path))
+                    ctx.reply(abstract.telegraph_url, getAbstractMarkup(abstract.source, abstract.name))
                 else return ctx.reply('Лекции под таким номером нет')
             }
 
@@ -154,48 +167,3 @@ module.exports = Router => {
 
     return router.middleware()
 }
-
-function nodeToDom(node) {
-  if (typeof node === 'string' || node instanceof String) {
-    return window.document.createTextNode(node);
-  }
-  if (node.tag) {
-    var domNode = window.document.createElement(node.tag);
-    if (node.attrs) {
-      for (var name in node.attrs) {
-        var value = node.attrs[name];
-        domNode.setAttribute(name, value);
-      }
-    }
-  } else {
-    var domNode = window.document.createDocumentFragment();
-  }
-  if (node.children) {
-    for (var i = 0; i < node.children.length; i++) {
-      var child = node.children[i];
-      domNode.appendChild(nodeToDom(child));
-    }
-  }
-  return domNode;
-}
-
-// var article = document.getElementById('article');
-// var content = domToNode(article).children;
-// $.ajax('https://api.telegra.ph/createPage', {
-//   data: {
-//     access_token:   '%access_token%',
-//     title:          'Title of page',
-//     content:        JSON.stringify(content),
-//     return_content: true
-//   },
-//   type: 'POST',
-//   dataType: 'json',
-//   success: function(data) {
-//     if (data.content) {
-//       while (article.firstChild) {
-//         article.removeChild(article.firstChild);
-//       }
-//       article.appendChild(nodeToDom({children: data.content}));
-//     }
-//   }
-// });

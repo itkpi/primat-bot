@@ -12,6 +12,7 @@
   "dependencies": {
     "encoding": "^0.1.12",
     "express": "^4.15.3",
+    "html-pdf": "^2.2.0",
     "jsdom": "^11.6.2",
     "latest": "^0.2.0",
     "mongoose": "^4.11.4",
