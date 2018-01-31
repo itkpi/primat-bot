@@ -4,7 +4,10 @@ const Abstract = require('../models/abstract'),
 
     // { JSDOM } = require('jsdom'),
     // { window } = new JSDOM(`<!DOCTYPE html><html></html>`),
-    pdf = require('html-pdf'),
+    // pdf = require('html-pdf'),
+
+    puppeteer = require('puppeteer'),
+
     { telegram } = require('../modules/utils').bot,
 
     Telegraf = require('telegraf'),
@@ -20,22 +23,28 @@ module.exports = Router => {
     const loadLecture = new Telegraf.Router(ctx => {
         if (!ctx.callbackQuery.data) return
 
-        console.log(ctx.callbackQuery.data)
-        // const { source, name } = JSON.parse(ctx.callbackQuery.data)
-        return { route: 'load', state: 'asd' }
+        return { route: 'load', state: { url: ctx.callbackQuery.data } }
     })
 
     loadLecture.on('load', async ctx => {
         try {
-            const createPdf = (source, name) => new Promise((resolve, reject) => {
-                pdf.create(source).toFile(`./public/${name}.pdf`, (err, res) => {
-                    if (err) reject(err)
-                    resolve(res)
-                })
-            })
+            const browser = await puppeteer.launch();
+            const page = await browser.newPage();
+            await page.goto(ctx.state.url, {waitUntil: 'networkidle2'});
+            await page.pdf({path: `./public/hn.pdf`, format: 'A4'});
+             
+            await browser.close();
+            // const createPdf = (source, name) => new Promise((resolve, reject) => {
+            //     pdf.create(source).toFile(`./public/${name}.pdf`, (err, res) => {
+            //         if (err) reject(err)
+            //         resolve(res)
+            //     })
+            // })
 
-            // const { source, name } = ctx.state
-            // const r = await createPdf(source, name)
+            // const abstract = await Abstract.findById(ctx.state.id)
+            // console.log(abstract)
+            // // const { source, name } = ctx.state
+            // const r = await createPdf(abstract.source, abstract.name)
             // console.log(r)
             // console.log()
             // telegram.sendDocument(ctx.from.id, r)
@@ -121,8 +130,8 @@ module.exports = Router => {
         }
 
         try {
-            const getAbstractMarkup = (source, name) => source && 
-                Extra.markup(m => m.inlineKeyboard([m.callbackButton('Завантажити в pdf', JSON.stringify({ source, name }))]))
+            const getAbstractMarkup = id => 
+                Extra.markup(m => m.inlineKeyboard([m.callbackButton('Завантажити в pdf', id)]))
 
             const abstracts = await Abstract.find({
                 subject: ctx.session.abstract.subject,
@@ -143,12 +152,12 @@ module.exports = Router => {
 
                 let timer = 100
                 abstracts.forEach(abstract =>
-                    setTimeout(ctx.reply, (timer += 100), abstract.telegraph_url, getAbstractMarkup(abstract.source, abstract.name))
+                    setTimeout(ctx.reply, (timer += 100), abstract.telegraph_url, getAbstractMarkup(abstract._id))
                 )
             } else {
                 const abstract = abstracts[ctx.state.btnVal - 1]
                 if (abstract)
-                    ctx.reply(abstract.telegraph_url, getAbstractMarkup(abstract.source, abstract.name))
+                    ctx.reply(abstract.telegraph_url, getAbstractMarkup(abstract.telegraph_url))
                 else return ctx.reply('Лекции под таким номером нет')
             }
 
