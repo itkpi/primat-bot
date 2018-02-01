@@ -1,7 +1,10 @@
 const Abstract = require('../models/abstract'),
     { bot, ph, request } = require('../modules/utils'),
-    fs = require('fs'),
     puppeteer = require('puppeteer'),
+    fs = require('fs'),
+    util = require('util'),
+
+    unlink = util.promisify(fs.unlink),
 
     { telegram } = require('../modules/utils').bot,
 
@@ -18,38 +21,43 @@ module.exports = Router => {
     const loadLecture = new Telegraf.Router(ctx => {
         if (!ctx.callbackQuery.data) return
 
-        const { url, name } = JSON.parse(ctx.callbackQuery.data)
-        return { route: 'load', state: { url, name } }
+        return { route: 'load', state: { id: ctx.callbackQuery.data } }
     })
 
-    loadLecture.on('load', async ctx => {
-        try {
-            const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']})
-            const page = await browser.newPage()
-
-            const { url, name } = ctx.state
-            await page.goto(url, { waitUntil: 'networkidle2' })
-
-            const path = `${__dirname}/../public/${name}.pdf`
-            await page.pdf({ path })
-
-            await request({
-                method: 'POST',
-                url: `${telegram.options.apiRoot}/bot${telegram.token}/sendDocument`,
-                formData: {
-                    chat_id: ctx.from.id,
-                    document: fs.createReadStream(path)
-                }
-            })
-
-            fs.unlinkSync(path)
-            await browser.close()
-
-            return ctx.answerCbQuery('Читай на здоровье!')
-        } catch(e) {
-            console.error(e)
-            return ctx.answerCbQuery('Ошибочка :c', true)
+    loadLecture.on('load', ctx => {
+        const sendPdf = (chat_id, filePath) => {
+            const method = 'POST'
+            const url = `${telegram.options.apiRoot}/bot${telegram.token}/sendDocument`
+            const formData = { chat_id, document: fs.createReadStream(filePath) }
+            return request({ method, url, formData })
         }
+
+        // promises instead of async/awaits for perfomance increase (parallel operations)
+        Promise.all([
+            Abstract.findById(ctx.state.id),
+            puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']})
+        ])
+            .then(([abstract, browser]) => Promise.all([abstract, browser, browser.newPage()]))
+            .then(([abstract, browser, page]) => Promise.all([
+                    `${__dirname}/../public/${abstract.name.substr(0, 45).replace(/\//g, '')}.pdf`,
+                    browser,
+                    page,
+                    page.goto(abstract.telegraph_url, { waitUntil: 'networkidle2' })
+                ])
+            )
+            .then(([path, browser, page]) => Promise.all([path, browser, page.pdf({ path, format: 'A4' })]))
+            .then(([path, browser]) => Promise.all([
+                    path,
+                    browser.close(),
+                    sendPdf(ctx.from.id, path),
+                ])
+            )
+            .then(([path]) => unlink(path))
+            .then(() => ctx.answerCbQuery('Читай на здоровье!'))
+            .catch(e => {
+                console.error(e)
+                ctx.answerCbQuery('Ошибочка :c', true)
+            })
     })
 
     router.on('abstract', async ctx => {
@@ -134,8 +142,8 @@ module.exports = Router => {
             })
             .sort({ date: 1 })
 
-            const getAbstractMarkup = (url, name) => 
-                Extra.markup(m => m.inlineKeyboard([m.callbackButton('Завантажити в pdf', JSON.stringify({ url, name }))]))
+            const getAbstractMarkup = id =>
+                Extra.markup(m => m.inlineKeyboard([m.callbackButton('Завантажити в pdf', id)]))
 
             if (ctx.state.btnVal === 'Все') {
                 // sendMessages(ctx, abstracts.map(i => i.telegraph_url))
@@ -148,12 +156,12 @@ module.exports = Router => {
 
                 let timer = 100
                 abstracts.forEach(abstract =>
-                    setTimeout(ctx.reply, (timer += 100), abstract.telegraph_url, getAbstractMarkup(abstract.telegraph_url, abstract.name))
+                    setTimeout(ctx.reply, (timer += 100), abstract.telegraph_url, getAbstractMarkup(abstract._id))
                 )
             } else {
                 const abstract = abstracts[ctx.state.btnVal - 1]
                 if (abstract)
-                    ctx.reply(abstract.telegraph_url, getAbstractMarkup(abstract.telegraph_url, abstract.name))
+                    ctx.reply(abstract.telegraph_url, getAbstractMarkup(abstract._id))
                 else return ctx.reply('Лекции под таким номером нет')
             }
 
