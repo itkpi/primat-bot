@@ -39,7 +39,7 @@ module.exports = Router => {
         ])
             .then(([abstract, browser]) => Promise.all([abstract, browser, browser.newPage()]))
             .then(([abstract, browser, page]) => Promise.all([
-                    `${__dirname}/../public/${abstract.name.substr(0, 45).replace(/\//g, '')}.pdf`,
+                    `${__dirname}/../public/${abstract.name.substr(0, 40).replace(/\//g, '')}.pdf`,
                     browser,
                     page,
                     page.goto(abstract.telegraph_url, { waitUntil: 'networkidle2' })
