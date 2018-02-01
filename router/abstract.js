@@ -1,5 +1,13 @@
-const { Markup } = require('telegraf'),
-    Abstract = require('../models/abstract')
+const Abstract = require('../models/abstract'),
+    { bot, ph, request } = require('../modules/utils'),
+    fs = require('fs'),
+
+    puppeteer = require('puppeteer'),
+
+    { telegram } = require('../modules/utils').bot,
+
+    Telegraf = require('telegraf'),
+    { Markup, Extra } = Telegraf
 
 module.exports = Router => {
     const router = Router(
@@ -7,6 +15,43 @@ module.exports = Router => {
         ctx => ctx.message.text !== config.btns.abstracts && !ctx.session.abstract,
         ctx => (ctx.session.abstract && ctx.session.abstract.nextCondition) || 'abstract'
     )
+
+    const loadLecture = new Telegraf.Router(ctx => {
+        if (!ctx.callbackQuery.data) return
+
+        const { url, name } = JSON.parse(ctx.callbackQuery.data)
+        return { route: 'load', state: { url, name } }
+    })
+
+    loadLecture.on('load', async ctx => {
+        try {
+            const browser = await puppeteer.launch()
+            const page = await browser.newPage()
+
+            const { url, name } = ctx.state
+            await page.goto(url, { waitUntil: 'networkidle2' })
+
+            const path = `${__dirname}/../public/${name}.pdf`
+            await page.pdf({ path })
+
+            await request({
+                method: 'POST',
+                url: `${telegram.options.apiRoot}/bot${telegram.token}/sendDocument`,
+                formData: {
+                    chat_id: ctx.from.id,
+                    document: fs.createReadStream(path)
+                }
+            })
+
+            fs.unlinkSync(path)
+            await browser.close()
+
+            return ctx.answerCbQuery('Читай на здоровье!')
+        } catch(e) {
+            console.error(e)
+            return ctx.answerCbQuery('Ошибочка :c', true)
+        }
+    })
 
     router.on('abstract', async ctx => {
         try {
@@ -90,6 +135,9 @@ module.exports = Router => {
             })
             .sort({ date: 1 })
 
+            const getAbstractMarkup = (url, name) => 
+                Extra.markup(m => m.inlineKeyboard([m.callbackButton('Завантажити в pdf', JSON.stringify({ url, name }))]))
+
             if (ctx.state.btnVal === 'Все') {
                 // sendMessages(ctx, abstracts.map(i => i.telegraph_url))
                 //     .then(() => console.log("All messages sent, in series!"))
@@ -100,12 +148,13 @@ module.exports = Router => {
                 //     chain = chain.then(ctx.reply(abstract.telegraph_url))
 
                 let timer = 100
-                abstracts.forEach(i =>
-                    setTimeout(ctx.reply, (timer += 100), i.telegraph_url)
+                abstracts.forEach(abstract =>
+                    setTimeout(ctx.reply, (timer += 100), abstract.telegraph_url, getAbstractMarkup(abstract.telegraph_url, abstract.name))
                 )
             } else {
-                if (abstracts[ctx.state.btnVal - 1])
-                    ctx.reply(abstracts[ctx.state.btnVal - 1].telegraph_url)
+                const abstract = abstracts[ctx.state.btnVal - 1]
+                if (abstract)
+                    ctx.reply(abstract.telegraph_url, getAbstractMarkup(abstract.telegraph_url, abstract.name))
                 else return ctx.reply('Лекции под таким номером нет')
             }
 
@@ -119,6 +168,8 @@ module.exports = Router => {
             return ctx.state.error(e)
         }
     })
+
+    bot.on('callback_query', loadLecture)
 
     return router.middleware()
 }

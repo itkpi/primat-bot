@@ -10,6 +10,7 @@ const Schema = mongoose.Schema,
         author: { type: String, required: true },
         authorId: { type: String, required: true },
         text: String,
+        source: String,
         telegraph_url: { type: String, required: true},
         telegraph_path: { type: String, required: true },
         telegraph_title: { type: String, required: true },
@@ -19,16 +20,18 @@ const Schema = mongoose.Schema,
         date: { type: Date, default: Date.now }
     })
 
-Abstract.post('save', async ({ flow, course, authorId, author, subject, telegraph_url }) => {
-    const msg = `${author} сохранил лекцию по предмету ${subject}\n${telegraph_url}\n(/unsub чтобы отписаться)`,
-      users = await User.find({
-        flow,
-        course, 
-        $or: [{ unsubscriber: {$exists: false} }, { unsubscriber: false }],
-        tgId: { $ne: authorId }
-      })
+if (process.env.STATUS === 'prod') {
+    Abstract.post('save', async ({ flow, course, authorId, author, subject, telegraph_url }) => {
+        const msg = `${author} сохранил лекцию по предмету ${subject}\n${telegraph_url}\n(/unsub чтобы отписаться)`,
+          users = await User.find({
+            flow,
+            course, 
+            $or: [{ unsubscriber: {$exists: false} }, { unsubscriber: false }],
+            tgId: { $ne: authorId }
+          })
 
-    users.forEach(({ tgId }) => telegram.sendMessage(tgId, msg))
-})
+        users.forEach(({ tgId }) => telegram.sendMessage(tgId, msg))
+    })
+}
 
 module.exports = mongoose.model('Abstract', Abstract)

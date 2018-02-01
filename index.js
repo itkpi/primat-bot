@@ -13,6 +13,8 @@ const express = require('express'),
       app = express(),
       port = process.env.PORT || 3210
 
+app.use(express.static('./public'))
+
 app.use((req, res, next) => {
   if ([`/bot${process.env.BOT_TOKEN}`, '/'].includes(req.url))
     return next()

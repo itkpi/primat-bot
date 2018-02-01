@@ -15,12 +15,12 @@ const Telegraf = require('telegraf'),
       })
 
 
-const upload   = require('./cabinet/upload')(ph, picasa),
-      photo    = require('./cabinet/photo')(ph, picasa),
-      cabinet  = require('./cabinet')(Router),
-      registry = require('./registry')(Router),
+const registry = require('./registry')(Router),
       schedule = require('./schedule')(Router),
       abstract = require('./abstract')(Router),
+      cabinet  = require('./cabinet')(Router),
+      upload   = require('./cabinet/upload'),
+      photo    = require('./cabinet/photo'),
       timeleft = require('./timeleft')
 
 module.exports = () => {
