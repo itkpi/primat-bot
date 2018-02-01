@@ -11,7 +11,7 @@ const Telegraf = require('telegraf'),
           ) return Promise.resolve()
 
         console.log(ctx.session)
-        console.log(ctx.message)
+        console.log(ctx.message.text)
         ctx.state.btnVal = ctx.message.text
         return Promise.resolve({ route: route(ctx) })
       })

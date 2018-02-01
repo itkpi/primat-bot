@@ -56,6 +56,8 @@ module.exports = Router => {
     })
 
     router.on('abstract', async ctx => {
+        console.log('eee')
+        console.log(ctx.session)
         try {
             const subjects = await Abstract.distinct('subject', {
                 course: ctx.session.course,
