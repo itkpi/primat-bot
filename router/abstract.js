@@ -5,7 +5,6 @@ const Abstract = require('../models/abstract'),
     util = require('util'),
 
     unlink = util.promisify(fs.unlink),
-
     { telegram } = require('../modules/utils').bot,
 
     Telegraf = require('telegraf'),
