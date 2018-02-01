@@ -39,8 +39,11 @@ module.exports = () => {
           ctx.session.semester = currSem()
           ctx.state.clearRoutes()
           ctx.state.saveSession()
-          return ctx.reply('Ой, я был занят обновлением твоей сессии и пропустил команду. ' +
-            'Повтори, пожалуйста', ctx.state.homeMarkup)
+
+          const msg = 'Ой, я был занят обновлением твоей сессии и пропустил команду. ' +
+                      'Повтори, пожалуйста'
+          console.log(msg)
+          return ctx.reply(msg, ctx.state.homeMarkup)
         } else start(ctx)
       } catch(e) {
         return ctx.state.error(e)
