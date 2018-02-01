@@ -21,7 +21,7 @@ async function createPage(ctx, name, page, source, photos = []) {
   }
   const response = await ph.createPage(ctx.session.user.telegraph_token, name, page, { return_content: true })
   
-  // if (process.env.STATUS === 'prod') {
+  if (process.env.STATUS === 'prod') {
     const { subject } = ctx.session.cabinet,
           { course, flow, username: author = ctx.from.id } = ctx.session.user,
           semester = currSem(),
@@ -44,7 +44,7 @@ async function createPage(ctx, name, page, source, photos = []) {
     console.log(
       `${author || ctx.from.id} has saved new lecture [${flow}, ${course} course, ${semester} semester]: ${subject} | ${name}`
     )
-  // }
+  }
 
   return response
 }
@@ -57,11 +57,6 @@ function parse(text) {
         page         = convert(numObj)(parsed.childNodes),
         source       = serialize(parsed),
         photosAmount = numObj.num - 1
-
-  // const test = pparse(text)
-  // console.log(test)
-  // console.log(serialize(test))
-  // console.log(serialize(source))
 
   return { lectureName, page, photosAmount, source }
 }

@@ -42,7 +42,6 @@ module.exports = () => {
 
           const msg = 'Ой, я был занят обновлением твоей сессии и пропустил команду. ' +
                       'Повтори, пожалуйста'
-          console.log(msg)
           return ctx.reply(msg, ctx.state.homeMarkup)
         } else start(ctx)
       } catch(e) {

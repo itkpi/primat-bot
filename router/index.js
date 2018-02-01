@@ -10,8 +10,6 @@ const Telegraf = require('telegraf'),
                               .length !== 0
           ) return Promise.resolve()
 
-        console.log(ctx.session)
-        console.log(ctx.message.text)
         ctx.state.btnVal = ctx.message.text
         return Promise.resolve({ route: route(ctx) })
       })
