@@ -14,7 +14,7 @@ module.exports = async ctx => {
           { page, photosAmount, lectureName, source } = parse(response.body)
 
     if (photosAmount > 0) {
-      const picasaToken = await getAccessToken(picasa)
+      const picasaToken = await getAccessToken()
 
       ctx.session.cabinet = {
         page,
@@ -45,7 +45,7 @@ module.exports = async ctx => {
   ctx.state.saveSession()
 }
 
-function getAccessToken(picasa) {
+function getAccessToken() {
   return new Promise((resolve, reject) => {
     const params = {
       clientId: process.env.GOOGLE_CLIENT_ID,

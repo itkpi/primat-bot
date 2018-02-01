@@ -45,6 +45,12 @@ module.exports = () => {
         return ctx.state.error(e)
       }
     } else {
+      const { username } = ctx.from
+      if (ctx.session.user.username !== username) {
+        User.findOneAndUpdate({ tgId: ctx.from.id }, { username })
+        ctx.session.user.username = username
+        ctx.state.saveSession()
+      }
       next()
     }
   })
