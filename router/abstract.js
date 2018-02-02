@@ -103,7 +103,7 @@ module.exports = Router => {
 
             if (abstracts.length !== 0) {
                 const getAbstractMarkup = id =>
-                    Extra.markup(m => m.inlineKeyboard([m.callbackButton('Завантажити в pdf', id)]))
+                    Extra.markup(m => m.inlineKeyboard([m.callbackButton('Загрузить в pdf', id)]))
 
                 let timer = 0
                 abstracts.forEach(abstract =>
@@ -149,13 +149,16 @@ module.exports = Router => {
                 ])
             )
             .then(([path, browser, page, msg]) => Promise.all([
+                    path, browser, msg, page.pdf({ path, format: 'A4' })
+                ])
+            )
+            .then(([path, browser, msg]) => Promise.all([
                     path,
-                    browser,
-                    page.pdf({ path, format: 'A4' }),
+                    browser.close(),
+                    sendPdf(ctx.from.id, path),
                     ctx.telegram.deleteMessage(msg.chat.id, msg.message_id)
                 ])
             )
-            .then(([path, browser]) => Promise.all([path, browser.close(), sendPdf(ctx.from.id, path),]))
             .then(([path]) => Promise.all([unlink(path), ctx.answerCbQuery('Читай на здоровье!')]))
             .catch(e => {
                 console.error(e)

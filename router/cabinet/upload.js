@@ -1,6 +1,16 @@
 const { createPage, parse } = require('../../modules/telegraph'),
       { request, picasa } = require('../../modules/utils')
 
+const getAccessToken = () => new Promise((resolve, reject) => {
+    const params = {
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET
+    }
+
+    picasa.renewAccessToken(params, process.env.PICASA_REFRESH_TOKEN, 
+      (err, token) => err ? reject(err) : resolve(token))
+  })
+
 module.exports = async ctx => {
   if (!ctx.session.cabinet || ctx.session.cabinet.nextCondition !== 'upload')
     return
@@ -43,16 +53,4 @@ module.exports = async ctx => {
   }
 
   ctx.state.saveSession()
-}
-
-function getAccessToken() {
-  return new Promise((resolve, reject) => {
-    const params = {
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET
-    }
-
-    picasa.renewAccessToken(params, process.env.PICASA_REFRESH_TOKEN, 
-      (err, token) => err ? reject(err) : resolve(token))
-  })
 }

@@ -81,7 +81,7 @@ router.get('/abstracts/:id?', async (req, res) => {
     ]).sort({ date: 1 })
 
     if (!abstracts)
-      return res.status(404).json({ data: null })
+      return res.json({ data: null })
 
     const data = abstracts.reduce((data, lecture) => {
       if (!data[lecture.subject])
