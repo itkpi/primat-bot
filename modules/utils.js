@@ -7,5 +7,5 @@ const Telegraf = require('telegraf'),
       bot = new Telegraf(process.env.BOT_TOKEN),
       ph = new Telegraph(),
       picasa = new Picasa()
-bot.webhookReply = false
+
 module.exports = { request, bot, ph, picasa }

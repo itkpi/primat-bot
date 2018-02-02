@@ -133,6 +133,7 @@ module.exports = Router => {
             return request({ method, url, formData })
         }
 
+        bot.webhookReply = false // to get result of reply msg
         // promises instead of async/awaits for perfomance increase (parallel operations)
         Promise.all([
             Abstract.findById(ctx.callbackQuery.data, { telegraph_url: 1, name: 1 }),
@@ -145,7 +146,8 @@ module.exports = Router => {
                     browser,
                     page,
                     msg,
-                    page.goto(abstract.telegraph_url, { waitUntil: 'networkidle2' })
+                    page.goto(abstract.telegraph_url, { waitUntil: 'networkidle2' }),
+                    () => bot.webhookReply = true
                 ])
             )
             .then(([path, browser, page, msg]) => Promise.all([
