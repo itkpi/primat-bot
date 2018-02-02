@@ -152,12 +152,15 @@ module.exports = Router => {
                     path, browser, msg, page.pdf({ path, format: 'A4' })
                 ])
             )
-            .then(([path, browser, msg]) => Promise.all([
+            .then(([path, browser, msg]) => {
+                console.log(msg)
+                return Promise.all([
                     path,
                     browser.close(),
                     sendPdf(ctx.from.id, path),
                     ctx.telegram.deleteMessage(msg.chat.id, msg.message_id)
                 ])
+                }
             )
             .then(([path]) => Promise.all([unlink(path), ctx.answerCbQuery('Читай на здоровье!')]))
             .catch(e => {
