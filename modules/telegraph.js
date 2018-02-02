@@ -4,16 +4,14 @@ const { parseFragment, serialize, parse: pparse } = require('parse5'),
       currSem = require('../modules/curr-sem'),
       { ph } = require('../modules/utils'),
 
-      getReg = num => new RegExp(`[${num}]`, 'g'),
-      replaceString = process.env.REPLACE_STRING
+      getReg = num => new RegExp(`[${num}]`, 'g')
 
 
 async function createPage(ctx, name, page, source, photos = []) {
-  console.log(source)
   if (photos.length > 0) {
     const putPhotos = (input, photos) => 
       JSON.parse(photos.reduce((acc, link, indx) => 
-        acc.replace(`${indx + 1}${replaceString}`, link), JSON.stringify(input))
+        acc.replace(`${indx + 1}${process.env.REPLACE_STRING}`, link), JSON.stringify(input))
       )
     
     page = putPhotos(page, photos)
@@ -41,9 +39,6 @@ async function createPage(ctx, name, page, source, photos = []) {
           })
 
     abstract.save()
-    console.log(
-      `${author || ctx.from.id} has saved new lecture [${flow}, ${course} course, ${semester} semester]: ${subject} | ${name}`
-    )
   }
 
   return response

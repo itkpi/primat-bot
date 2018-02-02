@@ -21,15 +21,19 @@ const Schema = mongoose.Schema,
     })
 
 if (process.env.STATUS === 'prod') {
-    Abstract.post('save', async ({ flow, course, authorId, author, subject, telegraph_url }) => {
-        const msg = `${author} сохранил лекцию по предмету ${subject}\n${telegraph_url}\n(/unsub чтобы отписаться)`,
-          users = await User.find({
+    Abstract.post('save', async ({ flow, course, authorId, author, subject, telegraph_url, name }) => {
+        console.log(
+          `${author || authorId} has saved new lecture [${flow}, ${course} course, ${semester} semester]: ${subject} | ${name}`
+        )
+
+        const users = await User.find({
             flow,
             course, 
             $or: [{ unsubscriber: {$exists: false} }, { unsubscriber: false }],
             tgId: { $ne: authorId }
           })
 
+        const msg = `${author} сохранил лекцию по предмету ${subject}\n${telegraph_url}\n(/unsub чтобы отписаться)`
         users.forEach(({ tgId }) => telegram.sendMessage(tgId, msg))
     })
 }

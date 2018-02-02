@@ -55,9 +55,7 @@ module.exports = Router => {
         return ctx.replyWithHTML(getTimeSch(), ctx.state.homeMarkup)        
       }
 
-      // const query = getScheduleQuery(ctx, day, week),
       const lessons = await getLessons(ctx, day, week)
-
       if (lessons)
         ctx.replyWithHTML(lessons, ctx.state.homeMarkup)
       else
