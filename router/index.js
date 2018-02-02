@@ -16,7 +16,7 @@ const Telegraf = require('telegraf'),
 
 
 const registry = require('./registry')(Router),
-      schedule = require('./schedule')(Router),
+      schedule = require('./schedule_test')(Router),
       abstract = require('./abstract')(Router),
       cabinet  = require('./cabinet')(Router),
       upload   = require('./cabinet/upload'),

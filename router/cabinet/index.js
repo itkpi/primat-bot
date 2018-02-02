@@ -1,6 +1,6 @@
 const { Markup } = require('telegraf'),
-        validGroup = require('../../modules/valid-group'),
-        getGroupId = require('../../modules/group-id'),
+        // validGroup = require('../../modules/valid-group'),
+        parseGroup = require('../../modules/parse-group'),
         { request } = require('../../modules/utils'),
         Teacher = require('../../models/teacher')
 
@@ -112,31 +112,42 @@ module.exports = Router => {
     router.on('changeGroup', async ctx => {
         if (ctx.state.btnVal === 'Назад') {
             ctx.session.cabinet = null
+            ctx.state.saveSession()
             ctx.reply('В другой раз', ctx.state.homeMarkup)
         } else {
             const group = ctx.message.text.trim().toLowerCase(),
-                groupInfo = await validGroup(group),
-                { groupHubId } = groupInfo.values
+                groupData = await parseGroup(group)
 
-            if (groupInfo.who !== 'kpi' && groupInfo.who !== 'primat') {
-                return ctx.reply('Впервые вижу такую группу. Попробуй еще')
+            if (!groupData)
+                return ctx.reply('Не знаю такой группы, попробуй по-другому')
+
+            if (Array.isArray(groupData)) {
+                const answer = groupData.reduce(
+                    (acc, group) => acc + `${group.group_full_name}\n`,
+                        'Я не нашел этой группы, но попробуй кое-что похожее:\n'
+                    )
+
+                return ctx.reply(answer)
             }
 
-            if (Array.isArray(groupHubId)) {
-              const msg = groupHubId.reduce((acc, val) => {
-                acc += `${val.name}\n`
-                return acc
-              }, 'Я не нашел конкретной группы, но попробуй кое-что похожее:\n')
-              return ctx.reply(msg)
+            if (!groupData.course) {
+                const user = await User.findOne({ group })
+                if (user && user.course) {
+                    groupData.course = user.course
+                } else {
+                    ctx.session = Object.assign({}, groupData)
+                    ctx.session.registry = Object.assign({}, userData, groupData, { nextCondition: 'course' })
+                    ctx.state.saveSession()
+
+                    return ctx.reply('Оке, но не могу разобрать... Можешь сказать номер курса?',
+                            Markup.keyboard([' ']).resize().extra()
+                        )
+                }
             }
 
-            ctx.session.cabinet = null
-            Object.assign(ctx.session, groupInfo.values)
-            const answer = groupHubId ? 'Все готово'
-                                      : 'Добро пожаловать, но расписания по этой группе нет :c'
-            ctx.reply(answer, ctx.state.homeMarkup)
+            ctx.session = Object.assign({}, ctx.session, groupData)
+            return ctx.state.home('Все готово')
         }
-        ctx.state.saveSession()
     })
 
     router.on('subject', ctx => {

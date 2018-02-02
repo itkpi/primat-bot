@@ -15,9 +15,15 @@ module.exports = session => (ctx, next) => {
     ctx.state.saveSession()
   }
 
+  ctx.state.home = msg => {
+    config.routes.forEach(route => ctx.session[route] = null)
+    ctx.state.saveSession()
+    ctx.reply(msg, ctx.state.homeMarkup)
+  }
+
   ctx.state.error = e => {
     ctx.state.clearRoutes()
-    ctx.reply('Ой, что-то пошло не так :c', ctx.state.homeMarkup)
+    ctx.reply('Ой, что-то пошло не так :c', ctx.session.user ? ctx.state.homeMarkup : null)
     console.error(e)
   }
 

@@ -9,18 +9,18 @@ const mongoose = require('../modules/mongoose'),
       required: true,
       unique: true
     },
-    username: {
-      type: String
-    },
+    username: String,
     group: {
       type: String,
       lowercase: true,
-      match: /^[А-яіє]{2,4}-[А-яіє]{0,2}[0-9]{2,3}[А-яіє]?\(?[А-яіє]*\)?\.?$/i,
+      // match: /^[А-яіє]{2,4}-[А-яіє]{0,2}[0-9]{2,3}[А-яіє]?\(?[А-яіє]*\)?\.?$/i,
       trim: true
     },
-    groupHubId: {
-      type: Number
-    },
+    groupHubId: Number,
+    rGroupId: Number,
+    groupOkr: String,
+    groupType: String,
+    groupScheduleUrl: String,
     flow: {
       type: String,
       lowercase: true,
@@ -34,14 +34,11 @@ const mongoose = require('../modules/mongoose'),
     },
     date: {
       type: Date,
-      required: true
+      required: true,
+      default: Date.now
     },
-    telegraph_token: {
-      type: String
-    },
-    telegraph_authurl: {
-      type: String
-    },
+    telegraph_token: String,
+    telegraph_authurl: String,
     telegraph_user: Boolean,
     unsubscriber: Boolean
   })

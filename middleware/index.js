@@ -45,10 +45,12 @@ module.exports = () => {
         return ctx.state.error(e)
       }
     } else {
-      const { username } = ctx.from
-      if (ctx.session.user.username !== username) {
-        User.findOneAndUpdate({ tgId: ctx.from.id }, { username })
-        ctx.session.user.username = username
+      const { username: originUsername } = ctx.from,
+            { user } = ctx.session
+      if (user && user.username !== originUsername) {
+        User.findOneAndUpdate({ tgId: ctx.from.id }, { originUsername })
+        user.username = originUsername
+        // console.log(ctx.session)
         ctx.state.saveSession()
       }
       next()
