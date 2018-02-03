@@ -21,12 +21,12 @@ module.exports = session => (ctx, next) => {
   }
   ctx.state.homeWithHTML = msg => {
     console.log(msg)
-    ctx.state.clearRoutes()
     ctx.replyWithHTML(msg, ctx.state.homeMarkup)
       .then(res => {
         console.log(res)
       })
       .catch(console.error)
+    ctx.state.clearRoutes()
   }
 
   ctx.state.error = e => {
