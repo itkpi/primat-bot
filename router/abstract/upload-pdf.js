@@ -16,7 +16,7 @@ module.exports = async ctx => {
     return request({ method, url, formData })
   }
 
-  ctx.webhookReply = false // to get result of reply msg
+  // ctx.webhookReply = false // to get result of reply msg
 
   // promises instead of async/awaits for perfomance increase (parallel operations)
   Promise.all([

@@ -4,7 +4,7 @@ const Telegraf = require('telegraf'),
       util = require('util')
 
 exports.request = util.promisify(require('request'))
-exports.bot = new Telegraf(process.env.BOT_TOKEN)
+exports.bot = new Telegraf(process.env.BOT_TOKEN, { webhookReply: false })
 exports.ph = new Telegraph()
 exports.picasa = new Picasa()
 exports.Router = (name, invalid, route) => new Telegraf.Router(ctx => {

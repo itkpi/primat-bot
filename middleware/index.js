@@ -39,7 +39,7 @@ module.exports = () => {
           ctx.session.semester = currSem()
           ctx.state.clearRoutes()
           ctx.state.saveSession()
-          return ctx.reply('Ой, засмотрелся. Повтори, пожалуйста', ctx.state.homeMarkup)
+          return ctx.state.home('Ой, засмотрелся. Повтори, пожалуйста')
         } else start(ctx)
       } catch(e) {
         return ctx.state.error(e)
