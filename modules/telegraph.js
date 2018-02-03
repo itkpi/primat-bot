@@ -68,7 +68,7 @@ function convert(numObj) {
       src = node.attrs.find(i => i.name === 'src')
 
       if (src.value.match(reg)) {
-        node.attrs.find(i => i.name === 'src').value = `${numObj.num++}${replaceString}`
+        node.attrs.find(i => i.name === 'src').value = `${numObj.num++}${process.env.REPLACE_STRING}`
       }
     }
 
