@@ -1,5 +1,6 @@
 const { bot, request, ph } = require('../modules/utils'),
       getFlows = require('../modules/groups-collector'),
+      currSem = require('../modules/curr-sem'),
       KpiInfo = require('../models/kpi-info'),
       User = require('../models/user'),
 
@@ -122,6 +123,8 @@ module.exports = () => {
       if (user) {
         ctx.session.user = user
         ctx.state.clearRoutes()
+        config.session_fields.forEach(field => ctx.session[field] = user[field])
+        ctx.session.semester = currSem()
         ctx.state.saveSession()
         return ctx.reply('Оп, обновил', ctx.state.homeMarkup)
       }

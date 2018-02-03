@@ -1,11 +1,11 @@
 const group = require('./group'),
-      course = require('./course')
+      course = require('./course'),
 
-module.exports = Router => {
-  const router = Router('registry', ctx => !ctx.session.registry, ctx => ctx.session.registry.nextCondition)
+      { Router } = require('../../modules/utils')
 
-  router.on('group', group)
-  router.on('course', course)
+const router = Router('registry', ctx => !ctx.session.registry, ctx => ctx.session.registry.nextCondition)
 
-  return router.middleware()
-}
+router.on('group', group)
+router.on('course', course)
+
+module.exports = router.middleware()

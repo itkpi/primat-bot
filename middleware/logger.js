@@ -10,8 +10,8 @@ module.exports = (ctx, next) => {
                       ? ctx.message.text.slice(3)
                       : ctx.message.text ? ctx.message.text : 'or uploaded smth'
 
-    console.log(`${username || tgId}${group ? `, ${group}` : ''}: ${usrTxt}` + 
-      `${route ? ` [${route} |> ${ctx.session[route].nextCondition} -> ${usrTxt}]` : ''}`)
+    console.log(`${username || tgId}${group ? `, ${group}` : ''}: ${route ? '' : usrTxt}` + 
+      `${route ? `[${route} |> ${ctx.session[route].nextCondition} -> ${usrTxt}]` : ''}`)
   }
 
   next()  

@@ -16,9 +16,12 @@ module.exports = session => (ctx, next) => {
   }
 
   ctx.state.home = msg => {
-    config.routes.forEach(route => ctx.session[route] = null)
-    ctx.state.saveSession()
+    ctx.state.clearRoutes()
     ctx.reply(msg, ctx.state.homeMarkup)
+  }
+  ctx.state.homeWithHTML = msg => {
+    ctx.state.clearRoutes()
+    ctx.replyWithHTML(msg, ctx.state.homeMarkup)
   }
 
   ctx.state.error = e => {

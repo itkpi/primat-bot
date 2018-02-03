@@ -1,27 +1,12 @@
-const Telegraf = require('telegraf'),
-      Picasa = require('picasa'),
-      { bot, ph } = require('../modules/utils'),
+const { bot } = require('../modules/utils'),
 
-      picasa = new Picasa(),
-      
-      Router = (name, invalid, route) => new Telegraf.Router(ctx => {
-        if (invalid(ctx) || config.routes
-                              .filter(route => ctx.session[route] && route !== name)
-                              .length !== 0
-          ) return Promise.resolve()
-
-        ctx.state.btnVal = ctx.message.text
-        return Promise.resolve({ route: route(ctx) })
-      })
-
-
-const registry = require('./registry')(Router),
-      schedule = require('./schedule_test')(Router),
-      abstract = require('./abstract')(Router),
-      cabinet  = require('./cabinet')(Router),
-      upload   = require('./cabinet/upload'),
+      registry = require('./registry'),
+      schedule = require('./schedule'),
+      abstract = require('./abstract'),
+      timeleft = require('./timeleft'),
+      cabinet  = require('./cabinet'),
       photo    = require('./cabinet/photo'),
-      timeleft = require('./timeleft')
+      upload   = require('./cabinet/upload')
 
 module.exports = () => {
   bot.on('text', registry, schedule, abstract, cabinet)
