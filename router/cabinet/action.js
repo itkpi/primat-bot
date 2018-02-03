@@ -107,6 +107,5 @@ async function getSubjects(groupId) {
     }
   }))
 
-  console.log(subjects)
   return subjects
 }

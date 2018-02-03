@@ -50,7 +50,6 @@ module.exports = () => {
       if (user && user.username !== originUsername) {
         User.findOneAndUpdate({ tgId: ctx.from.id }, { originUsername })
         user.username = originUsername
-        // console.log(ctx.session)
         ctx.state.saveSession()
       }
       next()
