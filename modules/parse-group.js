@@ -22,7 +22,7 @@ module.exports = async group => {
     rGroup = possibleGroups[0]
   }
 
-  const res = {
+  return {
     rGroupId: rGroup.group_id,
     group: rGroup.group_full_name,
     flow: rGroup.group_prefix,
@@ -32,8 +32,6 @@ module.exports = async group => {
     semester: currSem(),
     course: getCourse(rGroup.group_full_name)
   }
-  
-  return res
 }
 
 function getCourse(group) {
