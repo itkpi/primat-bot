@@ -19,7 +19,6 @@ class Rozklad {
 
       const url = encodeURI(`${this.apiRoot}${path}/?${params}`),
             { body } = await request(url)
-      console.log(body)
       return JSON.parse(body).data
     }
   }

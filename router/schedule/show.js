@@ -50,6 +50,7 @@ async function getLessons(id, value) {
   }
 
   const lessons = await r.lessons(id, cases[value])
+  console.log(lessons)
   return lessons && parseLessons(lessons)
 }
 
