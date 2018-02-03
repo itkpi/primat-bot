@@ -1,6 +1,6 @@
 const Telegraf = require('telegraf'),
       { cabinet, schedule, abstracts, timeleft } = config.btns,
-      { bot } = require('modules/utils')
+      { bot } = require('./modules/utils')
 
 module.exports = session => (ctx, next) => {
   ctx.state.homeMarkup = Telegraf.Markup
