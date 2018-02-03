@@ -26,6 +26,8 @@ module.exports = session => (ctx, next) => {
       .then(() => bot.startPolling())
       .then(() => {
         ctx.replyWithHTML(msg, ctx.state.homeMarkup)
+          .then(console.log)
+          .catch(console.error)
         ctx.state.clearRoutes() 
       })
       .catch(console.error)
