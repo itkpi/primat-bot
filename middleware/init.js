@@ -22,15 +22,16 @@ module.exports = session => (ctx, next) => {
   }
   ctx.state.homeWithHTML = msg => {
     console.log(msg)
-    bot.telegram.deleteWebhook()
-      .then(() => bot.startPolling())
-      .then(() => {
+    ctx.webhookReply = false
+    // bot.telegram.deleteWebhook()
+    //   .then(() => bot.startPolling())
+    //   .then(() => {
         ctx.replyWithHTML(msg, ctx.state.homeMarkup)
           .then(console.log)
           .catch(console.error)
         ctx.state.clearRoutes() 
-      })
-      .catch(console.error)
+      // })
+      // .catch(console.error)
     // ctx.replyWithHTML(msg, ctx.state.homeMarkup)
     //   .then(res => {
     //     console.log(res)
