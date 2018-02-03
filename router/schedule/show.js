@@ -49,7 +49,9 @@ async function getLessons(id, value) {
     'Следующая неделя': { lesson_week: nextWeek }
   }
 
-  const lessons = await r.lessons(id, cases[value])
+  const lessons = cases[value]
+    ? await r.lessons(id, cases[value])
+    : null
   return lessons && parseLessons(lessons)
 }
 
