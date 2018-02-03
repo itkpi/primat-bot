@@ -1,5 +1,6 @@
 const Telegraf = require('telegraf'),
-      { cabinet, schedule, abstracts, timeleft } = config.btns
+      { cabinet, schedule, abstracts, timeleft } = config.btns,
+      { bot } = require('modules/utils')
 
 module.exports = session => (ctx, next) => {
   ctx.state.homeMarkup = Telegraf.Markup
@@ -21,12 +22,19 @@ module.exports = session => (ctx, next) => {
   }
   ctx.state.homeWithHTML = msg => {
     console.log(msg)
-    ctx.replyWithHTML(msg, ctx.state.homeMarkup)
-      .then(res => {
-        console.log(res)
+    bot.telegram.deleteWebhook()
+      .then(() => bot.startPolling())
+      .then(() => {
+        ctx.replyWithHTML(msg, ctx.state.homeMarkup)
+        ctx.state.clearRoutes() 
       })
       .catch(console.error)
-    ctx.state.clearRoutes()
+    // ctx.replyWithHTML(msg, ctx.state.homeMarkup)
+    //   .then(res => {
+    //     console.log(res)
+    //   })
+    //   .catch(console.error)
+    // ctx.state.clearRoutes()
   }
 
   ctx.state.error = e => {
