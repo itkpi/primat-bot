@@ -4,7 +4,7 @@ const currSem = require('../../modules/curr-sem'),
 
 module.exports = async ctx => {
   if (!ctx.session.group)
-    return ctx.reply('Для начала выбери группу')
+    return ctx.reply('Для начала выбери группу в кабинете')
 
   if (currSem() !== ctx.session.semester)
     return ctx.reply(`Расписание за ${ctx.session.semester}-й семестр тебе вряд ли кто-то скажет, можешь сменить его`)
