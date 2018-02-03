@@ -20,6 +20,7 @@ module.exports = session => (ctx, next) => {
     ctx.reply(msg, ctx.state.homeMarkup)
   }
   ctx.state.homeWithHTML = msg => {
+    console.log(msg)
     ctx.state.clearRoutes()
     ctx.replyWithHTML(msg, ctx.state.homeMarkup)
   }

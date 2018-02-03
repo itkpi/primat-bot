@@ -10,7 +10,6 @@ module.exports = async ctx => {
 
   try {
     const lessons = await getLessons(ctx.session.rGroupId, ctx.state.btnVal)
-    console.log(lessons)
     return lessons
       ? ctx.state.homeWithHTML(lessons)
       : ctx.state.home('По-видимому, в это время пар у тебя нет. Отдыхай!')
