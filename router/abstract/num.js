@@ -22,10 +22,13 @@ module.exports = async ctx => {
       const getAbstractMarkup = id =>
         Extra.markup(m => m.inlineKeyboard([m.callbackButton('Загрузить в pdf', id)]))
 
-      let timer = 0
-      abstracts.forEach(abstract =>
-          setTimeout(ctx.reply, (timer += 100), abstract.telegraph_url, getAbstractMarkup(abstract._id))
-      )                
+      let chain = Promise.resolve()
+      for (let i = 0; i < abstracts.length; i++) {
+        const abstract = abstracts[i]
+        chain = chain.then(
+          () => ctx.reply(abstract.telegraph_url, getAbstractMarkup(abstract._id))
+        )
+      }
     } else
       return ctx.reply('Лекции под таким номером нет')
 
