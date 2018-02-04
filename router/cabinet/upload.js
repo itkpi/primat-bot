@@ -21,14 +21,13 @@ module.exports = async ctx => {
   try {
     const link = await ctx.telegram.getFileLink(ctx.message.document.file_id),
           response = await request(link),
-          { page, photosAmount, lectureName, source } = parse(response.body)
+          { page, photosAmount, lectureName } = parse(response.body)
 
     if (photosAmount > 0) {
       const picasaToken = await getAccessToken()
 
       ctx.session.cabinet = {
         page,
-        source,
         lectureName,
         picasaToken,
         photosAmount,
@@ -40,7 +39,7 @@ module.exports = async ctx => {
         `Вот их количество, которое я от тебя жду, чтобы вклеить все на свои места: `+
         `<b>${photosAmount}</b>`)
     } else {
-      const response = await createPage(ctx, lectureName, page, source)
+      const response = await createPage(ctx, lectureName, page)
       if (response) {
         ctx.reply(`Ты просто лучший! Только не забывай исправлять ошибки, вдруг что`)
         ctx.reply(response.url, ctx.state.homeMarkup)

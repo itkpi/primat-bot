@@ -7,7 +7,7 @@ const { parseFragment, serialize, parse: pparse } = require('parse5'),
       getReg = num => new RegExp(`[${num}]`, 'g')
 
 
-async function createPage(ctx, name, page, source, photos = []) {
+async function createPage(ctx, name, page, photos = []) {
   if (photos.length > 0) {
     const putPhotos = (input, photos) => 
       JSON.parse(photos.reduce((acc, link, indx) => 
@@ -15,7 +15,6 @@ async function createPage(ctx, name, page, source, photos = []) {
       )
     
     page = putPhotos(page, photos)
-    source = putPhotos(source, photos)
   }
   const response = await ph.createPage(ctx.session.user.telegraph_token, name, page, { return_content: true })
   
@@ -29,7 +28,6 @@ async function createPage(ctx, name, page, source, photos = []) {
             name,
             course,
             author,
-            source,
             subject,
             semester,
             authorId: ctx.from.id,
@@ -50,10 +48,9 @@ function parse(text) {
   const numObj       = { num: 1 }, // convert will modify it
         parsed       = parseFragment(text),
         page         = convert(numObj)(parsed.childNodes),
-        source       = serialize(parsed),
         photosAmount = numObj.num - 1
 
-  return { lectureName, page, photosAmount, source }
+  return { lectureName, page, photosAmount }
 }
 
 function convert(numObj) {
