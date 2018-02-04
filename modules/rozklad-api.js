@@ -42,7 +42,10 @@ class Rozklad {
   }
 
   async currWeek() {
-    return await this.r('weeks')
+    // wrong response
+    const week = await this.r('weeks'),
+          currWeek = week === 1 ? 2 : 1
+    return currWeek
   }
 }
 
