@@ -35,8 +35,8 @@ module.exports = async ctx => {
 
 
       if (!groupData.course) {
-        const user = await User.findOne({ group })
-        if (user && user.course) {
+        const user = await User.findOne({ group, course: { $exists: true } })
+        if (user) {
           groupData.course = user.course
         } else {
           ctx.session = Object.assign({}, groupData)
