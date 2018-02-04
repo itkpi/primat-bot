@@ -9,14 +9,15 @@ const Abstract = require('../../models/abstract'),
 module.exports = async ctx => {
   if (!ctx.callbackQuery.data) return
 
+  const { username, id } = ctx.from
+  console.log(`${username || id} is loading pdf. id: ${ctx.callbackQuery.data}`)
+
   const sendPdf = (chat_id, filePath) => {
     const method = 'POST'
     const url = `${telegram.options.apiRoot}/bot${telegram.token}/sendDocument`
     const formData = { chat_id, document: fs.createReadStream(filePath) }
     return request({ method, url, formData })
   }
-
-  // ctx.webhookReply = false // to get result of reply msg
 
   // promises instead of async/awaits for perfomance increase (parallel operations)
   Promise.all([
