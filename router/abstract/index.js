@@ -30,10 +30,8 @@ router.on('abstract', async ctx => {
         }).resize().extra()
       )
     } else {
-      ctx.session.abstract = null
-      ctx.reply(
-        'По твоему году и семестру совсем нет никаких лекций :c',
-        ctx.state.homeMarkup
+      ctx.state.home(
+        'По твоему году и семестру совсем нет никаких лекций :c'
       )
     }
 

@@ -20,8 +20,7 @@ module.exports = async ctx => {
 
         ctx.telegram.deleteMessage(msgInfo.chat.id, msgInfo.message_id)
         ctx.reply(`Ты просто лучший! Только не забывай исправлять ошибки, вдруг что`)
-        ctx.reply(response.url, ctx.state.homeMarkup)
-        ctx.session.cabinet = null
+        ctx.state.home(response.url)
     } else {
       ctx.replyWithHTML(`Оп, забрал. Еще не достает: <b>${amount}</b>`)
     }

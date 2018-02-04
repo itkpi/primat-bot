@@ -9,7 +9,7 @@ module.exports = async ctx => {
     const msg = 'Хей, мы ведь уже знакомы'
     console.log(`[start bot-msg] ${ctx.from.username}: ${msg}`)
 
-    return ctx.reply(msg, ctx.state.homeMarkup)
+    return ctx.state.home(msg)
   } else {
     const user = await User.findOne({ tgId: ctx.from.id })
     if (user) {

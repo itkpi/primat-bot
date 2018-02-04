@@ -76,8 +76,7 @@ module.exports = async ctx => {
       )
       break
     case 'Назад':
-      ctx.reply('Ну ладно', ctx.state.homeMarkup)
-      ctx.session.cabinet = null
+      ctx.state.home('Ну ладно')
       break
     default:
       ctx.reply('Выбери что-то')

@@ -32,12 +32,7 @@ module.exports = async ctx => {
     } else
       return ctx.reply('Лекции под таким номером нет')
 
-    ctx.session.abstract = null
-    ctx.state.saveSession()
-    ctx.reply(
-      'Держи, бро. Надеюсь, это тебе поможет не вылететь',
-      ctx.state.homeMarkup
-    )
+    ctx.state.home('Держи, бро. Надеюсь, это тебе поможет не вылететь')
   } catch (e) {
     return ctx.state.error(e)
   }
