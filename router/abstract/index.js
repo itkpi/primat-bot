@@ -5,7 +5,7 @@ const Abstract = require('../../models/abstract'),
       num = require('./num'),
       uploadPdf = require('./upload-pdf'),
 
-      { bot, Router } = require('../../modules/utils')
+      { bot, Router, callbackBtn } = require('../../modules/utils')
 
 const router = Router(
   'abstract',
@@ -44,6 +44,6 @@ router.on('abstract', async ctx => {
 router.on('subject', subject)
 router.on('num', num)
 
-bot.on('callback_query', uploadPdf)
+callbackBtn.on('download', uploadPdf)
 
 module.exports = router.middleware()
