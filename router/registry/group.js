@@ -33,13 +33,13 @@ module.exports = async ctx => {
         return ctx.reply(answer)
       }
 
+      ctx.session = groupData
 
       if (!groupData.course) {
         const user = await User.findOne({ group, course: { $exists: true } })
         if (user) {
           groupData.course = user.course
         } else {
-          ctx.session = Object.assign({}, groupData)
           ctx.session.registry = Object.assign({}, userData, groupData, { nextCondition: 'course' })
           ctx.state.saveSession()
 
@@ -49,12 +49,9 @@ module.exports = async ctx => {
         }
       }
 
-      ctx.session = Object.assign({}, ctx.session, groupData)
-
       const user = new User(Object.assign({}, userData, groupData))
       user.save()
       ctx.session.user = user
-      ctx.state.saveSession()
       
       const phrases = [
         'О, ты всего первый год, многого еще не знаешь',

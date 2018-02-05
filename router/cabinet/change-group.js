@@ -1,5 +1,6 @@
 const User = require('../../models/user'),
-      parseGroup = require('../../modules/parse-group')
+      parseGroup = require('../../modules/parse-group'),
+      { Markup } = require('telegraf')
 
 module.exports = async ctx => {
   if (ctx.state.btnVal === 'Домой') {
@@ -25,12 +26,13 @@ module.exports = async ctx => {
       if (user && user.course) {
         groupData.course = user.course
       } else {
-        ctx.session = Object.assign({}, groupData)
-        ctx.session.registry = Object.assign({}, userData, groupData, { nextCondition: 'course' })
+        ctx.session = Object.assign({}, ctx.session, groupData)
+        ctx.session.cabinet.nextCondition = 'course'
         ctx.state.saveSession()
 
-        return ctx.reply('Оке, но не могу разобрать... Можешь сказать номер курса?',
-              Markup.keyboard([' ']).resize().extra()
+        return ctx.reply(
+            'Оке, но не могу разобрать... Можешь сказать номер курса?',
+            { reply_markup: { remove_keyboard: true } }
           )
       }
     }

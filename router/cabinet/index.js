@@ -2,8 +2,9 @@ const { Markup } = require('telegraf'),
       { Router } = require('../../modules/utils'),
       changeGroup = require('./change-group'),
       subject = require('./subject'),
-      teacher = require('./teacher')
-      action = require('./action')
+      teacher = require('./teacher'),
+      action = require('./action'),
+      course = require('./course')
 
 const router = Router('cabinet',
   ctx => ctx.message.text !== config.btns.cabinet && !ctx.session.cabinet,
@@ -25,6 +26,7 @@ router.on('action', action)
 router.on('changeGroup', changeGroup)
 router.on('teacher', teacher)
 router.on('subject', subject)
+router.on('course', course)
 
 // this router triggers only when user has sent text message instead of document
 router.on('upload', ctx => {
