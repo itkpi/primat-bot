@@ -19,7 +19,6 @@ exports.Router = (name, invalid, route) => new Telegraf.Router(ctx => {
   })
 exports.callbackBtn = new Telegraf.Router(({ callbackQuery }) => {
   const { data } = callbackQuery
-  console.log(data)
   if (!data) return
 
   const [command, value] = data.split('|')
