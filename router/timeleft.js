@@ -10,7 +10,7 @@ module.exports = ctx => {
         month = date.getMonth() + 1,
         UTCshift = month > 3 && month < 11 ? 3 : 2,
 
-        timeNow = new Date(new Date().getTime() + UTCshift * 60 * 60 * 1000),
+        timeNow = new Date(date.getTime() + UTCshift * 60 * 60 * 1000),
         hours = timeNow.getUTCHours(),
         minutes = timeNow.getUTCMinutes(),
         curr = 60 * hours + minutes

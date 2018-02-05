@@ -17,19 +17,24 @@ class Rozklad {
       params = names.map(name => `${name}=${JSON.stringify(params[name])}`)
                     .join('&')
 
-      const url = encodeURI(`${this.apiRoot}${path}/?${params}`),
-            { body } = await request(url)
-      return JSON.parse(body).data
+      const url = encodeURI(`${this.apiRoot}${path}/?${params}`)
+      console.log(url)
+      const { body } = await request(url)
+      try {
+        return JSON.parse(body).data  
+      } catch(e) {
+        console.log(body)
+        console.log(e)
+        return null
+      }
     }
   }
 
   async group(arg) {
-    if (!arg)
-      throw new Error("Argument doesn't specified")
-
-    return typeof arg === 'object'
-      ? await this.r('groups', arg)
-      : await this.r(`groups/${arg}`)
+    return !arg ? await this.r('groups')
+      : typeof arg === 'object'
+        ? await this.r('groups', arg)
+        : await this.r(`groups/${arg}`)
   }
 
   async lessons(id, params) {
