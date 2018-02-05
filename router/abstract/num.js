@@ -20,7 +20,7 @@ module.exports = async ctx => {
 
     if (abstracts.length !== 0) {
       const getAbstractMarkup = id =>
-        Extra.markup(m => m.inlineKeyboard([m.callbackButton('Загрузить в pdf', id)]))
+        Extra.markup(m => m.inlineKeyboard([m.callbackButton('Загрузить в pdf', `download|${id}`)]))
 
       let chain = Promise.resolve()
       for (let i = 0; i < abstracts.length; i++) {

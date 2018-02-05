@@ -1,4 +1,5 @@
-const { r } = require('../../modules/utils')
+const { r } = require('../../modules/utils'),
+      { Extra, Router } = require('telegraf')
 
 module.exports = async ctx => {
   if (ctx.state.btnVal === 'Отмена')
@@ -10,9 +11,19 @@ module.exports = async ctx => {
 
   try {
     const lessons = await getLessons(ctx.session.rGroupId, ctx.state.btnVal)
-    return lessons
-      ? ctx.state.homeWithHTML(lessons)
-      : ctx.state.home('По-видимому, в это время пар у тебя нет. Отдыхай!')
+    const getLessonsMarkup = nums => 
+            Extra.markup(m => m.inlineKeyboard(
+                nums.sort().map(num => m.callbackButton(num, `location|${num}`))))
+
+
+    if (lessons) {
+      await ctx.state.homeWithHTML(lessons.answer)
+      if (lessons.buildings.length > 0) {
+        ctx.reply('Посмотреть местоположение корпуса №', getLessonsMarkup(lessons.buildings))
+      }
+    } else {
+      ctx.state.home('По-видимому, в это время пар у тебя нет. Отдыхай!')
+    }
   } catch(e) {
     ctx.state.error(e)
   }
@@ -69,6 +80,11 @@ function parseLessons(lessons) {
     acc.answer += `<b>${lesson.lesson_number}</b>| ${lesson.lesson_name}\n`
 
     const { lesson_room, teacher_name, lesson_type } = lesson
+    if (lesson_room) {
+      const building = lesson_room.split('-')[1]
+      if (!acc.buildings.includes(building))
+        acc.buildings.push(building)
+    }
 
     let secondLine = ''
     if (lesson_room)
@@ -84,5 +100,5 @@ function parseLessons(lessons) {
 
     acc.answer += `${secondLine}\n`
     return acc
-  }, { day: null, answer: '', putWeek: true }).answer
+  }, { day: null, answer: '', putWeek: true, buildings: [] })
 }

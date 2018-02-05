@@ -19,3 +19,6 @@ exports.Router = (name, invalid, route) => new Telegraf.Router(ctx => {
 
 const RozkladApi = require('./rozklad-api')
 exports.r = new RozkladApi()
+
+const HubApi = require('./hub-api')
+exports.h = new HubApi()

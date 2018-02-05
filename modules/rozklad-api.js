@@ -18,13 +18,12 @@ class Rozklad {
                     .join('&')
 
       const url = encodeURI(`${this.apiRoot}${path}/?${params}`)
-      console.log(url)
       const { body } = await request(url)
       try {
         return JSON.parse(body).data  
       } catch(e) {
         console.log(body)
-        console.log(e)
+        console.error(e)
         return null
       }
     }

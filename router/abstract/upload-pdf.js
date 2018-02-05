@@ -7,10 +7,15 @@ const Abstract = require('../../models/abstract'),
       unlink = util.promisify(fs.unlink)
 
 module.exports = async ctx => {
-  if (!ctx.callbackQuery.data) return
+  const { data } = ctx.callbackQuery
+  if (!data) return
+
+  const [command, value] = data.split('|')
+  if (command !== 'download')
+    return
 
   const { username, id } = ctx.from
-  console.log(`${username || id} is loading pdf. id: ${ctx.callbackQuery.data}`)
+  console.log(`${username || id} is loading pdf. id: ${value}`)
 
   const sendPdf = (chat_id, filePath) => {
     const method = 'POST'
@@ -21,7 +26,7 @@ module.exports = async ctx => {
 
   // promises instead of async/awaits for perfomance increase (parallel operations)
   Promise.all([
-    Abstract.findById(ctx.callbackQuery.data, { telegraph_url: 1, name: 1 }),
+    Abstract.findById(value, { telegraph_url: 1, name: 1 }),
     puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] }),
     ctx.reply('Собираю лекцию...')
   ])

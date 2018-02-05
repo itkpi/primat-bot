@@ -8,7 +8,6 @@ module.exports = async ctx => {
     const group = ctx.message.text.trim().toLowerCase(),
           groupData = await parseGroup(group)
 
-    console.log(groupData)
     if (!groupData)
       return ctx.reply('Не знаю такой группы, попробуй по-другому')
 

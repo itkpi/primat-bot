@@ -1,7 +1,8 @@
 const schedule = require('./schedule'),
+      location = require('./location'),
       show = require('./show'),
 
-      { Router } = require('../../modules/utils')
+      { Router, bot } = require('../../modules/utils')
 
 const router = Router('schedule', 
     ctx => ctx.message.text !== config.btns.schedule && !ctx.session.schedule,
@@ -9,5 +10,7 @@ const router = Router('schedule',
 
 router.on('schedule', schedule)
 router.on('show', show)
+
+bot.on('callback_query', location)
 
 module.exports = router.middleware()

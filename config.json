@@ -11,7 +11,6 @@
   },
 
   "telegraph_account_info_url": "https://api.telegra.ph/getAccountInfo/",
-  "hub_groups_url": "https://api.rozklad.hub.kpi.ua/groups/",
-  "hub_lessons_url": "https://api.rozklad.hub.kpi.ua/lessons/",
+  "hub_api_root": "https://api.rozklad.hub.kpi.ua/",
   "rozklad_api_root": "http://api.rozklad.org.ua/v2/"
 }

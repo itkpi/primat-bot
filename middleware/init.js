@@ -18,11 +18,11 @@ module.exports = session => (ctx, next) => {
 
   ctx.state.home = msg => {
     ctx.state.clearRoutes()
-    ctx.reply(msg, ctx.state.homeMarkup)
+    return ctx.reply(msg, ctx.state.homeMarkup)
   }
   ctx.state.homeWithHTML = msg => {
     ctx.state.clearRoutes()
-    ctx.replyWithHTML(msg, ctx.state.homeMarkup)
+    return ctx.replyWithHTML(msg, ctx.state.homeMarkup)
   }
 
   ctx.state.error = e => {
