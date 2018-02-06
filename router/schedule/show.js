@@ -18,8 +18,11 @@ module.exports = async ctx => {
 
     if (lessons) {
       await ctx.state.homeWithHTML(lessons.answer)
-      if (lessons.buildings.length > 0) {
-        ctx.reply('Посмотреть местоположение корпуса №', getLessonsMarkup(lessons.buildings))
+      if (!ctx.session.hideLocation && lessons.buildings.length > 0) {
+        ctx.reply(
+          'Посмотреть местоположение корпуса №',
+          getLessonsMarkup(lessons.buildings)
+        )
       }
     } else {
       ctx.state.home('По-видимому, в это время пар у тебя нет. Отдыхай!')

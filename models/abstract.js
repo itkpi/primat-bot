@@ -32,7 +32,7 @@ if (process.env.STATUS === 'prod') {
             tgId: { $ne: authorId }
           })
 
-        const msg = `${author} сохранил лекцию по предмету ${subject}\n${telegraph_url}\n(/unsub чтобы отписаться)`
+        const msg = `${author} сохранил лекцию по предмету ${subject}\n${telegraph_url}`
         users.forEach(({ tgId }) => telegram.sendMessage(tgId, msg))
     })
 }

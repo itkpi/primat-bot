@@ -3,6 +3,7 @@ const { bot, request, ph } = require('../modules/utils'),
       currSem = require('../modules/curr-sem'),
       KpiInfo = require('../models/kpi-info'),
       User = require('../models/user'),
+      Building = require('../models/building'),
 
       start = require('./start')
 
@@ -131,5 +132,28 @@ module.exports = () => {
     } catch(e) {
       return ctx.state.error(e)
     }  
+  })
+
+  bot.command('/hide_location', ctx => {
+    User.findOneAndUpdate({ tgId: ctx.from.id }, { hideLocation: true })
+    ctx.session.hideLocation = true
+    ctx.state.saveSession()
+    ctx.reply('Видимо, местоположение корпусов ты уже запомнил. Отлично!\n(/show_location - отображать)')
+  })
+  bot.command('/show_location', ctx => {
+    User.findOneAndUpdate({ tgId: ctx.from.id }, { hideLocation: false })
+    ctx.session.hideLocation = false
+    ctx.state.saveSession()
+    ctx.reply('Теперь ты всегда будешь знать куда идти!\n(/hide_location - скрывать)')
+  })
+
+  bot.command('/building', async ctx => {
+    const num = ctx.message.text.split(' ')[1]
+    if (!num)
+      return ctx.reply('Укажи номер через пробел - /building 15')
+    const building = await Building.findOne({ name: num })
+    if (!building)
+      return ctx.reply('Неизвестный мне номер :c')
+    bot.telegram.sendLocation(ctx.from.id, building.latitude, building.longitude)
   })
 }

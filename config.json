@@ -1,6 +1,6 @@
 {
   "routes": ["abstract", "cabinet", "registry", "schedule"],
-  "session_fields": ["group", "date", "flow", "course", "semester", "groupHubId", "rGroupId"],
+  "session_fields": ["group", "date", "flow", "course", "semester", "rGroupId", "hideLocation"],
   "ownerId": "147615474",
   "album_id": "6483466156901120049",
   "btns": {

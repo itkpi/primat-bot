@@ -1,6 +1,5 @@
 const User = require('../../models/user'),
-      parseGroup = require('../../modules/parse-group'),
-      { Markup } = require('telegraf')
+      parseGroup = require('../../modules/parse-group')
 
 module.exports = async ctx => {
   if (ctx.state.btnVal === 'Домой') {

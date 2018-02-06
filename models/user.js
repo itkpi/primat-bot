@@ -40,7 +40,8 @@ const mongoose = require('../modules/mongoose'),
     telegraph_token: String,
     telegraph_authurl: String,
     telegraph_user: Boolean,
-    unsubscriber: Boolean
+    unsubscriber: Boolean,
+    hideLocationBtns: { type: Boolean, default: false }
   })
 
 User.post('save', ({ username, tgId, group }) => {
