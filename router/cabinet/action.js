@@ -2,15 +2,17 @@ const { Markup } = require('telegraf'),
       { r } = require('../../modules/utils')
 
 module.exports = async ctx => {
+  const { cabinet_btns: btns } = config
+
   switch (ctx.state.btnVal) {
-    case 'Поменять группу':
+    case btns.change_group:
       ctx.reply('К кому пойдем?', Markup
           .keyboard(['Домой'])
           .resize().oneTime().extra()
       )
       ctx.session.cabinet.nextCondition = 'changeGroup'
       break
-    case 'Загрузить лекцию': {
+    case '📤 Загрузить лекцию': {
       if (ctx.session.user.telegraph_user) {
         if (!ctx.session.user.telegraph_token)
           return ctx.reply('У тебя пока нет аккаунта\nТебе поможет команда /telegraph')
@@ -36,7 +38,7 @@ module.exports = async ctx => {
       } else ctx.reply('Нет доступа')
       break
     }
-    case 'Сменить семестр':
+    case btns.change_semester:
       if (ctx.session.semester) {
         const currSemester = ctx.session.semester,
               newSemester = (currSemester + 1) % 3
@@ -48,7 +50,7 @@ module.exports = async ctx => {
         ctx.reply('Нет, так дело не пйдет. Попробуй другую группу')
       }
       break
-    case 'Кто я?':
+    case btns.who_am_i:
       let answer = ''
       if (ctx.session.user.group)
         answer += `Твоя родина - <b>${ctx.session.user.group.toUpperCase()}.</b> `
@@ -68,11 +70,11 @@ module.exports = async ctx => {
 
       ctx.replyWithHTML(answer)
       break
-    case 'Команды':
+    case btns.commands:
       const commands = Object.keys(config.commands)
       ctx.replyWithHTML(commands.map(command => `${command} - ${config.commands[command]}`).join('\n'))
       break
-    case 'Назад':
+    case btns.back:
       ctx.state.home('Ну ладно')
       break
     default:

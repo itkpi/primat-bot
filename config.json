@@ -9,6 +9,13 @@
     "schedule": "📜 Расписание",
     "timeleft": "🕐 Время до конца пары"
   },
+  "cabinet_btns": {
+    "change_group": "🔀 Поменять группу",
+    "change_semester": "🔁 Сменить семестр",
+    "who_am_i": "👤 Кто я?",
+    "commands": "📃 Команды",
+    "back": "↩️ Назад"
+  },
 
   "telegraph_account_info_url": "https://api.telegra.ph/getAccountInfo/",
   "hub_api_root": "https://api.rozklad.hub.kpi.ua/",
