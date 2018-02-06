@@ -11,10 +11,9 @@ const router = Router('cabinet',
 
 router.on('cabinet', ctx => {
   ctx.session.cabinet = { nextCondition: 'action' }
-  // const keyboard = ['Поменять группу', 'Сменить семестр', 'Кто я?', 'Команды', config.cabinet_btns.back]
   const keyboard = Object.values(config.cabinet_btns)
   if (ctx.session.user.telegraph_user)
-    keyboard.push('📤 Загрузить лекцию')
+    keyboard.push(config.load_lecture_btn)
 
   ctx.reply('Тут можешь притвориться кем-то другим', Markup
     .keyboard(keyboard, { columns: 2 }).resize().extra()

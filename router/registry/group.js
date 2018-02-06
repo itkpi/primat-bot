@@ -20,6 +20,15 @@ module.exports = async ctx => {
         )
       }
 
+      if (group === 'я преподаватель') {
+        ctx.session.registry = Object.assign({}, userData, { nextCondition: 'teacher' })
+        ctx.state.saveSession()
+        return ctx.reply(
+            'Введите полностью ваше ФИО',
+            Markup.keyboard(['Назад']).resize().extra()
+          )
+      }
+
       const groupData = await parseGroup(group)
 
       if (!groupData)
@@ -43,9 +52,10 @@ module.exports = async ctx => {
           ctx.session.registry = Object.assign({}, userData, groupData, { nextCondition: 'course' })
           ctx.state.saveSession()
 
-          return ctx.reply('Оке, но не могу разобрать... Можешь сказать номер курса?',
-            Markup.keyboard([' ']).resize().extra()
-          )
+          return ctx.reply(
+              'Оке, но не могу разобрать... Можешь сказать номер курса?',
+              { reply_markup: { remove_keyboard: true } }
+            )
         }
       }
 

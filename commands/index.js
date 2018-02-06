@@ -7,6 +7,7 @@ const { bot } = require('../modules/utils'),
       telegraphCmd = require('./telegraph'),
       buildingCmd = require('./building'),
       phupdateCmd = require('./phupdate'),
+      setMeCmd = require('./set-me'),
       startCmd = require('./start'),
       phoneCmd = require('./phone'),
       unsubCmd = require('./unsub'),
@@ -21,13 +22,14 @@ module.exports = () => {
   )
 
   bot.command('/deletesession', deletesessionCmd)
-  bot.command('/hide_location', hideLocationCmd)
   bot.command('/show_location', showLocationCmd)
+  bot.command('/hide_location', hideLocationCmd)
   bot.command('/updsession', updsessionCmd)
   bot.command('/deleteself', deleteselfCmd)
   bot.command('/telegraph', telegraphCmd)
   bot.command('/phupdate', phupdateCmd)
   bot.command('/building', buildingCmd)
+  bot.command('/set_me', setMeCmd)
   bot.command('/phone', phoneCmd)
   bot.command('/unsub', unsubCmd)
   bot.command('/sub', subCmd)

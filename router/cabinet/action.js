@@ -12,7 +12,7 @@ module.exports = async ctx => {
       )
       ctx.session.cabinet.nextCondition = 'changeGroup'
       break
-    case '📤 Загрузить лекцию': {
+    case config.load_lecture_btn: {
       if (ctx.session.user.telegraph_user) {
         if (!ctx.session.user.telegraph_token)
           return ctx.reply('У тебя пока нет аккаунта\nТебе поможет команда /telegraph')
@@ -54,7 +54,9 @@ module.exports = async ctx => {
       let answer = ''
       if (ctx.session.user.group)
         answer += `Твоя родина - <b>${ctx.session.user.group.toUpperCase()}.</b> `
-      else {
+      else if (ctx.session.user.isTeacher) {
+        answer += `Вы серьезный преподаватель с рейтингом ${ctx.session.user.teacherRating}. `
+      } else {
         answer += 'Ты не с КПИ. '
       }
       if (ctx.session.user.group !== ctx.session.group && 

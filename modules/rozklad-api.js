@@ -36,6 +36,10 @@ class Rozklad {
         : await this.r(`groups/${arg}`)
   }
 
+  async teacher(name) {
+    return await this.r(`teachers/${name}`)
+  }
+
   async lessons(id, params) {
     if (!id)
       throw new Error("Id doens't specified")
@@ -43,6 +47,13 @@ class Rozklad {
     return params
       ? await this.r(`groups/${id}/lessons`, { filter: params })
       : await this.r(`groups/${id}/timetable`)
+  }
+
+  async teacherLessons(name) {
+    if (!name)
+      throw new Error("Teacher name doesn't specified")
+
+    return await this.r(`teachers/${name}/lessons`)
   }
 
   async currWeek() {

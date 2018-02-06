@@ -16,6 +16,7 @@
     "commands": "📃 Команды",
     "back": "↩️ Назад"
   },
+  "load_lecture_btn": "📤 Загрузить лекцию",
 
   "telegraph_account_info_url": "https://api.telegra.ph/getAccountInfo/",
   "hub_api_root": "https://api.rozklad.hub.kpi.ua/",
