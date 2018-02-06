@@ -21,11 +21,8 @@ exports.callbackBtn = new Telegraf.Router(({ callbackQuery }) => {
   const { data } = callbackQuery
   if (!data) return
 
-  const [command, value] = data.split('|')
-  return {
-    route: command,
-    state: { value }
-  }
+  const [route, value] = data.split('|')
+  return { route, state: { value } }
 })
 
 const RozkladApi = require('./rozklad-api')

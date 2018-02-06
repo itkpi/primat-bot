@@ -12,5 +12,15 @@
 
   "telegraph_account_info_url": "https://api.telegra.ph/getAccountInfo/",
   "hub_api_root": "https://api.rozklad.hub.kpi.ua/",
-  "rozklad_api_root": "http://api.rozklad.org.ua/v2/"
+  "rozklad_api_root": "http://api.rozklad.org.ua/v2/",
+
+  "commands": {
+    "<b>/hide_location</b>": "скрывать местоположение корпусов под расписанием",
+    "<b>/show_location</b>": "отображать местоположение корпусов",
+    "<b>/building</b> <i>номер</i>": "местоположение корпуса",
+    "<b>/phone</b> <i>фамилия (укр)</i>": "номер телефона преподавателя",
+    "<b>/unsub</b>": "отписаться от рассылки новых лекций",
+    "<b>/sub</b>": "подписаться на рассылку лекций",
+    "<b>/updsession</b>": "обновить сессию. способ вернуть все как было :)"
+  }
 }

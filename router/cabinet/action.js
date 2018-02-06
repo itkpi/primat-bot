@@ -68,12 +68,9 @@ module.exports = async ctx => {
 
       ctx.replyWithHTML(answer)
       break
-    case 'Телефоны':
-      ctx.session.cabinet.nextCondition = 'teacher'
-      ctx.reply(
-        'Введи фамилию преподаватеоя (на украинском), номер которого ты хочешь узнать',
-        Markup.keyboard(['Домой']).resize().extra()
-      )
+    case 'Команды':
+      const commands = Object.keys(config.commands)
+      ctx.replyWithHTML(commands.map(command => `${command} - ${config.commands[command]}`).join('\n'))
       break
     case 'Назад':
       ctx.state.home('Ну ладно')

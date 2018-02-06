@@ -2,7 +2,6 @@ const { Markup } = require('telegraf'),
       { Router } = require('../../modules/utils'),
       changeGroup = require('./change-group'),
       subject = require('./subject'),
-      teacher = require('./teacher'),
       action = require('./action'),
       course = require('./course')
 
@@ -12,7 +11,7 @@ const router = Router('cabinet',
 
 router.on('cabinet', ctx => {
   ctx.session.cabinet = { nextCondition: 'action' }
-  const keyboard = ['Поменять группу', 'Сменить семестр', 'Кто я?', 'Телефоны', 'Назад']
+  const keyboard = ['Поменять группу', 'Сменить семестр', 'Кто я?', 'Команды', 'Назад']
   if (ctx.session.user.telegraph_user)
     keyboard.push('Загрузить лекцию')
 
@@ -24,7 +23,6 @@ router.on('cabinet', ctx => {
 
 router.on('action', action)
 router.on('changeGroup', changeGroup)
-router.on('teacher', teacher)
 router.on('subject', subject)
 router.on('course', course)
 
