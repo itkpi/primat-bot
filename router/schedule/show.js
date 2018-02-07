@@ -2,7 +2,7 @@ const { r } = require('../../modules/utils'),
       { Extra, Router } = require('telegraf')
 
 module.exports = async ctx => {
-  if (ctx.state.btnVal === 'Отмена')
+  if (ctx.state.btnVal === 'Назад')
     return ctx.state.home('эх')
 
   if (ctx.state.btnVal === 'Расписание пар') {
@@ -17,7 +17,8 @@ module.exports = async ctx => {
 
 
     if (lessons) {
-      await ctx.state.homeWithHTML(lessons.answer)
+      // await ctx.state.homeWithHTML(lessons.answer)
+      ctx.replyWithHTML(lessons.answer)
       if (!ctx.session.hideLocation && lessons.buildings.length > 0) {
         ctx.reply(
           'Посмотреть местоположение корпуса №',
@@ -25,7 +26,8 @@ module.exports = async ctx => {
         )
       }
     } else {
-      ctx.state.home('По-видимому, в это время пар у тебя нет. Отдыхай!')
+      ctx.reply('По-видимому, в это время пар у тебя нет. Отдыхай!')
+      // ctx.state.home('По-видимому, в это время пар у тебя нет. Отдыхай!')
     }
   } catch(e) {
     ctx.state.error(e)
