@@ -5,7 +5,7 @@ const schedule = require('./schedule'),
       { Router, callbackBtn, bot } = require('../../modules/utils')
 
 const router = Router('schedule', 
-    ctx => ctx.message.text !== config.btns.schedule && !ctx.session.schedule,
+    ctx => ctx.message.text !== config.home_btns.schedule && !ctx.session.schedule,
     ctx => ctx.session.schedule && ctx.session.schedule.nextCondition || 'schedule')
 
 router.on('schedule', schedule)

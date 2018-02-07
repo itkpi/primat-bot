@@ -6,7 +6,7 @@ module.exports = async ctx => {
     return ctx.state.home('эх')
 
   if (ctx.state.btnVal === 'Расписание пар') {
-    return ctx.state.homeWithHTML(getTimeSch())        
+    return ctx.replyWithHTML(getTimeSch())        
   }
 
   try {
@@ -17,8 +17,7 @@ module.exports = async ctx => {
 
 
     if (lessons) {
-      // await ctx.state.homeWithHTML(lessons.answer)
-      ctx.replyWithHTML(lessons.answer)
+      await ctx.replyWithHTML(lessons.answer)
       if (!ctx.session.hideLocation && lessons.buildings.length > 0) {
         ctx.reply(
           'Посмотреть местоположение корпуса №',
@@ -27,7 +26,6 @@ module.exports = async ctx => {
       }
     } else {
       ctx.reply('По-видимому, в это время пар у тебя нет. Отдыхай!')
-      // ctx.state.home('По-видимому, в это время пар у тебя нет. Отдыхай!')
     }
   } catch(e) {
     ctx.state.error(e)

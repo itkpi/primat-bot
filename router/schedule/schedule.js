@@ -3,13 +3,13 @@ const currSem = require('../../modules/curr-sem'),
       { Markup } = require('telegraf')
 
 module.exports = async ctx => {
-  if (!ctx.session.group && !ctx.session.isTeacher)
+  if (!ctx.session.group && !ctx.session.user.isTeacher)
     return ctx.reply('Для начала выбери группу в кабинете')
 
   if (currSem() !== ctx.session.semester)
     return ctx.reply(`Расписание за ${ctx.session.semester}-й семестр тебе вряд ли кто-то скажет, можешь сменить его`)
 
-  if (ctx.session.isTeacher && !ctx.session.rGroupId) {
+  if (ctx.session.user.isTeacher && !ctx.session.rGroupId) {
     const lessons = await r.teacherLessons(ctx.session.user.teacherId)
     if (!lessons)
       ctx.reply('Ваше расписание отсутсвует :c')

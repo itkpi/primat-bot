@@ -29,7 +29,7 @@ module.exports = async ctx => {
         `Твое имя я уже знаю, но из какой ты группы?\nИспользуй подобный формат: кв-51, kv-51`
       console.log(`[start bot-msg] ${ctx.from.username}: ${msg.split('\n')[0]}`)
 
-      return ctx.replyWithHTML(msg, Markup.keyboard(['Я не студент КПИ', 'Я преподаватель'], { columns: 2 }).resize().extra())
+      return ctx.replyWithHTML(msg, Markup.keyboard(['Я не студент КПИ', 'Я преподаватель', 'Я абитуриент'], { columns: 2 }).resize().extra())
     }    
   }
 }

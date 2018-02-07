@@ -9,7 +9,7 @@ const Abstract = require('../../models/abstract'),
 
 const router = Router(
   'abstract',
-  ctx => ctx.message.text !== config.btns.abstracts && !ctx.session.abstract,
+  ctx => ctx.message.text !== config.home_btns.abstracts && !ctx.session.abstract,
   ctx => (ctx.session.abstract && ctx.session.abstract.nextCondition) || 'abstract'
 )
 

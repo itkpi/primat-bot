@@ -56,6 +56,8 @@ module.exports = async ctx => {
         answer += `Твоя родина - <b>${ctx.session.user.group.toUpperCase()}.</b> `
       else if (ctx.session.user.isTeacher) {
         answer += `Вы серьезный преподаватель с рейтингом ${ctx.session.user.teacherRating}. `
+      } else if (ctx.session.user.isAbitura) {
+        answer += 'Ты абитуриент с большими перспективами. '
       } else {
         answer += 'Ты не с КПИ. '
       }
@@ -73,8 +75,12 @@ module.exports = async ctx => {
       ctx.replyWithHTML(answer)
       break
     case btns.commands:
-      const commands = Object.keys(config.commands)
-      ctx.replyWithHTML(commands.map(command => `${command} - ${config.commands[command]}`).join('\n'))
+      const { isTeacher, isAbitura } = ctx.session.user
+      const { teacher: teacherCmds, abitura: abitCmds } = config.setme_command
+      const commands = Object.assign({}, config.commands, isTeacher ? teacherCmds : isAbitura ? abitCmds : null)
+      const names = Object.keys(commands)
+
+      ctx.replyWithHTML(names.map(name => `${name} - ${commands[name]}`).join('\n'))
       break
     case btns.back:
       ctx.state.home('Ну ладно')

@@ -11,7 +11,7 @@ module.exports = async ctx => {
       const userData = { tgId: ctx.from.id, username: ctx.from.username }
 
       if (group === 'я не студент кпи') {
-        const user = new User(userData)
+        const user = new User(Object.assign(userData, { notKPI: true }))
         user.save()
         ctx.session.user = user
 
@@ -27,6 +27,14 @@ module.exports = async ctx => {
             'Введите полностью ваше ФИО',
             Markup.keyboard(['Назад']).resize().extra()
           )
+      }
+
+      if (group === 'я абитуриент') {
+        const user = new User(Object.assign({}, userData, { isAbitura: true }))
+        user.save()
+        ctx.session.user = user
+
+        return ctx.state.home('Ты обязательно поступишь!')
       }
 
       const groupData = await parseGroup(group)
@@ -59,7 +67,7 @@ module.exports = async ctx => {
         }
       }
 
-      const user = new User(Object.assign({}, userData, groupData))
+      const user = new User(Object.assign({}, userData, groupData, { isStudent: true }))
       user.save()
       ctx.session.user = user
       

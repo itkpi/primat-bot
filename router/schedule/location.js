@@ -11,7 +11,7 @@ module.exports = async ctx => {
       telegram.sendLocation(id, building.latitude, building.longitude)
       ctx.answerCbQuery('Прямо здесь!')
     } else {
-      ctx.answerCbQuery('Ой, нашел корпус :c', true)
+      ctx.answerCbQuery('Ой, не нашел корпус :c', true)
     }
   } catch(e) {
     console.error(e)

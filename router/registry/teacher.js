@@ -28,7 +28,6 @@ module.exports = async ctx => {
           }
           const user = new User(Object.assign({}, ctx.session.registry, teacherData, { nextCondition: undefined }))
           user.save()
-          ctx.session.isTeacher = teacherData.isTeacher
           ctx.session.teacherId = teacherData.teacherId
           ctx.session.teacherName = teacherName
           ctx.session.semester = currSem()

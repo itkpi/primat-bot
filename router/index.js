@@ -8,10 +8,12 @@ const { bot } = require('../modules/utils'),
       photo    = require('./cabinet/photo'),
       upload   = require('./cabinet/upload'),
 
+      abitura = require('./abitura'),
+
       { callbackBtn } = require('../modules/utils')
 
 module.exports = () => {
-  bot.on('text', registry, schedule, abstract, cabinet)
+  bot.on('text', registry, schedule, abstract, cabinet, abitura)
 
   // part of cabinet router
   bot.on('document', upload)
@@ -19,5 +21,5 @@ module.exports = () => {
 
   bot.on('callback_query', callbackBtn)
 
-  bot.hears(config.btns.timeleft, timeleft)
+  bot.hears(config.home_btns.timeleft, timeleft)
 }

@@ -7,7 +7,7 @@ const { bot } = require('../modules/utils'),
       telegraphCmd = require('./telegraph'),
       buildingCmd = require('./building'),
       phupdateCmd = require('./phupdate'),
-      setMeCmd = require('./set-me'),
+      setmeCmd = require('./setme'),
       startCmd = require('./start'),
       phoneCmd = require('./phone'),
       unsubCmd = require('./unsub'),
@@ -29,7 +29,7 @@ module.exports = () => {
   bot.command('/telegraph', telegraphCmd)
   bot.command('/phupdate', phupdateCmd)
   bot.command('/building', buildingCmd)
-  bot.command('/set_me', setMeCmd)
+  bot.command('/setme', setmeCmd)
   bot.command('/phone', phoneCmd)
   bot.command('/unsub', unsubCmd)
   bot.command('/sub', subCmd)

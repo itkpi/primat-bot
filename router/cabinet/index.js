@@ -6,7 +6,7 @@ const { Markup } = require('telegraf'),
       course = require('./course')
 
 const router = Router('cabinet',
-  ctx => ctx.message.text !== config.btns.cabinet && !ctx.session.cabinet,
+  ctx => ctx.message.text !== config.home_btns.cabinet && !ctx.session.cabinet,
   ctx => ctx.session.cabinet && ctx.session.cabinet.nextCondition || 'cabinet')
 
 router.on('cabinet', ctx => {
