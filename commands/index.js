@@ -33,4 +33,6 @@ module.exports = () => {
   bot.command('/phone', phoneCmd)
   bot.command('/unsub', unsubCmd)
   bot.command('/sub', subCmd)
+
+  bot.command('/b', buildingCmd)
 }
