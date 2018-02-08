@@ -6,12 +6,10 @@ module.exports = (ctx, next) => {
     const { username, tgId, group } = ctx.session.user,
           route = config.routes.reduce((res, route) => res || ctx.session[route] && route || null, null)
 
-    const usrTxt = Object.values(config.home_btns).includes(ctx.message.text)
-                      ? ctx.message.text.slice(3)
-                      : ctx.message.text ? ctx.message.text : 'or uploaded smth'
+    const usrTxt = ctx.message.text ? ctx.message.text : 'or uploaded smth'
 
     console.log(`${username || tgId}${group ? `, ${group}` : ''}: ${route ? '' : usrTxt}` + 
-      `${route ? `[${route} |> ${ctx.session[route].nextCondition} -> ${usrTxt}]` : ''}`)
+      `${route ? `[${route} |> ${ctx.session[route].nextCondition || 'action'} -> ${usrTxt}]` : ''}`)
   }
 
   next()  
