@@ -20,7 +20,7 @@ const Schema = mongoose.Schema,
     })
 
 if (process.env.STATUS === 'prod') {
-    Abstract.post('save', async ({ flow, course, authorId, author, subject, telegraph_url, name }) => {
+    Abstract.post('save', async ({ flow, course, semester, authorId, author, subject, telegraph_url, name }) => {
         console.log(
           `${author || authorId} has saved new lecture [${flow}, ${course} course, ${semester} semester]: ${subject} | ${name}`
         )
