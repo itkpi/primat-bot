@@ -9,7 +9,7 @@ module.exports = async ctx => {
   const { rGroupId, group } = ctx.session
 
   if (!rGroupId)
-    ctx.reply(
+    return ctx.reply(
       'Чтобы знать своих преподаватлей, для начала нужно знать свою группу. Можешь выбрать ее в кабинете'
     )
 
