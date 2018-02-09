@@ -1,6 +1,8 @@
+const { timeleft: timeleftBtn } = config.home_btns
+
 module.exports = ctx => {
-    if (config.routes.filter(route => ctx.session[route]).length !== 0)
-      return
+    if (ctx.message.text !== timeleftBtn)
+        return
 
     const len = 60 + 35, // 1:35
         shift = 60 + 55, // 1:55

@@ -1,10 +1,12 @@
 const { Markup } = require('telegraf'),
-      { r } = require('../../modules/utils')
+      { r } = require('../../modules/utils'),
+      parseSchedule = require('../../modules/parse-schedule'),
+      { cabinet_btns: btns } = config
 
 module.exports = async ctx => {
-  const { cabinet_btns: btns } = config
 
   switch (ctx.state.btnVal) {
+
     case btns.change_group:
       ctx.reply('К кому пойдем?', Markup
           .keyboard(['Домой'])
@@ -12,12 +14,13 @@ module.exports = async ctx => {
       )
       ctx.session.cabinet.nextCondition = 'changeGroup'
       break
-    case config.load_lecture_btn: {
+
+    case config.load_lecture_btn:
       if (ctx.session.user.telegraph_user) {
         if (!ctx.session.user.telegraph_token)
           return ctx.reply('У тебя пока нет аккаунта\nТебе поможет команда /telegraph')
         try {
-          const subjects = ctx.session.subjects || await getSubjects(ctx.session.user.rGroupId)
+          const subjects = ctx.session.subjects || await parseSchedule(ctx.session.user.rGroupId, 'subjects')
           ctx.session.subjects = subjects
 
           const amount = subjects.length
@@ -37,7 +40,7 @@ module.exports = async ctx => {
 
       } else ctx.reply('Нет доступа')
       break
-    }
+
     case btns.change_semester:
       if (ctx.session.semester) {
         const currSemester = ctx.session.semester,
@@ -50,6 +53,7 @@ module.exports = async ctx => {
         ctx.reply('Нет, так дело не пйдет. Попробуй другую группу')
       }
       break
+
     case btns.who_am_i:
       let answer = ''
       if (ctx.session.user.group)
@@ -74,14 +78,7 @@ module.exports = async ctx => {
 
       ctx.replyWithHTML(answer)
       break
-    case btns.commands:
-      const { isTeacher, isAbitura } = ctx.session.user
-      const { teacher: teacherCmds, abitura: abitCmds } = config.setme_command
-      const commands = Object.assign({}, config.commands, isTeacher ? teacherCmds : isAbitura ? abitCmds : null)
-      const names = Object.keys(commands)
 
-      ctx.replyWithHTML(names.map(name => `${name} - ${commands[name]}`).join('\n'))
-      break
     case btns.back:
       ctx.state.home('Ну ладно')
       break
@@ -90,28 +87,4 @@ module.exports = async ctx => {
   }
 
   ctx.state.saveSession()
-}
-
-async function getSubjects(groupId) {
-    const timetable = await r.lessons(groupId),
-        weeks = [1, 2],
-        days = [1, 2, 3, 4, 5, 6],
-        nums = [0, 1, 2, 3, 4],
-        subjects = []
-
-  weeks.forEach(week => days.forEach(dayNum => {
-    const day = timetable.weeks[week].days[dayNum]
-    if (day) {
-      nums.forEach(i => {
-        const lesson = day.lessons[i]
-        if (lesson) {
-          const subject = lesson.lesson_name
-          if (!subjects.includes(subject))
-            subjects.push(subject)
-        }
-      })
-    }
-  }))
-
-  return subjects
 }

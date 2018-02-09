@@ -71,7 +71,6 @@ async function getLessons(id, value) {
 
 function parseLessons(lessons) {
   const formatTime = time => time.split(':')
-        .map((value, i) => i === 0 ? +value.trim() : value)
         .slice(0, 2)
         .join(':')
 
@@ -95,14 +94,13 @@ function parseLessons(lessons) {
         acc.buildings.push(building)
     }
 
-    let secondLine = ``
     if (lesson_room)
-      secondLine += `<code>${lesson_room}</code>`
+      acc.answer += `<code>${lesson_room}</code>`
 
     if (lesson_type)
-      secondLine += ` <i>${lesson_type}</i>`
+      acc.answer += ` <i>${lesson_type}</i>`
 
-    acc.answer += `${secondLine}\n`
+    acc.answer += `\n`
     return acc
   }, { day: null, answer: '', putWeek: true, buildings: [] })
 }
