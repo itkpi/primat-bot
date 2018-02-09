@@ -70,7 +70,12 @@ async function getLessons(id, value) {
 }
 
 function parseLessons(lessons) {
-  return lessons.reduce((acc, lesson) => {
+  const formatTime = time => time.split(':')
+        .map((value, i) => i === 0 ? +value.trim() : value)
+        .slice(0, 2)
+        .join(':')
+
+  return lessons.reduce((acc, lesson, i) => {
     if (!acc.day || lesson.day_name !== acc.day) {
       if (acc.day && acc.putWeek) {
         acc.putWeek = false
@@ -80,26 +85,22 @@ function parseLessons(lessons) {
       acc.day = lesson.day_name
     }
 
-    acc.answer += `<b>${lesson.lesson_number}</b>| ${lesson.lesson_name}\n`
+    const { lesson_room, teacher_name, lesson_type, time_start, time_end } = lesson
 
-    const { lesson_room, teacher_name, lesson_type } = lesson
+    acc.answer += `<b>${lesson.lesson_number}</b>. ${formatTime(time_start)}<code>|</code> ${lesson.lesson_name} `
+
     if (lesson_room) {
       const building = lesson_room.split('-')[1]
       if (!acc.buildings.includes(building))
         acc.buildings.push(building)
     }
 
-    let secondLine = ''
+    let secondLine = ``
     if (lesson_room)
-      secondLine += `<b>${lesson_room}</b>`
-
-    if (teacher_name)
-      secondLine += `${lesson_room ? ', ' : ''}${teacher_name}`
+      secondLine += `<code>${lesson_room}</code>`
 
     if (lesson_type)
-      secondLine += `  <i>${lesson_type}</i>`
-
-    secondLine = `     ${secondLine}`
+      secondLine += ` <i>${lesson_type}</i>`
 
     acc.answer += `${secondLine}\n`
     return acc

@@ -1,14 +1,16 @@
 module.exports = (ctx, next) => {
   if (ctx.session && ctx.session.registry) {
     console.log(`[registry] ${ctx.from.username}: ${ctx.message.text}`)
-    console.log(ctx.session.registry)
   } else if (ctx.session && ctx.session.user && ctx.message) {
     const { username, tgId, group } = ctx.session.user,
-          route = config.routes.reduce((res, route) => res || ctx.session[route] && route || null, null)
+          route = config.routes.find(route => ctx.session[route])
 
-    const usrTxt = ctx.message.text ? ctx.message.text : 'or uploaded smth'
+    const usrTxt = ctx.message.text ? ctx.message.text : 'or did smth'
+    const roles = ['isStudent', 'isAbitura', 'isTeacher', 'notKPI']
+    const role = roles.find(role => ctx.session.user[role])
 
-    console.log(`${username || tgId}${group ? `, ${group}` : ''}: ${route ? '' : usrTxt}` + 
+
+    console.log(`${role}|${username || tgId}${group ? `, ${group}` : ''}: ${route ? '' : usrTxt}` + 
       `${route ? `[${route} |> ${ctx.session[route].nextCondition || 'action'} -> ${usrTxt}]` : ''}`)
   }
 

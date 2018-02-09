@@ -54,6 +54,7 @@ module.exports = session => (ctx, next) => {
     }
     ctx.reply('Ой, что-то пошло не так :c', markup)
     telegram.sendMessage(config.ownerId, `${ctx.from.username}:${ctx.from.id}|Error: ${e.message}`)
+    console.log(ctx.session)
     console.error(e)
   }
 
