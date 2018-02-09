@@ -27,8 +27,8 @@ if (process.env.LOCATION === 'local') {
     .then(() => bot.startPolling())
     .catch(console.error)
 } else {
-  bot.telegram.setWebhook(`${process.env.URL}/bot${process.env.BOT_TOKEN}`);
-  app.use(bot.webhookCallback(`/bot${process.env.BOT_TOKEN}`));
+  bot.telegram.setWebhook(`${process.env.URL}/bot${process.env.BOT_TOKEN}`)
+  app.use(bot.webhookCallback(`/bot${process.env.BOT_TOKEN}`))
 }
 
 middleware()

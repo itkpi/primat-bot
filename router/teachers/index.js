@@ -1,5 +1,4 @@
-const { r } = require('../../modules/utils'),
-      parseSchedule = require('../../modules/parse-schedule'),
+const parseSchedule = require('../../modules/parse-schedule'),
       { teachers: teachersBtn } = config.home_btns
 
 module.exports = async ctx => {
@@ -15,7 +14,9 @@ module.exports = async ctx => {
 
   const lessonTeachers = await parseSchedule(rGroupId, 'teachers')
   const lessons = Object.keys(lessonTeachers)
-  const answer = lessons.map(lesson => `<b>${lesson}</b><code>:</code> ${lessonTeachers[lesson].join(', ')}`).join('\n\n')
+  const answer = lessons
+    .map((lesson, i) => `<b>${++i}. ${lesson}</b><code>:</code> ${lessonTeachers[lesson].join(', ')}`)
+    .join('\n\n')
 
   return ctx.replyWithHTML(`<code>${group.toUpperCase()}</code>:\n${answer}`)
 }

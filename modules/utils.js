@@ -9,7 +9,6 @@ exports.ph = new Telegraph()
 exports.picasa = new Picasa()
 
 exports.Router = (name, invalid, route) => new Telegraf.Router(ctx => {
-
   if (invalid(ctx) || config.routes
                       .filter(route => ctx.session[route] && route !== name)
                       .length !== 0
