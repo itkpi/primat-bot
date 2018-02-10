@@ -1,5 +1,5 @@
 const Building = require('../../models/building'),
-      { telegram } = require('../../modules/utils').bot
+  { telegram } = require('../../modules/utils').bot
 
 module.exports = async ctx => {
   const { username, id } = ctx.from

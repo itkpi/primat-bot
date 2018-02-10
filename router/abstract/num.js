@@ -1,5 +1,5 @@
 const Abstract = require('../../models/abstract'),
-      { Extra } = require('telegraf')
+  { Extra } = require('telegraf')
 
 module.exports = async ctx => {
   if (ctx.state.btnVal === 'Отмена')
@@ -7,16 +7,16 @@ module.exports = async ctx => {
 
   try {
     const skip = ctx.state.btnVal === 'Все' ? 0 : ctx.state.btnVal - 1,
-          limit = ctx.state.btnVal === 'Все' ? 0 : 1,
-          abstracts = await Abstract.find({
-              subject: ctx.session.abstract.subject,
-              course: ctx.session.course,
-              flow: ctx.session.flow,
-              semester: ctx.session.semester
-            }, { telegraph_url: 1 })
-            .sort({ date: 1 })
-            .skip(skip)
-            .limit(limit)
+      limit = ctx.state.btnVal === 'Все' ? 0 : 1,
+      abstracts = await Abstract.find({
+        subject: ctx.session.abstract.subject,
+        course: ctx.session.course,
+        flow: ctx.session.flow,
+        semester: ctx.session.semester
+      }, { telegraph_url: 1 })
+        .sort({ date: 1 })
+        .skip(skip)
+        .limit(limit)
 
     if (abstracts.length !== 0) {
       const getAbstractMarkup = id =>

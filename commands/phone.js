@@ -21,12 +21,12 @@ module.exports = async ctx => {
 }
 
 function formatPhoneNumber(number) {
-    array = number.split('')
+  const array = number.split('')
 
-    array.splice(2, 0, ' (')
-    array.splice(6, 0, ') ')
-    array.splice(10, 0, ' ')
-    array.splice(13, 0, ' ')
+  array.splice(2, 0, ' (')
+  array.splice(6, 0, ') ')
+  array.splice(10, 0, ' ')
+  array.splice(13, 0, ' ')
 
-    return '+' + array.join('')
+  return '+' + array.join('')
 }

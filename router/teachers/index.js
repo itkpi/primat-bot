@@ -1,9 +1,9 @@
 const parseSchedule = require('../../modules/parse-schedule'),
-      { teachers: teachersBtn } = config.home_btns
+  { teachers: teachersBtn } = require('../../config').home_btns
 
 module.exports = async ctx => {
   if (ctx.message.text !== teachersBtn)
-      return
+    return
 
   const { rGroupId, group } = ctx.session
 

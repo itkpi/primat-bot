@@ -1,10 +1,9 @@
-const { parseFragment, serialize, parse: pparse } = require('parse5'),
-      Abstract = require('../models/abstract'),
-      User = require('../models/user'),
-      currSem = require('../modules/curr-sem'),
-      { ph } = require('../modules/utils'),
+const { parseFragment } = require('parse5'),
+  Abstract = require('../models/abstract'),
+  currSem = require('../modules/curr-sem'),
+  { ph } = require('../modules/utils'),
 
-      getReg = num => new RegExp(`[${num}]`, 'g')
+  getReg = num => new RegExp(`[${num}]`, 'g')
 
 
 async function createPage(ctx, name, page, photos = []) {
@@ -20,21 +19,20 @@ async function createPage(ctx, name, page, photos = []) {
   
   if (process.env.STATUS === 'prod') {
     const { subject } = ctx.session.cabinet,
-          { course, flow, username: author = ctx.from.id } = ctx.session.user,
-          semester = currSem(),
+      { course, flow, username: author = ctx.from.id } = ctx.session.user,
 
-          abstract = new Abstract({
-            flow,
-            name,
-            course,
-            author,
-            subject,
-            semester,
-            authorId: ctx.from.id,
-            telegraph_url: response.url,
-            telegraph_path: response.path,
-            telegraph_title: response.title
-          })
+      abstract = new Abstract({
+        flow,
+        name,
+        course,
+        author,
+        subject,
+        semester: currSem(),
+        authorId: ctx.from.id,
+        telegraph_url: response.url,
+        telegraph_path: response.path,
+        telegraph_title: response.title
+      })
 
     abstract.save()
   }
@@ -44,11 +42,11 @@ async function createPage(ctx, name, page, photos = []) {
 
 function parse(text) {
   const lectureName  = text.substring(0, text.indexOf('\n')) // get first line
-        text         = text.substring(text.indexOf('\n') + 1)  // remove first line
+  text         = text.substring(text.indexOf('\n') + 1)  // remove first line
   const numObj       = { num: 1 }, // convert will modify it
-        parsed       = parseFragment(text),
-        page         = convert(numObj)(parsed.childNodes),
-        photosAmount = numObj.num - 1
+    parsed       = parseFragment(text),
+    page         = convert(numObj)(parsed.childNodes),
+    photosAmount = numObj.num - 1
 
   return { lectureName, page, photosAmount }
 }

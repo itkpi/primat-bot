@@ -1,5 +1,5 @@
 const Building = require('../models/building'),
-      { bot } = require('../modules/utils')
+  { bot } = require('../modules/utils')
 
 module.exports = async ctx => {
   try {

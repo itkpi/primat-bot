@@ -1,11 +1,12 @@
 const Abstract = require('../../models/abstract'),
-      { Markup } = require('telegraf'),
+  { Markup } = require('telegraf'),
+  config = require('../../config'),
 
-      subject = require('./subject'),
-      num = require('./num'),
-      uploadPdf = require('./upload-pdf'),
+  subject = require('./subject'),
+  num = require('./num'),
+  uploadPdf = require('./upload-pdf'),
 
-      { bot, Router, callbackBtn } = require('../../modules/utils')
+  { Router, callbackBtn } = require('../../modules/utils')
 
 const router = Router(
   'abstract',

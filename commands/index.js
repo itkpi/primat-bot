@@ -1,17 +1,17 @@
 const { bot } = require('../modules/utils'),
-      deletesessionCmd = require('./deletesession'),
-      showLocationCmd = require('./show-location'),
-      hideLocationCmd = require('./hide-location'),
-      deleteselfCmd = require('./deleteself'),
-      updsessionCmd = require('./updsession'),
-      telegraphCmd = require('./telegraph'),
-      buildingCmd = require('./building'),
-      phupdateCmd = require('./phupdate'),
-      setmeCmd = require('./setme'),
-      startCmd = require('./start'),
-      phoneCmd = require('./phone'),
-      unsubCmd = require('./unsub'),
-      subCmd = require('./sub')
+  deletesessionCmd = require('./deletesession'),
+  showLocationCmd = require('./show-location'),
+  hideLocationCmd = require('./hide-location'),
+  deleteselfCmd = require('./deleteself'),
+  updsessionCmd = require('./updsession'),
+  telegraphCmd = require('./telegraph'),
+  buildingCmd = require('./building'),
+  phupdateCmd = require('./phupdate'),
+  setmeCmd = require('./setme'),
+  startCmd = require('./start'),
+  phoneCmd = require('./phone'),
+  unsubCmd = require('./unsub'),
+  subCmd = require('./sub')
 
 module.exports = () => {
   bot.command('start', startCmd)

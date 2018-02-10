@@ -1,6 +1,7 @@
 const Telegraf = require('telegraf'),
-      { home_btns, abitura_home_btns } = config,
-      { telegram } = require('../modules/utils').bot
+  config = require('../config'),
+  { home_btns, abitura_home_btns } = config,
+  { telegram } = require('../modules/utils').bot
 
 module.exports = session => (ctx, next) => {
   ctx.state.homeMarkup = Telegraf.Markup

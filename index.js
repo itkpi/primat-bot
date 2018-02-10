@@ -1,17 +1,15 @@
-global.config = require('./config')
-
 const express = require('express'),
 
-      { bot } = require('./modules/utils'),
+  { bot } = require('./modules/utils'),
       
-      commandHandler = require('./commands'),
-      middleware = require('./middleware'),
-      router = require('./router'),
+  commandHandler = require('./commands'),
+  middleware = require('./middleware'),
+  router = require('./router'),
 
-      api = require('./api'),
+  api = require('./api'),
 
-      app = express(),
-      port = process.env.PORT || 3210
+  app = express(),
+  port = process.env.PORT || 3210
 
 app.use(express.static('./public'))
 

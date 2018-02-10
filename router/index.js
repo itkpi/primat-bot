@@ -1,29 +1,29 @@
 const { bot } = require('../modules/utils'),
+  config = require('../config'),
 
-      registry = require('./registry'),
-      schedule = require('./schedule'),
-      abstract = require('./abstract'),
-      timeleft = require('./timeleft'),
-      commands = require('./commands'),
-      teachers = require('./teachers'),
-      cabinet  = require('./cabinet'),
-      photo    = require('./cabinet/photo'),
-      upload   = require('./cabinet/upload'),
+  registry = require('./registry'),
+  schedule = require('./schedule'),
+  abstract = require('./abstract'),
+  timeleft = require('./timeleft'),
+  commands = require('./commands'),
+  teachers = require('./teachers'),
+  cabinet  = require('./cabinet'),
+  photo    = require('./cabinet/photo'),
+  upload   = require('./cabinet/upload'),
 
-      abitura = require('./abitura'),
+  abitura = require('./abitura'),
 
-      { callbackBtn } = require('../modules/utils'),
+  { callbackBtn } = require('../modules/utils'),
 
-      {
-        timeleft: timeleftBtn,
-        teachers: teachersBtn,
-        commands: commandsBtn
-      } = config.home_btns
+  {
+    timeleft: timeleftBtn,
+    teachers: teachersBtn,
+    commands: commandsBtn
+  } = config.home_btns
 
 module.exports = () => {
   bot.on('text', registry, schedule, abstract, cabinet, abitura)
 
-  // part of cabinet router
   bot.on('document', upload)
   bot.on('photo', photo)
 
@@ -34,7 +34,7 @@ module.exports = () => {
   bot.hears(commandsBtn, commands)
 
   bot.catch(e => {
-    telegram.sendMessage(config.ownerId, `|Error: ${e.message}`)
+    bot.telegram.sendMessage(config.ownerId, `|Error: ${e.message}`)
     console.error(e)
   })
 }

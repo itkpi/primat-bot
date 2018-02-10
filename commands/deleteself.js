@@ -1,4 +1,5 @@
-const User = require('../models/user')
+const User = require('../models/user'),
+  config = require('../config')
 
 module.exports = async ctx => {
   if (config.ownerId == ctx.from.id) {

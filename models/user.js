@@ -1,5 +1,6 @@
 const mongoose = require('../modules/mongoose'),
-      { telegram } = require('../modules/utils').bot,
+  { telegram } = require('../modules/utils').bot,
+  config = require('../config'),
 
   Schema = mongoose.Schema,
 

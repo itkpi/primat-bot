@@ -1,5 +1,5 @@
 const currSem = require('./curr-sem'),
-      { r } = require('./utils')
+  { r } = require('./utils')
 
 // regex: /^[А-яіє]{2,4}-[А-яіє]{0,2}[0-9]{2,3}[А-яіє]?\(?[А-яіє]*\)?\.?$/
 
@@ -39,10 +39,10 @@ function getCourse(group) {
     return
 
   const date = new Date(),
-        year = date.getFullYear() % 10,
-        month = date.getMonth() + 1,
-        groupYear = Number(group.slice(-2, -1)),
-        course = month > 7 ? year - groupYear + 1 : year - groupYear
+    year = date.getFullYear() % 10,
+    month = date.getMonth() + 1,
+    groupYear = Number(group.slice(-2, -1)),
+    course = month > 7 ? year - groupYear + 1 : year - groupYear
 
   return course > 0 && course < 5
     ? course
