@@ -32,4 +32,9 @@ module.exports = () => {
   bot.hears(timeleftBtn, timeleft)
   bot.hears(teachersBtn, teachers)
   bot.hears(commandsBtn, commands)
+
+  bot.catch(e => {
+    telegram.sendMessage(config.ownerId, `|Error: ${e.message}`)
+    console.error(e)
+  })
 }
