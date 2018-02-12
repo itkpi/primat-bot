@@ -1,10 +1,9 @@
 const config = require('../../config')
 
 module.exports = ctx => {
-  const links = Object.keys(config.kpi_internets_links),
-    nums = ['Раз', 'Два', 'Три', 'Четыре', 'Пять', 'Шесть', 'Семь', 'Восемь', 'Девять', 'Десять']
+  const links = Object.keys(config.kpi_internets_links)
 
-  const answer = links.map((link, i) => `<a href="${link}">${nums[i]}</a> - ${config.kpi_internets_links[link]}\n`)
-    .join('')
+  const answer = links.map(link => `<a href="${link}">${config.kpi_internets_links[link]}</a>`)
+    .join('\n')
   return ctx.replyWithHTML(answer)
 }

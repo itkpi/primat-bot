@@ -44,12 +44,12 @@
 
   "kpi_internets_links": {
     "http://telegra.ph/KPI-02-04#1": "FAQ абитуриента 2018",
-    "http://telegra.ph/Gajd-dlya-abitury-programmistov-KPI-06-28": "гайд для абитуры-программистов",
-    "http://telegra.ph/Polnyj-gajd-po-obshchagam-KPI-dlya-chajnikov-07-30": "полный гайд по общагам",
-    "https://t.me/hochu_v_kpi": "канал с самой актуальной информацией"
+    "http://telegra.ph/Gajd-dlya-abitury-programmistov-KPI-06-28": "Гайд для абитуры-программистов",
+    "http://telegra.ph/Polnyj-gajd-po-obshchagam-KPI-dlya-chajnikov-07-30": "Полный гайд по общагам",
+    "https://t.me/hochu_v_kpi": "Канал с самой актуальной информацией"
   },
 
   "start_links": {
-    "http://telegra.ph/Kak-delat-lekcii-02-03": "рассказ о создании лекций с помощью бота"
+    "http://telegra.ph/Kak-delat-lekcii-02-03": "Рассказ о создании лекций с помощью бота"
   }
 }

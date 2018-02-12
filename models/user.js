@@ -61,9 +61,9 @@ User.post('save', ({ username, tgId, group }) => {
   console.log(msg)
 
   const links = Object.keys(config.start_links)
-  const answer = links.map(link => `<a href="${link}">Здесь</a> ${config.start_links[link]}\n`)
-    .join('')
-  telegram.sendMessage(tgId, answer, { parse_mode: 'HTML' })
+  const info = links.map(link => `<a href="${link}">Здесь</a> ${config.start_links[link]}`)
+    .join('\n')
+  telegram.sendMessage(tgId, info, { parse_mode: 'HTML' })
 })
 
 module.exports = mongoose.model('User', User)
