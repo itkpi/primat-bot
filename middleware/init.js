@@ -15,7 +15,7 @@ module.exports = session => (ctx, next) => {
 
   ctx.state.clearRoutes = () => {
     config.routes.forEach(route => ctx.session[route] = null)
-    if (ctx.session.user.isAbitura && !ctx.session.group)
+    if (ctx.session.user && ctx.session.user.isAbitura && !ctx.session.group)
       ctx.session.abitura = {}
 
     ctx.state.saveSession()
@@ -23,8 +23,9 @@ module.exports = session => (ctx, next) => {
 
   ctx.state.home = msg => {
     ctx.state.clearRoutes()
+    console.log(ctx.session)
 
-    if (ctx.session.user.isAbitura && !ctx.session.group) {
+    if (ctx.session.user && ctx.session.user.isAbitura && !ctx.session.group) {
       return ctx.reply(msg, ctx.state.abituraMarkup)
     } else {
       return ctx.reply(msg, ctx.state.homeMarkup)

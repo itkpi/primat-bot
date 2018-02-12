@@ -1,7 +1,7 @@
 const User = require('../../models/user'),
       parseGroup = require('../../modules/parse-group')
 
-module.exports = async ctx => {
+module.exports = route => async ctx => {
   if (ctx.state.btnVal === 'Домой') {
     ctx.state.home('Домой так домой')
   } else {
@@ -26,7 +26,7 @@ module.exports = async ctx => {
         groupData.course = user.course
       } else {
         ctx.session = Object.assign({}, ctx.session, groupData)
-        ctx.session.cabinet.nextCondition = 'course'
+        ctx.session[route].nextCondition = 'course'
         ctx.state.saveSession()
 
         return ctx.reply(

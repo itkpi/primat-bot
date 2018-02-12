@@ -6,8 +6,9 @@ module.exports = (ctx, next) => {
           route = config.routes.find(route => ctx.session[route])
 
     const usrTxt = ctx.message.text ? ctx.message.text : 'or did smth'
-    const roles = ['isStudent', 'isAbitura', 'isTeacher', 'notKPI']
-    const role = roles.find(role => ctx.session.user[role])
+    // const roles = ['isStudent', 'isAbitura', 'isTeacher', 'notKPI']
+    // const role = roles.find(role => ctx.session.user[role])
+    const role = 'kek'
 
 
     console.log(`${role}|${username || tgId}${group ? `, ${group}` : ''}: ${route ? '' : usrTxt}` + 
