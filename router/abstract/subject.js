@@ -1,5 +1,5 @@
 const Abstract = require('../../models/abstract'),
-      { Markup } = require('telegraf')
+  { Markup } = require('telegraf')
 
 module.exports = async ctx => {
   if (ctx.state.btnVal === 'Отмена')
@@ -23,7 +23,7 @@ module.exports = async ctx => {
       if (amount > 1) buttons.push('Все')
 
       ctx.reply(
-        `Выбирай номер`,
+        'Выбирай номер',
         Markup.keyboard(buttons.concat('Отмена'), { columns: 4 })
           .resize().extra()
       )

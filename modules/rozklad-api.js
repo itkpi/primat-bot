@@ -1,5 +1,5 @@
 const { request } = require('./utils'),
-      config = require('../config')
+  config = require('../config')
 
 class Rozklad {
   constructor() {
@@ -12,10 +12,10 @@ class Rozklad {
         throw new Error(`Too much params: [${names.join(', ')}]`)
 
       if (names.find(name => !['filter', 'search'].includes(name)))
-        throw new Error(`Wrong parameter`)
+        throw new Error('Wrong parameter')
 
       params = names.map(name => `${name}=${JSON.stringify(params[name])}`)
-                    .join('&')
+        .join('&')
 
       const url = encodeURI(`${this.apiRoot}${path}/?${params}`)
       const { body } = await request(url)
@@ -42,7 +42,7 @@ class Rozklad {
 
   async lessons(id, params) {
     if (!id)
-      throw new Error("Group id doens't specified")
+      throw new Error('Group id doens\'t specified')
 
     return params
       ? await this.r(`groups/${id}/lessons`, { filter: params })
@@ -51,14 +51,14 @@ class Rozklad {
 
   async teacherLessons(name) {
     if (!name)
-      throw new Error("Teacher name doesn't specified")
+      throw new Error('Teacher name doesn\'t specified')
 
     return await this.r(`teachers/${name}/lessons`)
   }
 
   async groupTeachers(id) {
     if (!id)
-      throw new Error("Group id doesn't specified")
+      throw new Error('Group id doesn\'t specified')
 
     return await this.r(`groups/${id}/teachers`)
   }

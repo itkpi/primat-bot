@@ -1,11 +1,11 @@
 const User = require('../models/user'),
-      { ph } = require('../modules/utils')
+  { ph } = require('../modules/utils')
 
 module.exports = async ctx => {
   if (ctx.session.user.telegraph_user) {
     try {
       const tgId = ctx.from.id,
-            user = await User.findOne({ tgId })
+        user = await User.findOne({ tgId })
 
       if (user && !user.telegraph_token) {
         const account = await ph.createAccount('eee fam', {
@@ -26,9 +26,9 @@ module.exports = async ctx => {
         ctx.state.saveSession()
       } else if (user) {
         ctx.reply(
-          `У тебя уже создан аккаунт в Телеграфе, можешь авторизироваться по этой ссылке: ` +
+          'У тебя уже создан аккаунт в Телеграфе, можешь авторизироваться по этой ссылке: ' +
             `${user.telegraph_authurl}\nНикому не показывай!\nЕсли ссылка уже использована, можешь обновить ее ` +
-            `командой /phupdate`
+            'командой /phupdate'
         )
       }
     } catch (e) {

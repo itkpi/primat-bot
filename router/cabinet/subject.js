@@ -8,7 +8,7 @@ module.exports = ctx => {
     ctx.session.cabinet.subject = ctx.state.btnVal
     ctx.session.cabinet.nextCondition = 'upload'
     ctx.reply('Понял-принял. Скидывай свой файл с лекцией', Markup.keyboard(['Отмена'])
-        .resize().extra()
+      .resize().extra()
     )
   } else {
     ctx.reply('Не нахожу такого предмета :c')

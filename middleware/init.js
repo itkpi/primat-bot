@@ -1,6 +1,7 @@
 const Telegraf = require('telegraf'),
-      { home_btns, abitura_home_btns } = config,
-      { telegram } = require('../modules/utils').bot
+  config = require('../config'),
+  { home_btns, abitura_home_btns } = config,
+  { telegram } = require('../modules/utils').bot
 
 module.exports = session => (ctx, next) => {
   ctx.state.homeMarkup = Telegraf.Markup
@@ -23,7 +24,6 @@ module.exports = session => (ctx, next) => {
 
   ctx.state.home = msg => {
     ctx.state.clearRoutes()
-    console.log(ctx.session)
 
     if (ctx.session.user && ctx.session.user.isAbitura && !ctx.session.group) {
       return ctx.reply(msg, ctx.state.abituraMarkup)

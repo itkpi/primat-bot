@@ -1,10 +1,10 @@
 const Abstract = require('../../models/abstract'),
-      { bot, request } = require('../../modules/utils'),
-      { telegram } = bot,
-      puppeteer = require('puppeteer'),
-      fs = require('fs'),
-      util = require('util'),
-      unlink = util.promisify(fs.unlink)
+  { bot, request } = require('../../modules/utils'),
+  { telegram } = bot,
+  puppeteer = require('puppeteer'),
+  fs = require('fs'),
+  util = require('util'),
+  unlink = util.promisify(fs.unlink)
 
 module.exports = async ctx => {
   const { username, id } = ctx.from
@@ -25,23 +25,23 @@ module.exports = async ctx => {
   ])
     .then(([abstract, browser, msg]) => Promise.all([abstract, browser, msg, browser.newPage()]))
     .then(([abstract, browser, msg, page]) => Promise.all([
-        `${process.cwd()}/public/${abstract.name.substr(0, 40).replace(/\//g, '')}.pdf`,
-        browser,
-        page,
-        msg,
-        page.goto(abstract.telegraph_url, { waitUntil: 'networkidle2' })
-      ])
+      `${process.cwd()}/public/${abstract.name.substr(0, 40).replace(/\//g, '')}.pdf`,
+      browser,
+      page,
+      msg,
+      page.goto(abstract.telegraph_url, { waitUntil: 'networkidle2' })
+    ])
     )
     .then(([path, browser, page, msg]) => Promise.all([
-        path, browser, msg, page.pdf({ path, format: 'A4' })
-      ])
+      path, browser, msg, page.pdf({ path, format: 'A4' })
+    ])
     )
     .then(([path, browser, msg]) => Promise.all([
-        path,
-        browser.close(),
-        sendPdf(ctx.from.id, path),
-        ctx.telegram.deleteMessage(msg.chat.id, msg.message_id)
-      ])
+      path,
+      browser.close(),
+      sendPdf(ctx.from.id, path),
+      ctx.telegram.deleteMessage(msg.chat.id, msg.message_id)
+    ])
     )
     .then(([path]) => Promise.all([unlink(path), ctx.answerCbQuery('Читай на здоровье!')]))
     .catch(e => {

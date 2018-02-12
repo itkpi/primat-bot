@@ -1,5 +1,6 @@
 const mongoose = require('../modules/mongoose'),
-      { telegram } = require('../modules/utils').bot,
+  { telegram } = require('../modules/utils').bot,
+  config = require('../config'),
 
   Schema = mongoose.Schema,
 
@@ -58,6 +59,11 @@ User.post('save', ({ username, tgId, group }) => {
   const msg = `New user ${username || tgId}${group ? ` from ${group}` : ''} has registered!`
   telegram.sendMessage(config.ownerId, msg)
   console.log(msg)
+
+  const links = Object.keys(config.start_links)
+  const info = links.map(link => `<a href="${link}">Здесь</a> ${config.start_links[link]}`)
+    .join('\n')
+  telegram.sendMessage(tgId, info, { parse_mode: 'HTML' })
 })
 
 module.exports = mongoose.model('User', User)

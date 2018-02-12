@@ -1,3 +1,5 @@
+const config = require('../config')
+
 module.exports = ctx => {
   if (config.ownerId == ctx.from.id) {
     ctx.session = null

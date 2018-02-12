@@ -1,5 +1,5 @@
 const { r } = require('../../modules/utils'),
-      { Extra, Router } = require('telegraf')
+  { Extra } = require('telegraf')
 
 module.exports = async ctx => {
   if (ctx.state.btnVal === 'Назад')
@@ -12,8 +12,8 @@ module.exports = async ctx => {
   try {
     const lessons = await getLessons(ctx.session.rGroupId, ctx.state.btnVal)
     const getLessonsMarkup = nums => 
-            Extra.markup(m => m.inlineKeyboard(
-                nums.sort().map(num => m.callbackButton(num, `location|${num}`))))
+      Extra.markup(m => m.inlineKeyboard(
+        nums.sort().map(num => m.callbackButton(num, `location|${num}`))))
 
 
     if (lessons) {
@@ -33,7 +33,7 @@ module.exports = async ctx => {
 }
 
 function getTimeSch() {
-    return `<b>1.</b> 8:30 - 10:05
+  return `<b>1.</b> 8:30 - 10:05
 <b>2.</b> 10:25 - 12:00
 <b>3.</b> 12:20 - 13:55
 <b>4.</b> 14:15 - 15:50
@@ -42,9 +42,9 @@ function getTimeSch() {
 
 async function getLessons(id, value) {
   const currDay = (new Date).getDay(),
-        nextDay = (currDay + 1) % 8 ? (currDay + 1) % 8 : 1,
-        currWeek = await r.currWeek(),
-        nextWeek = currWeek === 1 ? 2 : 1
+    nextDay = (currDay + 1) % 8 ? (currDay + 1) % 8 : 1,
+    currWeek = await r.currWeek(),
+    nextWeek = currWeek === 1 ? 2 : 1
 
   const cases = {
     'Сегодня': {
@@ -71,10 +71,10 @@ async function getLessons(id, value) {
 
 function parseLessons(lessons) {
   const formatTime = time => time.split(':')
-        .slice(0, 2)
-        .join(':')
+    .slice(0, 2)
+    .join(':')
 
-  return lessons.reduce((acc, lesson, i) => {
+  return lessons.reduce((acc, lesson) => {
     if (!acc.day || lesson.day_name !== acc.day) {
       if (acc.day && acc.putWeek) {
         acc.putWeek = false
@@ -84,7 +84,7 @@ function parseLessons(lessons) {
       acc.day = lesson.day_name
     }
 
-    const { lesson_room, teacher_name, lesson_type, time_start, time_end } = lesson
+    const { lesson_room, lesson_type, time_start } = lesson
 
     acc.answer += `<b>${lesson.lesson_number}</b>. ${formatTime(time_start)}<code>|</code> ${lesson.lesson_name} `
 
@@ -100,7 +100,7 @@ function parseLessons(lessons) {
     if (lesson_type)
       acc.answer += ` <i>${lesson_type}</i>`
 
-    acc.answer += `\n`
+    acc.answer += '\n'
     return acc
   }, { day: null, answer: '', putWeek: true, buildings: [] })
 }

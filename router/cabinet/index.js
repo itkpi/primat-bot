@@ -1,9 +1,10 @@
 const { Markup } = require('telegraf'),
-      { Router } = require('../../modules/utils'),
-      changeGroup = require('./change-group')('cabinet'),
-      subject = require('./subject'),
-      action = require('./action'),
-      course = require('./course')
+  config = require('../../config'),
+  { Router } = require('../../modules/utils'),
+  changeGroup = require('./change-group'),
+  subject = require('./subject'),
+  action = require('./action'),
+  course = require('./course')
 
 const router = Router('cabinet',
   ctx => ctx.message.text !== config.home_btns.cabinet && !ctx.session.cabinet,

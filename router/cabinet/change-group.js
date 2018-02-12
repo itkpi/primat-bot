@@ -1,21 +1,21 @@
 const User = require('../../models/user'),
-      parseGroup = require('../../modules/parse-group')
+  parseGroup = require('../../modules/parse-group')
 
 module.exports = route => async ctx => {
   if (ctx.state.btnVal === 'Домой') {
     ctx.state.home('Домой так домой')
   } else {
     const group = ctx.message.text.trim().toLowerCase(),
-          groupData = await parseGroup(group)
+      groupData = await parseGroup(group)
 
     if (!groupData)
       return ctx.reply('Не знаю такой группы, попробуй по-другому')
 
     if (Array.isArray(groupData)) {
       const answer = groupData.reduce(
-          (acc, group) => acc + `${group.group_full_name}\n`,
-              'Я не нашел этой группы, но попробуй кое-что похожее:\n'
-        )
+        (acc, group) => acc + `${group.group_full_name}\n`,
+        'Я не нашел этой группы, но попробуй кое-что похожее:\n'
+      )
 
       return ctx.reply(answer)
     }
@@ -30,9 +30,9 @@ module.exports = route => async ctx => {
         ctx.state.saveSession()
 
         return ctx.reply(
-            'Оке, но не могу разобрать... Можешь сказать номер курса?',
-            { reply_markup: { remove_keyboard: true } }
-          )
+          'Оке, но не могу разобрать... Можешь сказать номер курса?',
+          { reply_markup: { remove_keyboard: true } }
+        )
       }
     }
 

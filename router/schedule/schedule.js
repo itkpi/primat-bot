@@ -1,6 +1,6 @@
 const currSem = require('../../modules/curr-sem'),
-      { r } = require('../../modules/utils'),
-      { Markup } = require('telegraf')
+  { r } = require('../../modules/utils'),
+  { Markup } = require('telegraf')
 
 module.exports = async ctx => {
   if (!ctx.session.group && !ctx.session.user.isTeacher)
@@ -20,9 +20,9 @@ module.exports = async ctx => {
 
   ctx.session.schedule = { nextCondition: 'show' }
   ctx.reply('Давай посмотрим какие у тебя там пары',
-      Markup.keyboard([
-          'Сегодня', 'Завтра', 'Вчера', 'Эта неделя', 'Следующая неделя', 'Расписание пар', 'Назад'
-        ], { columns: 2 })
+    Markup.keyboard([
+      'Сегодня', 'Завтра', 'Вчера', 'Эта неделя', 'Следующая неделя', 'Расписание пар', 'Назад'
+    ], { columns: 2 })
       .resize()
       .extra()
   )
