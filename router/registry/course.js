@@ -6,7 +6,7 @@ module.exports = ctx => {
   if (course > 0 && course < 7) {
     try {
 
-      const user = new User(Object.assign({}, ctx.session.registry, { nextCondition: undefined, isStudent: true }))
+      const user = new User(Object.assign({}, ctx.session.registry, { course, nextCondition: undefined, isStudent: true }))
       user.save()
 
       ctx.state.home('Добро пожаловать!')

@@ -1,7 +1,7 @@
 const { Markup } = require('telegraf'),
   config = require('../../config'),
   { Router } = require('../../modules/utils'),
-  changeGroup = require('./change-group'),
+  changeGroup = require('./change-group')('cabinet'),
   subject = require('./subject'),
   action = require('./action'),
   course = require('./course')
