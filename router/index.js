@@ -7,7 +7,7 @@ const { bot } = require('../modules/utils'),
   timeleft = require('./timeleft'),
   commands = require('./commands'),
   teachers = require('./teachers'),
-  cabinet  = require('./cabinet'),
+  cabinet  = require('./cabinet')('cabinet'),
   photo    = require('./cabinet/photo'),
   upload   = require('./cabinet/upload'),
 
