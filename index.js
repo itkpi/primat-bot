@@ -18,6 +18,7 @@ app.use((req, res, next) => {
     return next()
 
   console.log(req.method, req.url)
+  next()
 })
 
 if (process.env.LOCATION === 'local') {
