@@ -1,6 +1,7 @@
 const router = require('express').Router(),
   Abstract = require('../models/abstract'),
-  KpiInfo = require('../models/kpi-info')
+  KpiInfo = require('../models/kpi-info'),
+  mongoose = require('mongoose')
 
 router.use((req, res, next) => {
   res.set({
@@ -8,6 +9,36 @@ router.use((req, res, next) => {
     'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
   })
   next()
+})
+
+router.get('/info', async (req, res) => {
+  try {
+    const o = {
+      map: function() {
+        emit(this.flow, `${this.course}_${this.semester}`)
+      },
+      reduce: function(k, courses) {
+        return JSON.stringify(courses
+          .filter((c, i, self) => self.indexOf(c) === i)
+          .reduce((acc, value) => {
+            const [course, semester] = value.split('_')
+            if (!acc[course])
+              acc[course] = { semesters: [] }
+            if (!acc[course].semesters.includes(semester))
+              acc[course].semesters.push(semester)
+            return acc
+          }, { }))
+      }
+    }
+    const resp = (await Abstract.mapReduce(o))
+      .map(({ _id, value }) => ({ flow: _id, courses: JSON.parse(value) }))
+
+    console.log(resp)
+    res.json({ data: resp })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Db error' })
+  }
 })
 
 router.get('/flows', async (req, res) => {
@@ -64,13 +95,19 @@ router.get('/meta', async (req, res) => {
 //     res.status(500).json({ error: '500 shit happens' })
 //   }
 // })
-
 router.get('/abstracts/:id?', async (req, res) => {
   try {
-    if (req.params.id) {
-      const abstract = await Abstract.findById(req.params.id)
-      return abstract ? res.json({ data: abstract }) : res.status(404).json({ data: null })
+    const { id } = req.params
+    if (id) {
+      if (!mongoose.Types.ObjectId.isValid(req.params.id))
+        return res.status(400).json({ error: 'Invalid id' })
+
+      const abstract = await Abstract.findById(id)
+      return abstract 
+        ? res.json({ data: abstract })
+        : res.status(404).json({ data: null })
     }
+
     const { semester, flow, course } = req.query
     if (!(semester && flow && course))
       return res.json({ error: 'Expected id or three parameters: semester, flow, course' })
@@ -95,10 +132,6 @@ router.get('/abstracts/:id?', async (req, res) => {
     console.error(e)
     res.status(500).json({ error: 'Error 500\nШось поломилося' })
   }
-})
-
-router.use((req, res, next) => {
-  res.status(404).json({ error: 'wrong path' })
 })
 
 module.exports = router

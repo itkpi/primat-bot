@@ -18,6 +18,7 @@ app.use((req, res, next) => {
     return next()
 
   console.log(req.method, req.url)
+  next()
 })
 
 if (process.env.LOCATION === 'local') {
@@ -35,14 +36,13 @@ router()
 
 app.use('/api', api)
 
-
 app.use((req, res, next) => {
-  res.status(404).end('404 Error :c')
+  res.status(404).json({ error: 'Wrong path' })
 })
 
 app.use((err, req, res, next) => {
   console.error(err)
-  res.status(500).end('ooops, error :c')
+  res.status(500).json({ error: 'Application error' })
 })
 
 app.listen(port, () => console.log(`Server is running on port ${port}`))
