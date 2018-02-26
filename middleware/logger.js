@@ -2,7 +2,7 @@ const config = require('../config')
 
 module.exports = (ctx, next) => {
   if (ctx.session && ctx.session.registry) {
-    console.log(`[registry] ${ctx.from.username}: ${ctx.message.text}`)
+    console.log(`[registry] ${ctx.from.username || ctx.from.id}: ${ctx.message.text}`)
   } else if (ctx.session && ctx.session.user && ctx.message) {
     const { username, tgId, group } = ctx.session.user,
       route = config.routes.find(route => ctx.session[route])

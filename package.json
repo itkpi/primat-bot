@@ -20,7 +20,7 @@
     "picasa": "^1.0.6",
     "puppeteer": "^1.0.0",
     "request": "^2.81.0",
-    "telegraf": "^3.17.6",
+    "telegraf": "^3.17.8",
     "telegraf-session-redis": "^4.2.0",
     "telegraph-node": "^1.0.4"
   },
