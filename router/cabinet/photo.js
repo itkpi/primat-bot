@@ -30,7 +30,7 @@ module.exports = async ctx => {
   ctx.state.saveSession()
 }
 
-async function uploadPhotos(user, info) {
+function uploadPhotos(user, info) {
   const { course, username, tgId } = user,
     { subject, lectureName, picasaToken, photoLinks: tgLinks } = info,
 
