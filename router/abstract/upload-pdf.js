@@ -17,35 +17,27 @@ module.exports = async ctx => {
     return request({ method, url, formData })
   }
 
-  // promises instead of async/awaits for perfomance increase (parallel operations)
-  Promise.all([
-    Abstract.findById(ctx.state.value, { telegraph_url: 1, name: 1 }),
-    puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] }),
-    ctx.reply('Собираю лекцию...')
-  ])
-    .then(([abstract, browser, msg]) => Promise.all([abstract, browser, msg, browser.newPage()]))
-    .then(([abstract, browser, msg, page]) => Promise.all([
-      `${process.cwd()}/public/${abstract.name.substr(0, 40).replace(/\//g, '')}.pdf`,
-      browser,
-      page,
-      msg,
-      page.goto(abstract.telegraph_url, { waitUntil: 'networkidle2' })
-    ])
-    )
-    .then(([path, browser, page, msg]) => Promise.all([
-      path, browser, msg, page.pdf({ path, format: 'A4' })
-    ])
-    )
-    .then(([path, browser, msg]) => Promise.all([
-      path,
-      browser.close(),
-      sendPdf(ctx.from.id, path),
-      ctx.telegram.deleteMessage(msg.chat.id, msg.message_id)
-    ])
-    )
-    .then(([path]) => Promise.all([unlink(path), ctx.answerCbQuery('Читай на здоровье!')]))
-    .catch(e => {
-      console.error(e)
-      ctx.answerCbQuery('Ошибочка :c', true)
-    })
+  try {
+    const [abstract, browser, msg] = await Promise.all([
+        Abstract.findById(ctx.state.value, { telegraph_url: 1, name: 1 }),
+        puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] }),
+        ctx.reply('Собираю лекцию...')    
+      ])
+    const page = await browser.newPage()
+    const pdfPath = `${process.cwd()}/public/${abstract.name.substr(0, 40).replace(/\//g, '')}.pdf`
+    await page.goto(abstract.telegraph_url, { waitUntil: 'networkidle2' })
+    await page.pdf({ path, format: 'A4' })
+    await Promise.all([
+        browser.close(),
+        sendPdf(ctx.from.id, path),
+        ctx.telegram.deleteMessage(msg.chat.id, msg.message_id)
+      ])
+    await Promise.all([
+        unlink(path),
+        ctx.answerCbQuery('Читай на здоровье!')
+      ])
+  } catch (e) {
+    console.error(e)
+    ctx.answerCbQuery('Ошибочка :c', true)
+  }
 }
