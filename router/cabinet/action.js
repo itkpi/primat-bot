@@ -3,6 +3,8 @@ const { Markup } = require('telegraf'),
   parseSchedule = require('../../modules/parse-schedule'),
   { cabinet_btns: btns } = config
 
+const groupSubjects = {}
+
 module.exports = async ctx => {
 
   switch (ctx.state.btnVal) {
@@ -20,8 +22,8 @@ module.exports = async ctx => {
       if (!ctx.session.user.telegraph_token)
         return ctx.reply('У тебя пока нет аккаунта\nТебе поможет команда /telegraph')
       try {
-        const subjects = ctx.session.subjects || await parseSchedule(ctx.session.user.rGroupId, 'subjects')
-        ctx.session.subjects = subjects
+        const subjects = groupSubjects[ctx.session.user.group] || await parseSchedule(ctx.session.user.rGroupId, 'subjects')
+        groupSubjects[ctx.session.user.group] = subjects
 
         const amount = subjects.length
         if (amount > 0) {

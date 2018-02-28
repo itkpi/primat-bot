@@ -66,10 +66,10 @@ async function getLessons(id, value) {
   const lessons = cases[value]
     ? await r.lessons(id, cases[value])
     : null
-  return lessons && parseLessons(lessons)
+  return lessons && parseLessons(lessons, currDay)
 }
 
-function parseLessons(lessons) {
+function parseLessons(lessons, currDay) {
   const formatTime = time => time.split(':')
     .slice(0, 2)
     .join(':')
@@ -78,9 +78,15 @@ function parseLessons(lessons) {
     if (!acc.day || lesson.day_name !== acc.day) {
       if (acc.day && acc.putWeek) {
         acc.putWeek = false
+        acc.putCurrDay = true
         acc.answer = `<b>${lesson.lesson_week}-й тиждень</b>` + acc.answer
       }
-      acc.answer += `\n<pre>${lesson.day_name}</pre>\n`
+      const dayTitle = `${lesson.day_name}`
+      if (acc.putCurrDay && lesson.day_number == currDay)
+        acc.answer += `\n<b>__${dayTitle}__</b>\n`
+      else
+        acc.answer += `\n<pre>${dayTitle}</pre>\n`
+
       acc.day = lesson.day_name
     }
 
@@ -102,5 +108,5 @@ function parseLessons(lessons) {
 
     acc.answer += '\n'
     return acc
-  }, { day: null, answer: '', putWeek: true, buildings: [] })
+  }, { day: null, answer: '', putWeek: true, putCurrDay: false, buildings: [] })
 }

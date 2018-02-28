@@ -24,7 +24,7 @@ module.exports = async ctx => {
         ctx.reply('Собираю лекцию...')    
       ])
     const page = await browser.newPage()
-    const pdfPath = `${process.cwd()}/public/${abstract.name.substr(0, 40).replace(/\//g, '')}.pdf`
+    const path = `${process.cwd()}/public/${abstract.name.substr(0, 40).replace(/\//g, '')}.pdf`
     await page.goto(abstract.telegraph_url, { waitUntil: 'networkidle2' })
     await page.pdf({ path, format: 'A4' })
     await Promise.all([
