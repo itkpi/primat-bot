@@ -91,9 +91,9 @@ function parseLessons(lessons, currDay, currWeek) {
       acc.day = lesson.day_name
     }
 
-    const { lesson_room, lesson_type, time_start } = lesson
+    const { lesson_room, lesson_type, time_start, lesson_number, lesson_name } = lesson
 
-    acc.answer += `<b>${lesson.lesson_number}</b>. ${formatTime(time_start)}<code>|</code> ${lesson.lesson_name} `
+    acc.answer += `<b>${lesson_number}</b>. ${formatTime(time_start)}<code>|</code> ${lesson_name} `
 
     if (lesson_room) {
       const building = lesson_room.split('-')[1]
