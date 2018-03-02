@@ -17,6 +17,9 @@ module.exports = async ctx => {
     const weeks = [1, 2]
     const days  = [1, 2, 3, 4, 5, 6]
 
+    const currWeek = await r.currWeek()
+    const currDay = (new Date).getDay()
+
     let answer = ''
     weeks.forEach(weekNum => {
       answer += `<b>${weekNum}-й тиждень</b>\n`
@@ -24,7 +27,10 @@ module.exports = async ctx => {
       days.forEach(dayNum => {
         const day = week.days[dayNum]
         if (day.lessons.length > 0) {
-          answer += `<pre>${day.day_name}</pre>\n`
+          answer += currWeek === weekNum && currDay === dayNum
+            ? `<b>__${day.day_name}__</b>\n`
+            : `<pre>${day.day_name}</pre>\n`
+
           day.lessons.forEach(lesson => {
             const { lesson_room, lesson_type, time_start } = lesson
             answer += `<b>${lesson.lesson_number}</b>. ${formatTime(time_start)}<code>|</code> ${lesson.lesson_name} `

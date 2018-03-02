@@ -75,23 +75,33 @@ function parseLessons(lessons, currDay, currWeek) {
     .join(':')
 
   return lessons.reduce((acc, lesson) => {
-    if (!acc.day || lesson.day_name !== acc.day) {
+    const {
+      lesson_room,
+      lesson_type,
+      time_start,
+      lesson_number,
+      lesson_name,
+      day_name,
+      lesson_week,
+      day_number
+    } = lesson
+
+    if (!acc.day || day_name !== acc.day) {
       if (acc.day && acc.putWeek) {
         acc.putWeek = false
-        acc.answer = `<b>${lesson.lesson_week}-й тиждень</b>` + acc.answer
-        if (currWeek == lesson.lesson_week)
+        acc.answer = `<b>${lesson_week}-й тиждень</b>` + acc.answer
+        if (currWeek == lesson_week)
           acc.putCurrDay = true
       }
-      const dayTitle = `${lesson.day_name}`
-      if (acc.putCurrDay && lesson.day_number == currDay)
-        acc.answer += `\n<b>__${dayTitle}__</b>\n`
+      
+      if (acc.putCurrDay && day_number == currDay)
+        acc.answer += `\n<b>__${day_name}__</b>\n`
       else
-        acc.answer += `\n<pre>${dayTitle}</pre>\n`
+        acc.answer += `\n<pre>${day_name}</pre>\n`
 
-      acc.day = lesson.day_name
+      acc.day = day_name
     }
 
-    const { lesson_room, lesson_type, time_start, lesson_number, lesson_name } = lesson
 
     acc.answer += `<b>${lesson_number}</b>. ${formatTime(time_start)}<code>|</code> ${lesson_name} `
 
