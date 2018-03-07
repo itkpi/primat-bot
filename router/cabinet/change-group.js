@@ -2,11 +2,14 @@ const User = require('../../models/user'),
   parseGroup = require('../../modules/parse-group')
 
 module.exports = route => async ctx => {
-  if (ctx.state.btnVal === 'Домой') {
-    ctx.state.home('Домой так домой')
+  if (ctx.state.btnVal === 'Отмена') {
+    ctx.state.home('Лады')
   } else {
-    const group = ctx.message.text.trim().toLowerCase(),
-      groupData = await parseGroup(group)
+    const group = ctx.state.btnVal === 'Домой'
+      ? ctx.session.user.group
+      : ctx.message.text.trim().toLowerCase()
+    // const group = ctx.message.text.trim().toLowerCase(),
+    const groupData = await parseGroup(group)
 
     if (!groupData)
       return ctx.reply('Не знаю такой группы, попробуй по-другому')

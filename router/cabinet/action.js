@@ -11,7 +11,7 @@ module.exports = async ctx => {
 
   case btns.change_group:
     ctx.reply('К кому пойдем?', Markup
-      .keyboard(['Домой'])
+      .keyboard(['Домой', 'Отмена'], { columns: 2 })
       .resize().oneTime().extra()
     )
     ctx.session.cabinet.nextCondition = 'changeGroup'
