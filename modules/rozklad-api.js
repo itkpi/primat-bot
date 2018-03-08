@@ -1,5 +1,5 @@
 const { request } = require('./utils'),
-  config = require('../config')
+      config = require('../config')
 
 class Rozklad {
   constructor() {
@@ -20,8 +20,8 @@ class Rozklad {
       const url = encodeURI(`${this.apiRoot}${path}/?${params}`)
       const { body } = await request(url)
       try {
-        return JSON.parse(body).data  
-      } catch(e) {
+        return JSON.parse(body).data
+      } catch (e) {
         console.log(body)
         console.error(e)
         return null

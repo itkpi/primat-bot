@@ -1,6 +1,6 @@
 const mongoose = require('mongoose'),
-  url = process.env.MONGO_URL,
-  db = mongoose.connection
+      url = process.env.MONGO_URL,
+      db = mongoose.connection
 
 mongoose.Promise = Promise
 

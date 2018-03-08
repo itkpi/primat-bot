@@ -13,6 +13,6 @@ module.exports = ctx => {
   } else {
     ctx.reply('Не нахожу такого предмета :c')
   }
-  
+
   ctx.state.saveSession()
 }

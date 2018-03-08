@@ -2,19 +2,19 @@ const { r } = require('./utils')
 
 module.exports = async (groupId, param) => {
   const timetable = await r.lessons(groupId),
-    weeks = [1, 2],
-    days = [1, 2, 3, 4, 5, 6],
-    nums = [0, 1, 2, 3, 4],
-    result = {
-      subjects: [],
-      teachers: {}
-    }
+        weeks = [1, 2],
+        days = [1, 2, 3, 4, 5, 6],
+        nums = [0, 1, 2, 3, 4],
+        result = {
+          subjects: [],
+          teachers: {}
+        }
 
   weeks.forEach(week => days.forEach(dayNum => {
     const day = timetable.weeks[week].days[dayNum]
     if (day) {
       nums.forEach(i => {
-        const { 
+        const {
           lesson_name: subject,
           teachers,
           lesson_full_name

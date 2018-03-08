@@ -1,5 +1,5 @@
 const Building = require('../models/building'),
-  { bot } = require('../modules/utils')
+      { bot } = require('../modules/utils')
 
 module.exports = async ctx => {
   try {
@@ -12,7 +12,7 @@ module.exports = async ctx => {
       return ctx.reply('Неизвестный мне номер :c')
 
     bot.telegram.sendLocation(ctx.from.id, building.latitude, building.longitude)
-  } catch(e) {
+  } catch (e) {
     ctx.state.error(e)
   }
 }

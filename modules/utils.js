@@ -1,8 +1,8 @@
 const Telegraf = require('telegraf'),
-  Telegraph = require('telegraph-node'),
-  Picasa = require('picasa'),
-  util = require('util'),
-  config = require('../config')
+      Telegraph = require('telegraph-node'),
+      Picasa = require('picasa'),
+      util = require('util'),
+      config = require('../config')
 
 exports.request = util.promisify(require('request'))
 exports.bot = new Telegraf(process.env.BOT_TOKEN, { telegram: { webhookReply: false } })
@@ -28,8 +28,8 @@ exports.callbackBtn = new Telegraf.Router(({ callbackQuery }) => {
 })
 
 
-const RozkladApi = require('./rozklad-api')
-exports.r = new RozkladApi()
+// const RozkladApi = require('./rozklad-api')
+exports.r = require('node-rozklad-api') // new RozkladApi()
 
 const HubApi = require('./hub-api')
 exports.h = new HubApi()

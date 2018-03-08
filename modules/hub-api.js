@@ -1,5 +1,5 @@
 const { request } = require('./utils'),
-  config = require('../config')
+      config = require('../config')
 
 class Hub {
   constructor() {

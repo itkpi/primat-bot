@@ -9,7 +9,7 @@ module.exports = ctx => {
       group: null,
       flow: null
     })
-    
+
     ctx.state.home('А вот и ты')
   }
 }

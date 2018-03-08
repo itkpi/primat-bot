@@ -1,8 +1,8 @@
 const group = require('./group'),
-  course = require('./course'),
-  teacher = require('./teacher'),
+      course = require('./course'),
+      teacher = require('./teacher'),
 
-  { Router } = require('../../modules/utils')
+      { Router } = require('../../modules/utils')
 
 const router = Router('registry', ctx => !ctx.session.registry, ctx => ctx.session.registry.nextCondition)
 

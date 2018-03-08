@@ -1,5 +1,5 @@
 const Abstract = require('../../models/abstract'),
-  { Markup } = require('telegraf')
+      { Markup } = require('telegraf')
 
 module.exports = async ctx => {
   if (ctx.state.btnVal === 'Отмена')

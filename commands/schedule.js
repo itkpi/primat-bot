@@ -15,7 +15,7 @@ module.exports = async ctx => {
       return ctx.reply('Не могу найти расписания по этой группе, попробуй другую')
 
     const weeks = [1, 2]
-    const days  = [1, 2, 3, 4, 5, 6]
+    const days = [1, 2, 3, 4, 5, 6]
 
     const currWeek = await r.currWeek()
     const currDay = (new Date).getDay()

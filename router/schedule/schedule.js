@@ -1,6 +1,6 @@
 const currSem = require('../../modules/curr-sem'),
-  { r } = require('../../modules/utils'),
-  { Markup } = require('telegraf')
+      { r } = require('../../modules/utils'),
+      { Markup } = require('telegraf')
 
 module.exports = async ctx => {
   if (!ctx.session.group && !ctx.session.user.isTeacher)
