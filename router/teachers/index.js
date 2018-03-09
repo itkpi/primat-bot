@@ -1,10 +1,6 @@
-const parseSchedule = require('../../modules/parse-schedule'),
-      { teachers: teachersBtn } = require('../../config').home_btns
+const parseSchedule = require('../../modules/parse-schedule')
 
 module.exports = async ctx => {
-  if (ctx.message.text !== teachersBtn)
-    return
-
   const { rGroupId, group } = ctx.session
 
   if (!rGroupId)

@@ -2,6 +2,7 @@ const { bot } = require('../modules/utils'),
       deletesessionCmd = require('./deletesession'),
       showLocationCmd = require('./show-location'),
       hideLocationCmd = require('./hide-location'),
+      helpCmd = require('../router/commands'),
       deleteselfCmd = require('./deleteself'),
       updsessionCmd = require('./updsession'),
       telegraphCmd = require('./telegraph'),
@@ -34,8 +35,10 @@ module.exports = () => {
   bot.command('/setme', setmeCmd)
   bot.command('/phone', phoneCmd)
   bot.command('/unsub', unsubCmd)
+  bot.command('/help', helpCmd)
   bot.command('/sub', subCmd)
 
   bot.command('/b', buildingCmd)
   bot.command('/s', schedule)
+  bot.command('/h', helpCmd)
 }
