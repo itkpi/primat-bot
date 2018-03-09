@@ -1,9 +1,4 @@
-const { timeleft: timeleftBtn } = require('../../config').home_btns
-
 module.exports = ctx => {
-  if (ctx.message.text !== timeleftBtn)
-    return
-
   const len = 60 + 35, // 1:35
         shift = 60 + 55, // 1:55
         firstStart = 60 * 8 + 30, // 8:30
