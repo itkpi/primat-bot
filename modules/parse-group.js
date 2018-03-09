@@ -10,10 +10,10 @@ module.exports = async group => {
   // stupid api that can't search by full name so use hack
   group = group.split(' ')
 
-  let rGroup = await r.group(group[0])
+  let rGroup = await r.groups(group[0])
 
   if (!rGroup) {
-    const possibleGroups = await r.group({ search: { query: group[0] } })
+    const possibleGroups = await r.groups({ search: { query: group[0] } })
 
     // if there no spaces into group name
     if (group.length === 1)
