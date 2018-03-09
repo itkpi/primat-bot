@@ -1,15 +1,15 @@
 const express = require('express'),
 
-  { bot } = require('./modules/utils'),
-      
-  commandHandler = require('./commands'),
-  middleware = require('./middleware'),
-  router = require('./router'),
+      { bot } = require('./modules/utils'),
 
-  api = require('./api'),
+      commandHandler = require('./commands'),
+      middleware = require('./middleware'),
+      router = require('./router'),
 
-  app = express(),
-  port = process.env.PORT || 3210
+      api = require('./api'),
+
+      app = express(),
+      port = process.env.PORT || 3210
 
 app.use(express.static('./public'))
 

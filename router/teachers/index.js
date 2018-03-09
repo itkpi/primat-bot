@@ -1,5 +1,5 @@
 const parseSchedule = require('../../modules/parse-schedule'),
-  { teachers: teachersBtn } = require('../../config').home_btns
+      { teachers: teachersBtn } = require('../../config').home_btns
 
 module.exports = async ctx => {
   if (ctx.message.text !== teachersBtn)

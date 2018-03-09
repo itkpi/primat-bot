@@ -1,12 +1,12 @@
 const Abstract = require('../../models/abstract'),
-  { Markup } = require('telegraf'),
-  config = require('../../config'),
+      { Markup } = require('telegraf'),
+      config = require('../../config'),
 
-  subject = require('./subject'),
-  num = require('./num'),
-  uploadPdf = require('./upload-pdf'),
+      subject = require('./subject'),
+      num = require('./num'),
+      uploadPdf = require('./upload-pdf'),
 
-  { Router, callbackBtn } = require('../../modules/utils')
+      { Router, callbackBtn } = require('../../modules/utils')
 
 const router = Router(
   'abstract',

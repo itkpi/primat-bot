@@ -14,7 +14,7 @@ module.exports = ctx => {
       ctx.session.user = user
       ctx.session.course = course
       ctx.state.saveSession()
-    } catch(e) {
+    } catch (e) {
       ctx.state.error(e)
     }
   } else

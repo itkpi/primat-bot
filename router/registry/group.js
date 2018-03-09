@@ -1,7 +1,7 @@
 const parseGroup = require('../../modules/parse-group'),
-  User = require('../../models/user'),
+      User = require('../../models/user'),
 
-  { Markup } = require('telegraf')
+      { Markup } = require('telegraf')
 
 
 module.exports = async ctx => {
@@ -69,7 +69,7 @@ module.exports = async ctx => {
     const user = new User(Object.assign({}, userData, groupData, { isStudent: true }))
     user.save()
     ctx.session.user = user
-      
+
     const phrases = [
       'О, ты всего первый год, многого еще не знаешь',
       'Отлично, ты на втором курсе, а тебя еще не отчислили. Молодец!',
@@ -77,7 +77,7 @@ module.exports = async ctx => {
       'Диплом уже готов?'
     ]
     return ctx.state.home(phrases[user.course - 1])
-  } catch(e) {
+  } catch (e) {
     ctx.state.error(e)
   }
 }

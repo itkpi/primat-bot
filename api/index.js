@@ -1,7 +1,9 @@
+/*global emit*/
+
 const router = require('express').Router(),
-  Abstract = require('../models/abstract'),
-  KpiInfo = require('../models/kpi-info'),
-  mongoose = require('mongoose')
+      Abstract = require('../models/abstract'),
+      KpiInfo = require('../models/kpi-info'),
+      mongoose = require('mongoose')
 
 router.use((req, res, next) => {
   res.set({
@@ -45,7 +47,7 @@ router.get('/flows', async (req, res) => {
   try {
     const { flows } = await KpiInfo.findOne({ name: 'flows' })
     res.json({ data: flows })
-  } catch(e) {
+  } catch (e) {
     console.error(e)
     res.status(500).json({ error: '500 shit happens' })
   }
@@ -57,7 +59,7 @@ router.get('/meta', async (req, res) => {
       [{ $group: { _id: { course: '$course', semester: '$semester', flow: '$flow' } } }]
     )
     res.json({ data })
-  } catch(e) {
+  } catch (e) {
     console.error(e)
     res.status(500).json({ error: '500 shit happens' })
   }
@@ -103,7 +105,7 @@ router.get('/abstracts/:id?', async (req, res) => {
         return res.status(400).json({ error: 'Invalid id' })
 
       const abstract = await Abstract.findById(id)
-      return abstract 
+      return abstract
         ? res.json({ data: abstract })
         : res.status(404).json({ data: null })
     }
@@ -128,7 +130,7 @@ router.get('/abstracts/:id?', async (req, res) => {
     }, {})
 
     res.json({ data })
-  } catch(e) {
+  } catch (e) {
     console.error(e)
     res.status(500).json({ error: 'Error 500\nШось поломилося' })
   }

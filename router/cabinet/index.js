@@ -1,10 +1,10 @@
 const { Markup } = require('telegraf'),
-  config = require('../../config'),
-  { Router } = require('../../modules/utils'),
-  changeGroup = require('./change-group')('cabinet'),
-  subject = require('./subject'),
-  action = require('./action'),
-  course = require('./course')
+      config = require('../../config'),
+      { Router } = require('../../modules/utils'),
+      changeGroup = require('./change-group')('cabinet'),
+      subject = require('./subject'),
+      action = require('./action'),
+      course = require('./course')
 
 const router = Router('cabinet',
   ctx => ctx.message.text !== config.home_btns.cabinet && !ctx.session.cabinet,
@@ -42,7 +42,7 @@ router.on('photo', ctx => {
     ctx.state.home('Очень жаль, я так люблю читать ваши лекции :c')
   } else {
     ctx.reply('Фотография выглядит как изображение, если что')
-  }  
+  }
 })
 
 module.exports = router.middleware()

@@ -1,11 +1,11 @@
 const schedule = require('./schedule'),
-  location = require('./location'),
-  show = require('./show'),
+      location = require('./location'),
+      show = require('./show'),
 
-  { Router, callbackBtn } = require('../../modules/utils'),
-  config = require('../../config')
+      { Router, callbackBtn } = require('../../modules/utils'),
+      config = require('../../config')
 
-const router = Router('schedule', 
+const router = Router('schedule',
   ctx => ctx.message.text !== config.home_btns.schedule && !ctx.session.schedule,
   ctx => ctx.session.schedule && ctx.session.schedule.nextCondition || 'schedule')
 

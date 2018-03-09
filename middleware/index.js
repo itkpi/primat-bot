@@ -1,19 +1,19 @@
 const start = require('../commands/start'),
-  config = require('../config'),
-  User = require('../models/user'),
-  { bot } = require('../modules/utils'),
-  currSem = require('../modules/curr-sem'),
+      config = require('../config'),
+      User = require('../models/user'),
+      { bot } = require('../modules/utils'),
+      currSem = require('../modules/curr-sem'),
 
-  logger = require('./logger'),
-  init = require('./init'),
-      
-  RedisSession = require('telegraf-session-redis'),
-  redisConfig = {
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT,
-    password: process.env.REDIS_PASSWORD
-  },
-  session = new RedisSession({ store: redisConfig })
+      logger = require('./logger'),
+      init = require('./init'),
+
+      RedisSession = require('telegraf-session-redis'),
+      redisConfig = {
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT,
+        password: process.env.REDIS_PASSWORD
+      },
+      session = new RedisSession({ store: redisConfig })
 
 module.exports = () => {
 
@@ -42,12 +42,12 @@ module.exports = () => {
           ctx.state.saveSession()
           return ctx.state.home('Ой, засмотрелся. Повтори, пожалуйста')
         } else start(ctx)
-      } catch(e) {
+      } catch (e) {
         return ctx.state.error(e)
       }
     } else {
       const { username: originUsername } = ctx.from,
-        { user } = ctx.session
+            { user } = ctx.session
       if (user && user.username !== originUsername) {
         User.findOneAndUpdate({ tgId: ctx.from.id }, { originUsername })
         user.username = originUsername

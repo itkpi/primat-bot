@@ -1,13 +1,15 @@
 const Telegraf = require('telegraf'),
-  Telegraph = require('telegraph-node'),
-  Picasa = require('picasa'),
-  util = require('util'),
-  config = require('../config')
+      Telegraph = require('telegraph-node'),
+      Picasa = require('picasa'),
+      util = require('util'),
+      config = require('../config')
 
 exports.request = util.promisify(require('request'))
 exports.bot = new Telegraf(process.env.BOT_TOKEN, { telegram: { webhookReply: false } })
 exports.ph = new Telegraph()
 exports.picasa = new Picasa()
+
+exports.r = require('node-rozklad-api')
 
 exports.Router = (name, invalid, route) => new Telegraf.Router(ctx => {
   if (invalid(ctx) || config.routes
@@ -26,10 +28,6 @@ exports.callbackBtn = new Telegraf.Router(({ callbackQuery }) => {
   const [route, value] = data.split('|')
   return { route, state: { value } }
 })
-
-
-const RozkladApi = require('./rozklad-api')
-exports.r = new RozkladApi()
 
 const HubApi = require('./hub-api')
 exports.h = new HubApi()

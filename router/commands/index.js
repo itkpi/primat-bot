@@ -1,5 +1,5 @@
 const config = require('../../config'),
-  { commands: commandBtn } = config.home_btns
+      { commands: commandBtn } = config.home_btns
 
 module.exports = ctx => {
   if (ctx.message.text !== commandBtn)

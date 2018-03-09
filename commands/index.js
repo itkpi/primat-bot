@@ -1,23 +1,23 @@
 const { bot } = require('../modules/utils'),
-  deletesessionCmd = require('./deletesession'),
-  showLocationCmd = require('./show-location'),
-  hideLocationCmd = require('./hide-location'),
-  deleteselfCmd = require('./deleteself'),
-  updsessionCmd = require('./updsession'),
-  telegraphCmd = require('./telegraph'),
-  buildingCmd = require('./building'),
-  phupdateCmd = require('./phupdate'),
-  schedule = require('./schedule'),
-  setmeCmd = require('./setme'),
-  startCmd = require('./start'),
-  phoneCmd = require('./phone'),
-  unsubCmd = require('./unsub'),
-  subCmd = require('./sub')
+      deletesessionCmd = require('./deletesession'),
+      showLocationCmd = require('./show-location'),
+      hideLocationCmd = require('./hide-location'),
+      deleteselfCmd = require('./deleteself'),
+      updsessionCmd = require('./updsession'),
+      telegraphCmd = require('./telegraph'),
+      buildingCmd = require('./building'),
+      phupdateCmd = require('./phupdate'),
+      schedule = require('./schedule'),
+      setmeCmd = require('./setme'),
+      startCmd = require('./start'),
+      phoneCmd = require('./phone'),
+      unsubCmd = require('./unsub'),
+      subCmd = require('./sub')
 
 module.exports = () => {
   bot.command('start', startCmd)
 
-  bot.use((ctx, next) => ctx.session.user || ctx.session.registry 
+  bot.use((ctx, next) => ctx.session.user || ctx.session.registry
     ? next()
     : null
   )

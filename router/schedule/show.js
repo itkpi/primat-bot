@@ -1,17 +1,17 @@
 const { r } = require('../../modules/utils'),
-  { Extra } = require('telegraf')
+      { Extra } = require('telegraf')
 
 module.exports = async ctx => {
   if (ctx.state.btnVal === 'Назад')
     return ctx.state.home('эх')
 
   if (ctx.state.btnVal === 'Расписание пар') {
-    return ctx.replyWithHTML(getTimeSch())        
+    return ctx.replyWithHTML(getTimeSch())
   }
 
   try {
     const lessons = await getLessons(ctx.session.rGroupId, ctx.state.btnVal)
-    const getLessonsMarkup = nums => 
+    const getLessonsMarkup = nums =>
       Extra.markup(m => m.inlineKeyboard(
         nums.sort().map(num => m.callbackButton(num, `location|${num}`))))
 
@@ -27,7 +27,7 @@ module.exports = async ctx => {
     } else {
       ctx.reply('По-видимому, в это время пар у тебя нет. Отдыхай!')
     }
-  } catch(e) {
+  } catch (e) {
     ctx.state.error(e)
   }
 }
@@ -42,9 +42,9 @@ function getTimeSch() {
 
 async function getLessons(id, value) {
   const currDay = (new Date).getDay(),
-    nextDay = (currDay + 1) % 8 ? (currDay + 1) % 8 : 1,
-    currWeek = await r.currWeek(),
-    nextWeek = currWeek === 1 ? 2 : 1
+        nextDay = (currDay + 1) % 8 ? (currDay + 1) % 8 : 1,
+        currWeek = await r.currWeek(),
+        nextWeek = currWeek === 1 ? 2 : 1
 
   const cases = {
     'Сегодня': {
@@ -93,7 +93,7 @@ function parseLessons(lessons, currDay, currWeek) {
         if (currWeek == lesson_week)
           acc.putCurrDay = true
       }
-      
+
       if (acc.putCurrDay && day_number == currDay)
         acc.answer += `\n<b>__${day_name}__</b>\n`
       else

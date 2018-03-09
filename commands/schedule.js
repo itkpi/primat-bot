@@ -10,12 +10,12 @@ module.exports = async ctx => {
     if (!group)
       return ctx.reply('Чтобы посмотреть расписание, укажи группу')
 
-    const schedule = await r.lessons(group)
+    const schedule = await r.timetable(group)
     if (!schedule)
       return ctx.reply('Не могу найти расписания по этой группе, попробуй другую')
 
     const weeks = [1, 2]
-    const days  = [1, 2, 3, 4, 5, 6]
+    const days = [1, 2, 3, 4, 5, 6]
 
     const currWeek = await r.currWeek()
     const currDay = (new Date).getDay()

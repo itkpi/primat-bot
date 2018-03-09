@@ -1,8 +1,8 @@
 // const Teacher = require('../../models/teacher'),
 const User = require('../../models/user'),
-  start = require('../../commands/start'),
-  currSem = require('../../modules/curr-sem'),
-  { r } = require('../../modules/utils')
+      start = require('../../commands/start'),
+      currSem = require('../../modules/curr-sem'),
+      { r } = require('../../modules/utils')
 
 module.exports = async ctx => {
   try {
@@ -44,7 +44,7 @@ module.exports = async ctx => {
         }
       }
     }
-  } catch(e) {
+  } catch (e) {
     ctx.state.error(e)
   }
 }
