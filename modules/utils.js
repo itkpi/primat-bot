@@ -9,6 +9,8 @@ exports.bot = new Telegraf(process.env.BOT_TOKEN, { telegram: { webhookReply: fa
 exports.ph = new Telegraph()
 exports.picasa = new Picasa()
 
+exports.r = require('node-rozklad-api')
+
 exports.Router = (name, invalid, route) => new Telegraf.Router(ctx => {
   if (invalid(ctx) || config.routes
     .filter(route => ctx.session[route] && route !== name)
@@ -26,10 +28,6 @@ exports.callbackBtn = new Telegraf.Router(({ callbackQuery }) => {
   const [route, value] = data.split('|')
   return { route, state: { value } }
 })
-
-
-// const RozkladApi = require('./rozklad-api')
-exports.r = require('node-rozklad-api') // new RozkladApi()
 
 const HubApi = require('./hub-api')
 exports.h = new HubApi()
