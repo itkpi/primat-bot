@@ -3,7 +3,7 @@ const Building = require('../models/building'),
 
 module.exports = async ctx => {
   try {
-    const num = ctx.message.text.split(' ')[1]
+    const num = Number(ctx.message.text.split(' ')[1])
     if (!num)
       return ctx.reply('Укажи номер через пробел - /building 15')
 
