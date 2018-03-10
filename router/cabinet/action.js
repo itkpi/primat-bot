@@ -8,8 +8,7 @@ const groupSubjects = {}
 module.exports = async ctx => {
 
   switch (ctx.state.btnVal) {
-
-    case btns.change_group:
+    case btns.change_group: {
       const keyboard = ['Отмена']
       if (ctx.session.user.group)
         keyboard.push('Домой')
@@ -18,9 +17,10 @@ module.exports = async ctx => {
         .keyboard(keyboard, { columns: 2 })
         .resize().oneTime().extra()
       )
-      
+
       ctx.session.cabinet.nextCondition = 'changeGroup'
       break
+    }
 
     case config.load_lecture_btn:
       if (ctx.session.user.telegraph_user) {
