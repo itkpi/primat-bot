@@ -2,7 +2,7 @@ const { Markup } = require('telegraf')
 
 module.exports = ctx => {
   ctx.reply('К кому пойдем?', Markup
-    .keyboard(['Домой'])
+    .keyboard(['Отмена'])
     .resize().oneTime().extra()
   )
   ctx.session.abitura.nextCondition = 'changeGroup'
