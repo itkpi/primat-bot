@@ -26,7 +26,7 @@ module.exports = async ctx => {
 
       const msg = `Привет, <b>${ctx.from.first_name}</b>!\nЯ могу многим с тобой поделиться. ` +
         'Для нашего хорошего общения мне нужно лучше тебя узнать. ' +
-        'Твое имя я уже знаю, но из какой ты группы?\nИспользуй подобный формат: кв-51, kv-51'
+        'Твое имя я уже знаю, но из какой ты группы?\nИспользуй подобный формат: kv-51, іс-52'
       console.log(`[start bot-msg] ${ctx.from.username}: ${msg.split('\n')[0]}`)
 
       return ctx.replyWithHTML(msg, Markup.keyboard(['Я не студент КПИ', 'Я преподаватель', 'Я абитуриент'], { columns: 2 }).resize().extra())
