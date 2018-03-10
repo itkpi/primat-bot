@@ -10,10 +10,15 @@ module.exports = async ctx => {
   switch (ctx.state.btnVal) {
 
     case btns.change_group:
+      const keyboard = ['Отмена']
+      if (ctx.session.user.group)
+        keyboard.push('Домой')
+
       ctx.reply('К кому пойдем?', Markup
-        .keyboard(['Домой', 'Отмена'], { columns: 2 })
+        .keyboard(keyboard, { columns: 2 })
         .resize().oneTime().extra()
       )
+      
       ctx.session.cabinet.nextCondition = 'changeGroup'
       break
 
