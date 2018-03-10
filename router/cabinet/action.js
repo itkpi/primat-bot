@@ -28,6 +28,9 @@ module.exports = async ctx => {
           return ctx.reply('У тебя пока нет аккаунта\nТебе поможет команда /telegraph')
         try {
           const subjects = groupSubjects[ctx.session.user.group] || await parseSchedule(ctx.session.user.rGroupId, 'subjects')
+          if (!subjects)
+            return ctx.reply('Не получается узнать твои предметы. Сорян :c')
+
           groupSubjects[ctx.session.user.group] = subjects
 
           const amount = subjects.length
