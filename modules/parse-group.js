@@ -1,8 +1,6 @@
 const currSem = require('./curr-sem'),
       { r } = require('./utils')
 
-// regex: /^[А-яіє]{2,4}-[А-яіє]{0,2}[0-9]{2,3}[А-яіє]?\(?[А-яіє]*\)?\.?$/
-
 module.exports = async group => {
   if (parseInt(group))
     return
@@ -11,9 +9,11 @@ module.exports = async group => {
   group = group.split(' ')
 
   let rGroup = await r.groups(group[0])
-
   if (!rGroup) {
     const possibleGroups = await r.groups({ search: { query: group[0] } })
+
+    if (!possibleGroups)
+      return null
 
     // if there no spaces into group name
     if (group.length === 1)
