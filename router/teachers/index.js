@@ -9,6 +9,9 @@ module.exports = async ctx => {
     )
 
   const lessonTeachers = await parseSchedule(rGroupId, 'teachers')
+  if (!lessonTeachers)
+    return ctx.reply('Не могу достать твое раписание, чтобы узнать кто тебя учит :c')
+
   const lessons = Object.keys(lessonTeachers)
   const answer = lessons
     .map((lesson, i) => `<b>${++i}. ${lesson}</b><code>:</code> ${lessonTeachers[lesson].join(', ')}`)
