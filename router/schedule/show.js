@@ -106,9 +106,11 @@ function parseLessons(lessons, currDay, currWeek) {
     acc.answer += `<b>${lesson_number}</b>. ${formatTime(time_start)}<code>|</code> ${lesson_name} `
 
     if (lesson_room) {
-      const building = lesson_room.split('-')[1]
-      if (!acc.buildings.includes(building))
-        acc.buildings.push(building)
+      lesson_room.split(',').forEach(room => {
+        const building = room.split('-')[1]
+        if (!acc.buildings.includes(building))
+          acc.buildings.push(building)
+      })
     }
 
     if (lesson_room)
