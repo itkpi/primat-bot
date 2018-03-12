@@ -28,7 +28,7 @@ async function createPage(ctx, name, page, links) {
 
   const response = await ph.createPage(ctx.session.user.telegraph_token, name, page, { return_content: true })
 
-  if (process.env.STATUS === 'prod') {
+  if (process.env.NODE_ENV === 'production') {
     const { subject } = ctx.session.cabinet,
           { course, flow, username: author = ctx.from.id } = ctx.session.user,
 
