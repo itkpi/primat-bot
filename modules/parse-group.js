@@ -8,10 +8,7 @@ module.exports = async group => {
   ])
 
   if (!rGroup) {
-    if (!possibleGroups)
-      return null
-
-    return possibleGroups
+    return possibleGroups ? possibleGroups : null
   } else if (possibleGroups && possibleGroups.length > 1) {
     return { type: 'choice', groups: possibleGroups.map(parseData) }
   }

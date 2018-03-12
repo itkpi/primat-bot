@@ -13,8 +13,9 @@
   "dependencies": {
     "encoding": "^0.1.12",
     "express": "^4.15.3",
+    "mathmode": "0.0.4",
     "mongoose": "^4.11.4",
-    "node-rozklad-api": "^1.0.0",
+    "node-rozklad-api": "^1.0.1",
     "node-wav": "0.0.2",
     "node-wit": "^4.3.0",
     "ogg": "^1.2.5",

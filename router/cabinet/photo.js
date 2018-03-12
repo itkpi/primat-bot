@@ -13,10 +13,10 @@ module.exports = async ctx => {
     ctx.session.cabinet.photoLinks.push(tgLink)
 
     if (amount === 0) {
-      const { lectureName, page } = ctx.session.cabinet,
+      const { lectureName, page, latexPicasaLinks } = ctx.session.cabinet,
             msgInfo = await ctx.reply('Секундочку, делаю всю магию...'),
-            picasaLinks = await uploadPhotos(ctx.session.user, ctx.session.cabinet),
-            response = await createPage(ctx, lectureName, page, picasaLinks)
+            photoPicasaLinks = await uploadPhotos(ctx.session.user, ctx.session.cabinet),
+            response = await createPage(ctx, lectureName, page, { photoPicasaLinks, latexPicasaLinks })
 
       ctx.telegram.deleteMessage(msgInfo.chat.id, msgInfo.message_id)
       ctx.reply('Ты просто лучший! Только не забывай исправлять ошибки, вдруг что')
@@ -41,11 +41,11 @@ function uploadPhotos(user, info) {
 
         upload = num => ({ body }) => new Promise((resolve, reject) =>
           picasa.postPhoto(picasaToken, config.album_id, {
-            title: getTitle(++num),
-            summary,
-            contentType: 'image/jpg',
-            binary: body
-          }, (err, { content }) => err ? reject(err) : resolve(content.src)
+              title: getTitle(++num),
+              summary,
+              contentType: 'image/jpg',
+              binary: body
+            }, (err, { content }) => err ? reject(err) : resolve(content.src)
           )),
 
         dwnldBinariesUpldPhotos = urls => Promise.all(urls.map((url, num) =>

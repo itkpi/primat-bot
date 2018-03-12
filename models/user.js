@@ -56,7 +56,6 @@ const mongoose = require('../modules/mongoose'),
       })
 
 User.post('save', ({ username, tgId, group }) => {
-  console.log(username, tgId, group)
   const msg = `New user ${username || tgId}${group ? ` from ${group}` : ''} has registered!`
   telegram.sendMessage(config.ownerId, msg)
   console.log(msg)

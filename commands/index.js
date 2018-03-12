@@ -13,6 +13,7 @@ const { bot } = require('../modules/utils'),
       startCmd = require('./start'),
       phoneCmd = require('./phone'),
       unsubCmd = require('./unsub'),
+      latexCmd = require('./latex'),
       subCmd = require('./sub')
 
 module.exports = () => {
@@ -35,6 +36,7 @@ module.exports = () => {
   bot.command('/setme', setmeCmd)
   bot.command('/phone', phoneCmd)
   bot.command('/unsub', unsubCmd)
+  bot.command('/latex', latexCmd)
   bot.command('/help', helpCmd)
   bot.command('/sub', subCmd)
 
