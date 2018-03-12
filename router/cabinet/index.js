@@ -2,6 +2,7 @@ const { Markup } = require('telegraf'),
       config = require('../../config'),
       { Router } = require('../../modules/utils'),
       changeGroup = require('./change-group')('cabinet'),
+      choice = require('./choice')('cabinet'),
       subject = require('./subject'),
       action = require('./action'),
       course = require('./course')
@@ -26,6 +27,7 @@ router.on('action', action)
 router.on('changeGroup', changeGroup)
 router.on('subject', subject)
 router.on('course', course)
+router.on('choice', choice)
 
 // this router triggers only when user has sent text message instead of document
 router.on('upload', ctx => {

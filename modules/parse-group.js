@@ -2,26 +2,24 @@ const currSem = require('./curr-sem'),
       { r } = require('./utils')
 
 module.exports = async group => {
-  if (parseInt(group))
-    return
+  const [rGroup, possibleGroups] = await Promise.all([
+    r.groups(group),
+    r.groups({ search: { query: group } })
+  ])
 
-  // stupid api that can't search by full name so use hack
-  group = group.split(' ')
-
-  let rGroup = await r.groups(group[0])
   if (!rGroup) {
-    const possibleGroups = await r.groups({ search: { query: group[0] } })
-
     if (!possibleGroups)
       return null
 
-    // if there no spaces into group name
-    if (group.length === 1)
-      return possibleGroups
-
-    rGroup = possibleGroups[0]
+    return possibleGroups
+  } else if (possibleGroups && possibleGroups.length > 1) {
+    return { type: 'choice', groups: possibleGroups.map(parseData) }
   }
 
+  return parseData(rGroup)
+}
+
+function parseData(rGroup) {
   return {
     rGroupId: rGroup.group_id,
     group: rGroup.group_full_name,

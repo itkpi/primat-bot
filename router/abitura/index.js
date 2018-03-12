@@ -3,6 +3,7 @@ const { Router } = require('../../modules/utils'),
 
       setGroup = require('./set-group'),
       changeGroup = require('../cabinet/change-group')('abitura'),
+      choice = require('../cabinet/choice')('abitura'),
       course = require('../cabinet/course'),
       kpiInternets = require('./kpi-internets'),
       location = require('./location'),
@@ -20,6 +21,7 @@ router.on(btns.set_group, setGroup)
 router.on(btns.kpi_internets, kpiInternets)
 
 router.on('changeGroup', changeGroup)
+router.on('choice', choice)
 router.on('course', course)
 router.on('building', building)
 
