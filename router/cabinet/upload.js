@@ -1,7 +1,6 @@
 const { createPage, parse } = require('../../modules/telegraph'),
-      { request, picasa, bot } = require('../../modules/utils'),
-      config = require('../../config'),
-      mathmode = require('mathmode')
+      { request, picasa } = require('../../modules/utils'),
+      uploadLatex = require('./upload-latex')
 
 module.exports = async ctx => {
   if (!ctx.session.cabinet || ctx.session.cabinet.nextCondition !== 'upload')
@@ -19,54 +18,28 @@ module.exports = async ctx => {
       ? await getAccessToken()
       : null
 
-    let latexPicasaLinks
-    if (latexValues.length > 0) {
-      const binaries = await Promise.all(
-          latexValues.map((value, indx) => new Promise((resolve, reject) => {
-            const render = mathmode(value)
-            const bufs = []
-
-            render.on('data', data => bufs.push(data))
-            render.on('finish', () => {
-              resolve(Buffer.concat(bufs))
-            })
-            render.on('error', e => {
-              reject(e)
-            })            
-          }))
-        )
-
-      latexPicasaLinks = await sendPhotos(ctx.session.user, {
-        page,
-        binaries,
-        lectureName,
-        picasaToken,
-        photosAmount,
-        subject: ctx.session.cabinet.subject        
-      })
+    const pageData = {
+      page,
+      lectureName,
+      picasaToken,
+      photosAmount,
+      latexValues,
+      photoLinks: [],
+      subject: ctx.session.cabinet.subject
     }
 
     if (photosAmount > 0) {
-      ctx.session.cabinet = {
-        page,
-        lectureName,
-        picasaToken,
-        photosAmount,
-        photoLinks: [],
-        latexPicasaLinks,
-        nextCondition: 'photo',
-        subject: ctx.session.cabinet.subject
-      }
+      ctx.session.cabinet = Object.assign({}, pageData, { nextCondition: 'photo' })
+
       ctx.replyWithHTML('Словил! Но, вижу, твоей лекции не хватает фотографий. ' +
         'Вот их количество, которое я от тебя жду, чтобы вклеить все на свои места: ' +
         `<b>${photosAmount}</b>`)
     } else {
+      const latexPicasaLinks = await uploadLatex(ctx.session.user, pageData)
       const response = await createPage(ctx, lectureName, page, { latexPicasaLinks })
-      if (response) {
-        ctx.reply('Ты просто лучший! Только не забывай исправлять ошибки, вдруг что')
-        ctx.state.home(response.url)
-      }
-      ctx.session.cabinet = null
+
+      ctx.reply('Ты просто лучший! Только не забывай исправлять ошибки, вдруг что')
+      ctx.state.home(response.url)
     }
 
   } catch (e) {
@@ -89,21 +62,21 @@ function getAccessToken() {
   })
 }
 
-function sendPhotos(user, info) {
-  const { course, username, tgId } = user,
-        { subject, lectureName, picasaToken, binaries } = info,
+// function uploadPhotos(user, info) {
+//   const { course, username, tgId } = user,
+//         { subject, lectureName, picasaToken, binaries } = info,
 
-        summary = `${lectureName}. Created by ${username || tgId}.`,
-        getTitle = num => `Formula #${num}. ${course} course. ${subject} | ${new Date().toDateString()}`,
+//         summary = `${lectureName}. Created by ${username || tgId}.`,
+//         getTitle = num => `Formula #${num}. ${course} course. ${subject} | ${new Date().toDateString()}`,
 
-        upload = (binary, num) => new Promise((resolve, reject) =>
-          picasa.postPhoto(picasaToken, config.album_id, {
-              title: getTitle(++num),
-              contentType: 'image/jpg',
-              summary,
-              binary
-            }, (err, { content }) => err ? reject(err) : resolve(content.src)
-          ))
+//         upload = (binary, num) => new Promise((resolve, reject) =>
+//           picasa.postPhoto(picasaToken, config.album_id, {
+//               title: getTitle(++num),
+//               contentType: 'image/jpg',
+//               summary,
+//               binary
+//             }, (err, { content }) => err ? reject(err) : resolve(content.src)
+//           ))
 
-  return Promise.all(binaries.map(upload))
-}
+//   return Promise.all(binaries.map(upload))
+// }

@@ -58,7 +58,7 @@ function parse(text) {
         parsed = parseFragment(text),
         page = convert(info)(parsed.childNodes),
         photosAmount = info.photoNum - 1
-  console.log(page)
+
   return { lectureName, page, photosAmount, latexValues: info.latexValues }
 }
 
