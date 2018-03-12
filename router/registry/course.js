@@ -8,7 +8,6 @@ module.exports = ctx => {
 
       const user = new User(Object.assign({}, ctx.session.registry, { course, nextCondition: undefined, isStudent: true }))
       user.save()
-
       ctx.state.home('Добро пожаловать!')
 
       ctx.session.user = user

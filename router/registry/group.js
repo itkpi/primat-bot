@@ -37,23 +37,38 @@ module.exports = async ctx => {
     }
 
     const groupData = await parseGroup(group)
-
-    if (!groupData)
+    if (groupData === null)
       return ctx.reply('Не знаю такой группы, попробуй по-другому')
+
+    ctx.session = groupData
+
+    if (groupData.type === 'choice') {
+      const answer = groupData.groups.reduce(
+        (acc, group, indx) => acc + `<b>${indx + 1}</b>. ${group.group}. ` +
+        `Идентификатор: ${group.rGroupId}\n`,
+        'Одному богу известно почему, но с таким именем на самом деле ' +
+        'существует несколько групп. Отправь порядковый номер одной из них:\n'
+      )
+
+      ctx.session.tmpGroup = group
+      ctx.session.registry = Object.assign({}, userData, { nextCondition: 'choice' })
+      ctx.state.saveSession()
+      return ctx.replyWithHTML(answer, { reply_markup: { remove_keyboard: true } })
+    }
 
     if (Array.isArray(groupData)) {
       const answer = groupData.reduce(
         (acc, group) => acc + `${group.group_full_name}\n`,
         'Я не нашел этой группы, но попробуй кое-что похожее:\n'
       )
+
       return ctx.reply(answer)
     }
 
-    ctx.session = groupData
 
     if (!groupData.course) {
-      const user = await User.findOne({ group, course: { $exists: true } })
-      if (user) {
+      const user = await User.findOne({ group })
+      if (user && user.course) {
         groupData.course = user.course
       } else {
         ctx.session.registry = Object.assign({}, userData, groupData, { nextCondition: 'course' })
