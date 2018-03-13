@@ -17,7 +17,7 @@ const start = require('../commands/start'),
 
 module.exports = () => {
 
-  if (process.env.STATUS === 'dev') {
+  if (process.env.NODE_ENV === 'development') {
     bot.use((ctx, next) => config.ownerId == ctx.from.id
       ? next()
       : ctx.reply('Соре, я пока кушаю бананы. Но скоро вернусь!')
