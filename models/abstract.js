@@ -19,7 +19,7 @@ const Schema = mongoose.Schema,
         date: { type: Date, default: Date.now }
       })
 
-if (process.env.STATUS === 'prod') {
+if (process.env.NODE_ENV === 'production') {
   Abstract.post('save', async ({ flow, course, semester, authorId, author, subject, telegraph_url, name }) => {
     console.log(
       `${author || authorId} has saved new lecture [${flow}, ${course} course, ${semester} semester]: ${subject} | ${name}`

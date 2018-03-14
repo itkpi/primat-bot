@@ -1,6 +1,7 @@
 const { createPage } = require('../../modules/telegraph'),
       { request, picasa } = require('../../modules/utils'),
-      config = require('../../config')
+      config = require('../../config'),
+      uploadLatex = require('./upload-latex')
 
 module.exports = async ctx => {
   if (!ctx.session.cabinet || ctx.session.cabinet.nextCondition !== 'photo')
@@ -13,10 +14,15 @@ module.exports = async ctx => {
     ctx.session.cabinet.photoLinks.push(tgLink)
 
     if (amount === 0) {
-      const { lectureName, page } = ctx.session.cabinet,
-            msgInfo = await ctx.reply('Секундочку, делаю всю магию...'),
-            picasaLinks = await uploadPhotos(ctx.session.user, ctx.session.cabinet),
-            response = await createPage(ctx, lectureName, page, picasaLinks)
+      const { lectureName, page } = ctx.session.cabinet
+
+      const [msgInfo, photoPicasaLinks, latexPicasaLinks] = await Promise.all([
+        ctx.reply('Секундочку, делаю всю магию...'),
+        uploadPhotos(ctx.session.user, ctx.session.cabinet),
+        uploadLatex(ctx.session.user, ctx.session.cabinet)
+      ])
+
+      const response = await createPage(ctx, lectureName, page, { photoPicasaLinks, latexPicasaLinks })
 
       ctx.telegram.deleteMessage(msgInfo.chat.id, msgInfo.message_id)
       ctx.reply('Ты просто лучший! Только не забывай исправлять ошибки, вдруг что')
