@@ -31,6 +31,9 @@ module.exports = () => {
   bot.use(init(session))
 
   bot.use(async (ctx, next) => {
+    if (ctx.state.status === 'inline')
+      return next()
+
     if (!ctx.session.user && !ctx.session.registry) {
       try {
         const user = await User.findOne({ tgId: ctx.from.id })

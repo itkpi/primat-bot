@@ -1,5 +1,6 @@
 const Abstract = require('../../models/abstract'),
       { bot, request } = require('../../modules/utils'),
+      sendDocument = require('../../modules/send-document'),
       { telegram } = bot,
       puppeteer = require('puppeteer'),
       fs = require('fs'),
@@ -9,13 +10,6 @@ const Abstract = require('../../models/abstract'),
 module.exports = async ctx => {
   const { username, id } = ctx.from
   console.log(`${username || id} is loading pdf. id: ${ctx.state.value}`)
-
-  const sendPdf = (chat_id, filePath) => {
-    const method = 'POST'
-    const url = `${telegram.options.apiRoot}/bot${telegram.token}/sendDocument`
-    const formData = { chat_id, document: fs.createReadStream(filePath) }
-    return request({ method, url, formData })
-  }
 
   try {
     const [abstract, browser, msg] = await Promise.all([
@@ -29,7 +23,7 @@ module.exports = async ctx => {
     await page.pdf({ path, format: 'A4' })
     await Promise.all([
       browser.close(),
-      sendPdf(ctx.from.id, path),
+      sendDocument(ctx.from.id, path),
       ctx.telegram.deleteMessage(msg.chat.id, msg.message_id)
     ])
     await Promise.all([

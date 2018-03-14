@@ -19,7 +19,7 @@ const { bot } = require('../modules/utils'),
 module.exports = () => {
   bot.command('start', startCmd)
 
-  bot.use((ctx, next) => ctx.session.user || ctx.session.registry
+  bot.use((ctx, next) => !ctx.session || ctx.session.user || ctx.session.registry
     ? next()
     : null
   )
