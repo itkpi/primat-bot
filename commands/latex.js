@@ -6,10 +6,15 @@ const unlink = util.promisify(fs.unlink)
 
 module.exports = ctx => {
   const msg = ctx.message.text
-    .split(' ').slice(1).join(' ')
+    .split(' ')
+    .slice(1)
+    .map(str => str.trim())
+    .join(' ')
 
   if (!msg)
     return ctx.reply('Выражение не указано. Попробуй еще раз')
+
+  console.log(msg.length)
 
   const path = `${process.cwd()}/public/${ctx.from.id}:${ctx.message.date}.png`
   const dest = fs.createWriteStream(path)
