@@ -5,7 +5,9 @@ const util = require('util')
 const fs = require('fs')
 const unlink = util.promisify(fs.unlink)
 
-module.exports = ctx => {
+const getLatexPath = require('../modules/latex-photo')
+
+module.exports = async ctx => {
   const msg = ctx.message.text
     .split(' ')
     .slice(1)
@@ -15,26 +17,17 @@ module.exports = ctx => {
   if (!msg)
     return ctx.reply('Выражение не указано. Попробуй еще раз')
 
-  const path = `${process.cwd()}/public/${ctx.from.id}:${ctx.message.date}.png`
-  const dest = fs.createWriteStream(path)
+  try {
+    const path = await getLatexPath(msg)
+    const { body } = await sendImg(ctx.from.id, path)
+    const response = JSON.parse(body)
+    if (response.ok === false)
+      await sendDocument(ctx.from.id, path)
 
-  const render = mathmode(msg).pipe(dest)
-
-  render.on('finish', async () => {
-    try {
-      const { body } = await sendImg(ctx.from.id, path)
-      const response = JSON.parse(body)
-      if (response.ok === false)
-        await sendDocument(ctx.from.id, path)
-
-      await unlink(path)
-    } catch (e) {
-      ctx.state.error(e)
-    }
-  })
-  render.on('error', e => {
+    await unlink(path)
+  } catch (e) {
     ctx.state.error(e)
-  })
+  }
 }
 
 function sendImg(chat_id, filePath) {
