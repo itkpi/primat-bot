@@ -1,12 +1,12 @@
 const mongoose = require('mongoose'),
-  url = process.env.MONGO_URL,
-  db = mongoose.connection
+      url = process.env.MONGO_URL,
+      db = mongoose.connection
 
 mongoose.Promise = Promise
 
 mongoose.connect(url, { useMongoClient: true })
 
-db.on('error', err => console.log(err))
+db.on('error', console.error)
 db.once('open', () => console.log('Connected to the mongoDB'))
 db.once('close', () => console.log('Connection has closed'))
 

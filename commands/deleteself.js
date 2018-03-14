@@ -1,5 +1,5 @@
 const User = require('../models/user'),
-  config = require('../config')
+      config = require('../config')
 
 module.exports = async ctx => {
   if (config.ownerId == ctx.from.id) {
@@ -8,7 +8,7 @@ module.exports = async ctx => {
       const { username, tgId } = ctx.session.user
       console.log(`${username || tgId} has removed his document from the db`)
       ctx.reply('Your document in the db has removed')
-    } catch(e) {
+    } catch (e) {
       ctx.state.error(e)
     }
   }

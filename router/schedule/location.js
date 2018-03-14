@@ -1,5 +1,5 @@
 const Building = require('../../models/building'),
-  { telegram } = require('../../modules/utils').bot
+      { telegram } = require('../../modules/utils').bot
 
 module.exports = async ctx => {
   const { username, id } = ctx.from
@@ -13,7 +13,7 @@ module.exports = async ctx => {
     } else {
       ctx.answerCbQuery('Ой, не нашел корпус :c', true)
     }
-  } catch(e) {
+  } catch (e) {
     console.error(e)
     ctx.answerCbQuery('Ой, ошибочка :c', true)
   }

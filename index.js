@@ -1,15 +1,15 @@
 const express = require('express'),
 
-  { bot } = require('./modules/utils'),
-      
-  commandHandler = require('./commands'),
-  middleware = require('./middleware'),
-  router = require('./router'),
+      { bot } = require('./modules/utils'),
 
-  api = require('./api'),
+      commandHandler = require('./commands'),
+      middleware = require('./middleware'),
+      router = require('./router'),
 
-  app = express(),
-  port = process.env.PORT || 3210
+      api = require('./api'),
+
+      app = express(),
+      port = process.env.PORT || 3210
 
 app.use(express.static('./public'))
 
@@ -36,14 +36,13 @@ router()
 
 app.use('/api', api)
 
-
 app.use((req, res, next) => {
-  res.status(404).end('404 Error :c')
+  res.status(404).json({ error: 'Wrong path' })
 })
 
 app.use((err, req, res, next) => {
   console.error(err)
-  res.status(500).end('ooops, error :c')
+  res.status(500).json({ error: 'Application error' })
 })
 
 app.listen(port, () => console.log(`Server is running on port ${port}`))

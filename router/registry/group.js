@@ -1,7 +1,7 @@
 const parseGroup = require('../../modules/parse-group'),
-  User = require('../../models/user'),
+      User = require('../../models/user'),
 
-  { Markup } = require('telegraf')
+      { Markup } = require('telegraf')
 
 
 module.exports = async ctx => {
@@ -37,23 +37,38 @@ module.exports = async ctx => {
     }
 
     const groupData = await parseGroup(group)
-
-    if (!groupData)
+    if (groupData === null)
       return ctx.reply('Не знаю такой группы, попробуй по-другому')
+
+    ctx.session = groupData
+
+    if (groupData.type === 'choice') {
+      const answer = groupData.groups.reduce(
+        (acc, group, indx) => acc + `<b>${indx + 1}</b>. ${group.group}. ` +
+        `Идентификатор: ${group.rGroupId}\n`,
+        'Одному богу известно почему, но с таким именем на самом деле ' +
+        'существует несколько групп. Отправь порядковый номер одной из них:\n'
+      )
+
+      ctx.session.tmpGroup = group
+      ctx.session.registry = Object.assign({}, userData, { nextCondition: 'choice' })
+      ctx.state.saveSession()
+      return ctx.replyWithHTML(answer, { reply_markup: { remove_keyboard: true } })
+    }
 
     if (Array.isArray(groupData)) {
       const answer = groupData.reduce(
         (acc, group) => acc + `${group.group_full_name}\n`,
         'Я не нашел этой группы, но попробуй кое-что похожее:\n'
       )
+
       return ctx.reply(answer)
     }
 
-    ctx.session = groupData
 
     if (!groupData.course) {
-      const user = await User.findOne({ group, course: { $exists: true } })
-      if (user) {
+      const user = await User.findOne({ group })
+      if (user && user.course) {
         groupData.course = user.course
       } else {
         ctx.session.registry = Object.assign({}, userData, groupData, { nextCondition: 'course' })
@@ -69,7 +84,7 @@ module.exports = async ctx => {
     const user = new User(Object.assign({}, userData, groupData, { isStudent: true }))
     user.save()
     ctx.session.user = user
-      
+
     const phrases = [
       'О, ты всего первый год, многого еще не знаешь',
       'Отлично, ты на втором курсе, а тебя еще не отчислили. Молодец!',
@@ -77,7 +92,7 @@ module.exports = async ctx => {
       'Диплом уже готов?'
     ]
     return ctx.state.home(phrases[user.course - 1])
-  } catch(e) {
+  } catch (e) {
     ctx.state.error(e)
   }
 }

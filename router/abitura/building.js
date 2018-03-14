@@ -1,5 +1,5 @@
 const Building = require('../../models/building'),
-  { telegram } = require('../../modules/utils').bot
+      { telegram } = require('../../modules/utils').bot
 
 module.exports = async ctx => {
   const { text } = ctx.message
@@ -13,7 +13,7 @@ module.exports = async ctx => {
     } else {
       ctx.reply('Не нашел корпус :c')
     }
-  } catch(e) {
+  } catch (e) {
     ctx.state.error(e)
   }
 }

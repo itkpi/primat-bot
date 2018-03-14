@@ -14,8 +14,8 @@ module.exports = async ctx => {
       ctx.reply(answer || 'Номер этого преподавателя мне не известен :c')
     } else {
       ctx.reply('Не нашел такого преподавателя, попробуй еще раз')
-    }   
-  } catch(e) {
+    }
+  } catch (e) {
     ctx.state.error(e)
   }
 }

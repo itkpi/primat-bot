@@ -1,10 +1,6 @@
-const config = require('../../config'),
-  { commands: commandBtn } = config.home_btns
+const config = require('../../config')
 
 module.exports = ctx => {
-  if (ctx.message.text !== commandBtn)
-    return
-
   const { isTeacher, isAbitura } = ctx.session.user
   const { teacher: teacherCmds, abitura: abitCmds } = config.setme_command
   const commands = Object.assign({}, config.commands, isTeacher ? teacherCmds : isAbitura ? abitCmds : null)

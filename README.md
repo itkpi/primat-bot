@@ -1,14 +1,27 @@
 # BotKPI
-[@primat_bot](https://t.me/primat_bot)
+[@primat_bot](https://t.me/primat_bot) helps with your life.
+He was created for reduce writing lectures and share them with everyone.
 
-### This bot was created for reduce writing lectures and share them with everyone.
+There is three roles: student, teacher and abiturient.
 
-#### Features:
-# shedule 
-![alt text](https://i.imgur.com/NzIM8XD.png)
-# lesson timeleft
-![alt text](https://i.imgur.com/41aa4Y1.png)
-# lectures with pdf donwloading
-![alt text](https://i.imgur.com/fWYyIgy.png)
-# uploading lectures: http://telegra.ph/Kak-delat-lekcii-02-03
-# etc
+## Features
+- [schedule](#schedule)
+- [uploading](#uploading)
+- [timeleft](#timeleft)
+- [lectures](#lectures)
+
+## shedule
+![alt text](https://i.imgur.com/Zwu1AeP.png)
+or
+```text
+/s any group
+```
+
+## uploading
+Information how to upload lectures through bot: http://telegra.ph/Kak-delat-lekcii-02-03
+
+## timeleft
+![alt text](https://i.imgur.com/HkhOoKa.png)
+
+## lectures
+![alt text](https://i.imgur.com/FTIQonP.png)

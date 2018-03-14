@@ -5,3 +5,4 @@ set-env.sh
 test-set-env.sh
 test-lecture.html
 test.js
+ecosystem.config.js

@@ -1,17 +1,17 @@
 const { r } = require('../../modules/utils'),
-  { Extra } = require('telegraf')
+      { Extra } = require('telegraf')
 
 module.exports = async ctx => {
   if (ctx.state.btnVal === 'Назад')
     return ctx.state.home('эх')
 
   if (ctx.state.btnVal === 'Расписание пар') {
-    return ctx.replyWithHTML(getTimeSch())        
+    return ctx.replyWithHTML(getTimeSch())
   }
 
   try {
     const lessons = await getLessons(ctx.session.rGroupId, ctx.state.btnVal)
-    const getLessonsMarkup = nums => 
+    const getLessonsMarkup = nums =>
       Extra.markup(m => m.inlineKeyboard(
         nums.sort().map(num => m.callbackButton(num, `location|${num}`))))
 
@@ -27,7 +27,7 @@ module.exports = async ctx => {
     } else {
       ctx.reply('По-видимому, в это время пар у тебя нет. Отдыхай!')
     }
-  } catch(e) {
+  } catch (e) {
     ctx.state.error(e)
   }
 }
@@ -42,9 +42,9 @@ function getTimeSch() {
 
 async function getLessons(id, value) {
   const currDay = (new Date).getDay(),
-    nextDay = (currDay + 1) % 8 ? (currDay + 1) % 8 : 1,
-    currWeek = await r.currWeek(),
-    nextWeek = currWeek === 1 ? 2 : 1
+        nextDay = (currDay + 1) % 8 ? (currDay + 1) % 8 : 1,
+        currWeek = await r.currWeek(),
+        nextWeek = currWeek === 1 ? 2 : 1
 
   const cases = {
     'Сегодня': {
@@ -66,32 +66,51 @@ async function getLessons(id, value) {
   const lessons = cases[value]
     ? await r.lessons(id, cases[value])
     : null
-  return lessons && parseLessons(lessons)
+  return lessons && parseLessons(lessons, currDay, currWeek)
 }
 
-function parseLessons(lessons) {
+function parseLessons(lessons, currDay, currWeek) {
   const formatTime = time => time.split(':')
     .slice(0, 2)
     .join(':')
 
   return lessons.reduce((acc, lesson) => {
-    if (!acc.day || lesson.day_name !== acc.day) {
+    const {
+      lesson_room,
+      lesson_type,
+      time_start,
+      lesson_number,
+      lesson_name,
+      day_name,
+      lesson_week,
+      day_number
+    } = lesson
+
+    if (!acc.day || day_name !== acc.day) {
       if (acc.day && acc.putWeek) {
         acc.putWeek = false
-        acc.answer = `<b>${lesson.lesson_week}-й тиждень</b>` + acc.answer
+        acc.answer = `<b>${lesson_week}-й тиждень</b>` + acc.answer
+        if (currWeek == lesson_week)
+          acc.putCurrDay = true
       }
-      acc.answer += `\n<pre>${lesson.day_name}</pre>\n`
-      acc.day = lesson.day_name
+
+      if (acc.putCurrDay && day_number == currDay)
+        acc.answer += `\n<b>__${day_name}__</b>\n`
+      else
+        acc.answer += `\n<pre>${day_name}</pre>\n`
+
+      acc.day = day_name
     }
 
-    const { lesson_room, lesson_type, time_start } = lesson
 
-    acc.answer += `<b>${lesson.lesson_number}</b>. ${formatTime(time_start)}<code>|</code> ${lesson.lesson_name} `
+    acc.answer += `<b>${lesson_number}</b>. ${formatTime(time_start)}<code>|</code> ${lesson_name} `
 
     if (lesson_room) {
-      const building = lesson_room.split('-')[1]
-      if (!acc.buildings.includes(building))
-        acc.buildings.push(building)
+      lesson_room.split(',').forEach(room => {
+        const building = room.split('-')[1]
+        if (!acc.buildings.includes(building))
+          acc.buildings.push(building)
+      })
     }
 
     if (lesson_room)
@@ -102,5 +121,5 @@ function parseLessons(lessons) {
 
     acc.answer += '\n'
     return acc
-  }, { day: null, answer: '', putWeek: true, buildings: [] })
+  }, { day: null, answer: '', putWeek: true, putCurrDay: false, buildings: [] })
 }

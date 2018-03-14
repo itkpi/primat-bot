@@ -1,27 +1,22 @@
 const currSem = require('./curr-sem'),
-  { r } = require('./utils')
-
-// regex: /^[А-яіє]{2,4}-[А-яіє]{0,2}[0-9]{2,3}[А-яіє]?\(?[А-яіє]*\)?\.?$/
+      { r } = require('./utils')
 
 module.exports = async group => {
-  if (parseInt(group))
-    return
-  
-  // stupid api that can't search by full name so use hack
-  group = group.split(' ')
-
-  let rGroup = await r.group(group[0])
+  const [rGroup, possibleGroups] = await Promise.all([
+    r.groups(group),
+    r.groups({ search: { query: group } })
+  ])
 
   if (!rGroup) {
-    const possibleGroups = await r.group({ search: { query: group[0] } })
-    
-    // if there no spaces into group name
-    if (group.length === 1)
-      return possibleGroups
-
-    rGroup = possibleGroups[0]
+    return possibleGroups ? possibleGroups : null
+  } else if (possibleGroups && possibleGroups.length > 1) {
+    return { type: 'choice', groups: possibleGroups.map(parseData) }
   }
 
+  return parseData(rGroup)
+}
+
+function parseData(rGroup) {
   return {
     rGroupId: rGroup.group_id,
     group: rGroup.group_full_name,
@@ -39,10 +34,10 @@ function getCourse(group) {
     return
 
   const date = new Date(),
-    year = date.getFullYear() % 10,
-    month = date.getMonth() + 1,
-    groupYear = Number(group.slice(-2, -1)),
-    course = month > 7 ? year - groupYear + 1 : year - groupYear
+        year = date.getFullYear() % 10,
+        month = date.getMonth() + 1,
+        groupYear = Number(group.slice(-2, -1)),
+        course = month > 7 ? year - groupYear + 1 : year - groupYear
 
   return course > 0 && course < 5
     ? course

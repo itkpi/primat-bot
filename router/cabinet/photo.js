@@ -1,6 +1,7 @@
 const { createPage } = require('../../modules/telegraph'),
-  { request, picasa } = require('../../modules/utils'),
-  config = require('../../config')
+      { request, picasa } = require('../../modules/utils'),
+      config = require('../../config'),
+      uploadLatex = require('./upload-latex')
 
 module.exports = async ctx => {
   if (!ctx.session.cabinet || ctx.session.cabinet.nextCondition !== 'photo')
@@ -8,15 +9,20 @@ module.exports = async ctx => {
 
   try {
     const tgLink = await ctx.telegram.getFileLink(ctx.message.photo[2].file_id),
-      amount = --ctx.session.cabinet.photosAmount
+          amount = --ctx.session.cabinet.photosAmount
 
     ctx.session.cabinet.photoLinks.push(tgLink)
 
     if (amount === 0) {
-      const { lectureName, page } = ctx.session.cabinet,
-        msgInfo = await ctx.reply('Секундочку, делаю всю магию...'),
-        picasaLinks = await uploadPhotos(ctx.session.user, ctx.session.cabinet),
-        response = await createPage(ctx, lectureName, page, picasaLinks)
+      const { lectureName, page } = ctx.session.cabinet
+
+      const [msgInfo, photoPicasaLinks, latexPicasaLinks] = await Promise.all([
+        ctx.reply('Секундочку, делаю всю магию...'),
+        uploadPhotos(ctx.session.user, ctx.session.cabinet),
+        uploadLatex(ctx.session.user, ctx.session.cabinet)
+      ])
+
+      const response = await createPage(ctx, lectureName, page, { photoPicasaLinks, latexPicasaLinks })
 
       ctx.telegram.deleteMessage(msgInfo.chat.id, msgInfo.message_id)
       ctx.reply('Ты просто лучший! Только не забывай исправлять ошибки, вдруг что')
@@ -24,33 +30,33 @@ module.exports = async ctx => {
     } else {
       ctx.replyWithHTML(`Оп, забрал. Еще не достает: <b>${amount}</b>`)
     }
-  } catch(e) {
+  } catch (e) {
     return ctx.state.error(e)
   }
   ctx.state.saveSession()
 }
 
-async function uploadPhotos(user, info) {
+function uploadPhotos(user, info) {
   const { course, username, tgId } = user,
-    { subject, lectureName, picasaToken, photoLinks: tgLinks } = info,
+        { subject, lectureName, picasaToken, photoLinks: tgLinks } = info,
 
-    summary = `${lectureName}. Created by ${username || tgId}.`,
-    getTitle = num => `Photo #${num}. ${course} course. ${subject} | ${new Date().toDateString()}`,
+        summary = `${lectureName}. Created by ${username || tgId}.`,
+        getTitle = num => `Photo #${num}. ${course} course. ${subject} | ${new Date().toDateString()}`,
 
-    download = url => request({ encoding: null, url }),
+        download = url => request({ encoding: null, url }),
 
-    upload = num => ({ body }) => new Promise((resolve, reject) =>
-      picasa.postPhoto(picasaToken, config.album_id, {
-        title: getTitle(++num),
-        summary,
-        contentType: 'image/jpg',
-        binary: body
-      }, (err, { content }) => err ? reject(err) : resolve(content.src)
-      )),
+        upload = num => ({ body }) => new Promise((resolve, reject) =>
+          picasa.postPhoto(picasaToken, config.album_id, {
+            title: getTitle(++num),
+            summary,
+            contentType: 'image/jpg',
+            binary: body
+          }, (err, { content }) => err ? reject(err) : resolve(content.src)
+          )),
 
-    dwnldBinariesUpldPhotos = urls => Promise.all(urls.map((url, num) => 
-      download(url).then(upload(num))
-    ))
+        dwnldBinariesUpldPhotos = urls => Promise.all(urls.map((url, num) =>
+          download(url).then(upload(num))
+        ))
 
   return dwnldBinariesUpldPhotos(tgLinks)
 }
