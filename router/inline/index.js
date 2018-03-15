@@ -1,5 +1,5 @@
 const os = require('os')
-const getLatexPath = require('../../modules/latex-photo')
+const mathmode = require('../../modules/mathmode')
 
 const [ipv4] = os.networkInterfaces().eth0 || [{}]
 const { address } = ipv4
@@ -20,18 +20,21 @@ module.exports = async ctx => {
     return ctx.answerInlineQuery([])
 
   try {
-    const path = await getLatexPath(msg, 'jpg')
-    console.log(path)
+    const path = `${process.cwd()}/public/${msg.slice(0, 10)}${Date.now()}.png`
+    const render = mathmode(msg, path)
 
-    ctx.answerInlineQuery([{
-      type: 'photo',
-      id: 1,
-      title: 'kek',
-      description: 'description',
-      caption: 'caption',
-      photo_url: `${address}/public${path}`,
-      thumb_url: `${address}/public${path}`
-    }])
+    render.on('finish' => {
+      ctx.answerInlineQuery([{
+        type: 'photo',
+        id: 1,
+        title: 'kek',
+        description: 'description',
+        caption: 'caption',
+        photo_url: `${address}${path}`,
+        thumb_url: `${address}${path}`
+      }])
+    })
+    render.on('error', console.error)
     // const { body } = await sendImg(ctx.from.id, path)
     // const response = JSON.parse(body)
     // if (response.ok === false)
