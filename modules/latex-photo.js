@@ -5,12 +5,12 @@ const mathmode = require('mathmode')
 const fs = require('fs')
 // const unlink = util.promisify(fs.unlink)
 
-module.exports = (msg, ext = 'png') => {
+module.exports = (msg, format = 'png') => {
   return new Promise((resolve, reject) => {
-    const path = `${process.cwd()}/public/${msg.slice(0, 10)}${Date.now()}.${ext}`
+    const path = `${process.cwd()}/public/${msg.slice(0, 10)}${Date.now()}.${format}`
     const dest = fs.createWriteStream(path)
 
-    const render = mathmode(msg).pipe(dest)
+    const render = mathmode(msg).pipe(dest, { format })
 
     render.on('finish', () => {
       resolve(path)
