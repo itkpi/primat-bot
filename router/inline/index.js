@@ -20,25 +20,24 @@ module.exports = async ctx => {
     return ctx.answerInlineQuery([])
 
   try {
-    const path = `${process.cwd()}/public/${msg.slice(0, 10)}${Date.now()}.png`
+    const path = `${process.cwd()}/public/${msg.slice(0, 10)}${Date.now()}.jpg`
+    const route = path.slice(path.indexOf('/public'))
     const render = mathmode(msg, path)
 
-    render.on('finish' => {
-      ctx.answerInlineQuery([{
+    render.on('finish', () => {
+      const obj = {
         type: 'photo',
         id: 1,
         title: 'kek',
         description: 'description',
         caption: 'caption',
-        photo_url: `${address}${path}`,
-        thumb_url: `${address}${path}`
-      }])
+        photo_url: `${address}${route}`,
+        thumb_url: `${address}${route}`
+      }
+      console.log(obj)
+      ctx.answerInlineQuery([obj])
     })
     render.on('error', console.error)
-    // const { body } = await sendImg(ctx.from.id, path)
-    // const response = JSON.parse(body)
-    // if (response.ok === false)
-    //   await sendDocument(ctx.from.id, path)
 
     // await unlink(path)
   } catch (e) {
