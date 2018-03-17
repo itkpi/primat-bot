@@ -1,6 +1,7 @@
 const { bot } = require('../modules/utils'),
       config = require('../config'),
 
+      inlineHandler = require('./inline'),
       registry = require('./registry'),
       schedule = require('./schedule'),
       abstract = require('./abstract'),
@@ -28,6 +29,7 @@ module.exports = () => {
   bot.on('photo', photo)
 
   bot.on('callback_query', callbackBtn)
+  bot.on('inline_query', inlineHandler)
 
   bot.hears(timeleftBtn, timeleft)
   bot.hears(teachersBtn, teachers)
