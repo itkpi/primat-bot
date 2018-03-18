@@ -1,16 +1,18 @@
 {
-  "name": "telega",
+  "name": "BotKPI",
   "version": "1.0.0",
-  "description": "FAM telegram bot",
+  "description": "Bot for university",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "eslint": "eslint ."
+    "eslint": "node_modules/.bin/eslint .; exit 0",
+    "fix-eslint": "node_modules/.bin/eslint . --fix; exit 0"
   },
   "author": "Fowi",
   "license": "ISC",
   "dependencies": {
+    "bunyan": "^1.8.12",
     "encoding": "^0.1.12",
     "express": "^4.15.3",
     "mathmode": "0.0.4",
