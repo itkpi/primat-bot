@@ -1,7 +1,5 @@
 const Abstract = require('../../models/abstract'),
-      { bot, request } = require('../../modules/utils'),
       sendDocument = require('../../modules/send-document'),
-      { telegram } = bot,
       puppeteer = require('puppeteer'),
       fs = require('fs'),
       util = require('util'),

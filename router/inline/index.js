@@ -23,7 +23,7 @@ module.exports = async ctx => {
     const path = `${process.cwd()}/public/${msg.slice(0, 10)}${Date.now()}.png`
     const render = mathmode(msg, path)
 
-    render.on('finish' => {
+    render.on('finish', () => {
       ctx.answerInlineQuery([{
         type: 'photo',
         id: 1,
