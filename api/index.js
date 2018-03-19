@@ -2,7 +2,6 @@
 
 const router = require('express').Router(),
       Abstract = require('../models/abstract'),
-      KpiInfo = require('../models/kpi-info'),
       mongoose = require('mongoose')
 
 router.use((req, res, next) => {
@@ -32,71 +31,16 @@ router.get('/info', async (req, res) => {
           }, { }))
       }
     }
-    const resp = (await Abstract.mapReduce(o))
+    const data = (await Abstract.mapReduce(o))
       .map(({ _id, value }) => ({ flow: _id, courses: JSON.parse(value) }))
 
-    console.log(resp)
-    res.json({ data: resp })
+    res.json({ data })
   } catch (e) {
     console.error(e)
     res.status(500).json({ error: 'Db error' })
   }
 })
 
-router.get('/flows', async (req, res) => {
-  try {
-    const { flows } = await KpiInfo.findOne({ name: 'flows' })
-    res.json({ data: flows })
-  } catch (e) {
-    console.error(e)
-    res.status(500).json({ error: '500 shit happens' })
-  }
-})
-
-router.get('/meta', async (req, res) => {
-  try {
-    const data = await Abstract.aggregate(
-      [{ $group: { _id: { course: '$course', semester: '$semester', flow: '$flow' } } }]
-    )
-    res.json({ data })
-  } catch (e) {
-    console.error(e)
-    res.status(500).json({ error: '500 shit happens' })
-  }
-})
-// router.get('/meta2', async (req, res) => {
-//   try {
-//     const result = await Abstract.aggregate(
-//       [{ $group: { _id: { course: '$course', semester: '$semester', flow: '$flow' } } }]
-//     )
-//     const data = result
-//       .reduce((acc, { _id: item }) => {
-//         const flow = acc.find(({ name }) => name === item.flow)
-//         if (flow) {
-//           const course = flow.courses.find(({ num }) => num === item.course)
-//           if (!course)
-//             flow.courses.push({ num: item.course, semesters: [item.semester] })
-//           else
-//             course.semesters = courses.semesters.includes(item.semester)
-//               ? courses.semesters
-//               : courses.semesters.concat(item.semester)
-//         } else {
-//           acc.push({
-//             name: item.flow,
-//             courses: [{ num: item.course, semesters: [item.semester] }]
-//           })
-//         // flow.name = item.flow
-//         // flow.courses = [{ num: item.course, semesters: [item.semester] }]
-//         }
-//         return acc
-//       }, [])
-//     console.log(data)
-//     res.json({ data })
-//   } catch(e) {
-//     console.error(e)
-//     res.status(500).json({ error: '500 shit happens' })
-//   }
-// })
 router.get('/abstracts/:id?', async (req, res) => {
   try {
     const { id } = req.params
@@ -114,20 +58,25 @@ router.get('/abstracts/:id?', async (req, res) => {
     if (!(semester && flow && course))
       return res.json({ error: 'Expected id or three parameters: semester, flow, course' })
 
-    const abstracts = await Abstract.aggregate([
-      { $match: { flow, course: Number(course), semester: Number(semester) } },
-      { $project: { text: 0, __v: 0 } }
-    ]).sort({ date: 1 })
-
-    if (!abstracts)
-      return res.json({ data: null })
-
-    const data = abstracts.reduce((data, lecture) => {
-      if (!data[lecture.subject])
-        data[lecture.subject] = []
-      data[lecture.subject].push(lecture)
-      return data
-    }, {})
+    const data = await Abstract.aggregate([
+      { $match: {
+        semester: { $eq: Number(semester) },
+        flow: { $eq: flow },
+        course: { $eq: Number(course) }
+      } },
+      { $group: { _id: '$subject', abstracts: { $push: {
+        flow: '$flow',
+        course: '$course',
+        author: '$author',
+        name: '$name',
+        semester: '$semester',
+        authorId: '$authorId',
+        telegraph_url: '$telegraph_url',
+        telegraph_path: '$telegraph_path',
+        telegraph_title: '$telegraph_title'
+      }
+      } } }
+    ])
 
     res.json({ data })
   } catch (e) {
