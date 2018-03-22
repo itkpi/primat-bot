@@ -13,14 +13,6 @@ const express = require('express'),
 
 app.use(express.static('./public'))
 
-app.use((req, res, next) => {
-  if ([`/bot${process.env.BOT_TOKEN}`, '/'].includes(req.url))
-    return next()
-
-  console.log(req.method, req.url)
-  next()
-})
-
 if (process.env.LOCATION === 'local') {
   bot.telegram.deleteWebhook()
     .then(() => bot.startPolling())
