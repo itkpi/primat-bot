@@ -18,7 +18,7 @@ router.use((req, res, next) => {
   next()
 })
 
-router.get('/info', async (req, res) => {
+router.get('/abstracts-info', async (req, res) => {
   try {
     const o = {
       map: function() {
@@ -41,9 +41,9 @@ router.get('/info', async (req, res) => {
       .map(({ _id, value }) => ({ flow: _id, courses: JSON.parse(value) }))
 
     res.json({ data })
-  } catch (e) {
-    console.error(e)
-    res.status(500).json({ error: 'Db error' })
+  } catch (err) {
+    log.error({ err }, 'api abstracts-info route')
+    res.status(500).json({ error: 'error' })
   }
 })
 
@@ -51,10 +51,10 @@ router.get('/abstracts/:id?', async (req, res) => {
   try {
     const { id } = req.params
     if (id) {
-      if (!mongoose.Types.ObjectId.isValid(req.params.id))
+      if (!mongoose.Types.ObjectId.isValid(id))
         return res.status(400).json({ error: 'Invalid id' })
 
-      const abstract = await Abstract.findById(id)
+      const abstract = await Abstract.findById(id, '-__v')
       return abstract
         ? res.json({ data: abstract })
         : res.status(404).json({ data: null })
@@ -78,22 +78,22 @@ router.get('/abstracts/:id?', async (req, res) => {
         name: '$name',
         semester: '$semester',
         authorId: '$authorId',
+        date: '$date',
         telegraph_url: '$telegraph_url',
         telegraph_path: '$telegraph_path',
         telegraph_title: '$telegraph_title'
-      }
-      } } },
+      } } } },
       { $project: {
         _id: 0,
         subject: '$_id',
         abstracts: '$abstracts'
       } }
     ])
-    throw new Error('test')
+
     res.json({ data })
   } catch (err) {
     log.error({ err }, 'api abstracts route')
-    res.status(500).json({ error: 'Error 500\nШось поломилося' })
+    res.status(500).json({ error: 'error' })
   }
 })
 

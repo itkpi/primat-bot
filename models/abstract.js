@@ -17,7 +17,7 @@ const Schema = mongoose.Schema,
         semester: { type: Number, required: true },
         flow: { type: String, required: true },
         date: { type: Date, default: Date.now }
-      })
+      }, { versionKey: false })
 
 if (process.env.NODE_ENV === 'production') {
   Abstract.post('save', async ({ flow, course, semester, authorId, author, subject, telegraph_url, name }) => {
