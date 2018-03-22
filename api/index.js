@@ -65,6 +65,7 @@ router.get('/abstracts/:id?', async (req, res) => {
         course: { $eq: Number(course) }
       } },
       { $group: { _id: '$subject', abstracts: { $push: {
+        id: '$_id',
         flow: '$flow',
         course: '$course',
         author: '$author',
@@ -75,12 +76,17 @@ router.get('/abstracts/:id?', async (req, res) => {
         telegraph_path: '$telegraph_path',
         telegraph_title: '$telegraph_title'
       }
-      } } }
+      } } },
+      { $project: {
+        _id: 0,
+        subject: '$_id',
+        abstracts: '$abstracts'
+      } }
     ])
-
+    throw new Error('test')
     res.json({ data })
-  } catch (e) {
-    console.error(e)
+  } catch (err) {
+    log.error({ err }, 'api abstracts route')
     res.status(500).json({ error: 'Error 500\nШось поломилося' })
   }
 })
