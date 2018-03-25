@@ -17,9 +17,8 @@ module.exports = route => async ctx => {
     if (groupData.type === 'choice') {
       const answer = groupData.groups.reduce(
         (acc, group, indx) => acc + `<b>${indx + 1}</b>. ${group.group}. ` +
-        `Идентификатор: ${group.rGroupId}\n`,
-        'Одному богу известно почему, но с таким именем на самом деле ' +
-        'существует несколько групп. Отправь порядковый номер одной из них:\n'
+          `Идентификатор: ${group.rGroupId}\n`,
+        'Отправь порядковый номер одной из возможных групп:\n'
       )
 
       ctx.session.tmpGroup = group
