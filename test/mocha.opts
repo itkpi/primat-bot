@@ -1,0 +1,6 @@
+test/**/*.js
+--recursive
+--timeout 300000
+--colors
+--growl
+--exit
