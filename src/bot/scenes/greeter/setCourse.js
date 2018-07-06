@@ -5,9 +5,9 @@ const ignoreCommand = require('../../utils/ignoreCommand')
 
 const scene = new Scene(config.scenes.greeter.setCourse)
 
-scene.enter(async ctx => {
+scene.enter(ctx => {
   const { msg, keyboard } = ctx.scene.state
-  ctx.reply(msg, keyboard)
+  return ctx.reply(msg, keyboard)
 })
 scene.hears(ignoreCommand, async ctx => {
   const course = Number(ctx.message.text.trim().toLowerCase())

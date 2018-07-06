@@ -1,5 +1,5 @@
 {
-  "name": "BotKPI",
+  "name": "KPIbot",
   "version": "1.0.0",
   "description": "Bot for university",
   "main": "index.js",
@@ -21,6 +21,7 @@
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "mathmode": "0.0.4",
+    "mem": "^3.0.1",
     "mongoose": "^5.1.7",
     "node-rozklad-api": "^1.1.0",
     "node-wav": "0.0.2",

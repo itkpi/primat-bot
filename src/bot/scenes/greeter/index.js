@@ -8,7 +8,7 @@ const ignoreCommand = require('../../utils/ignoreCommand')
 const scene = new Scene(config.scenes.greeter.self)
 const btns = config.btns.greeter
 
-scene.enter(async ctx => {
+scene.enter(ctx => {
   const { msg, keyboard } = service.welcome(ctx.from.first_name)
   return ctx.replyWithHTML(msg, keyboard)
 })

@@ -6,12 +6,12 @@ const ignoreCommand = require('../../utils/ignoreCommand')
 const { scenes } = config
 const scene = new Scene(scenes.greeter.chooseGroup)
 
-scene.enter(async ctx => {
+scene.enter(ctx => {
   const { msg, keyboard } = ctx.scene.state
-  ctx.reply(msg, keyboard)
+  return ctx.reply(msg, keyboard)
 })
 
-scene.hears(ignoreCommand, async ctx => {
+scene.hears(ignoreCommand, ctx => {
   const num = parseInt(ctx.message.text.trim().toLowerCase(), 10)
   if (!num) {
     return ctx.reply('Выбери какой-то номер')
