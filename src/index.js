@@ -30,7 +30,7 @@ if (app.env === 'development') {
   telegraf.telegram.setWebhook(`${config.appUrl}${secretPath}`)
   app.use((ctx, next) => {
     if (ctx.url === secretPath) {
-      return bot.handleUpdate(ctx.request.body, ctx.response)
+      return telegraf.handleUpdate(ctx.request.body, ctx.response)
     }
     return next()
   })
