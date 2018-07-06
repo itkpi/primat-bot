@@ -1,6 +1,6 @@
 const config = require('config')
 const { assert } = require('chai')
-const service = require('../source/bot/service/greeter')
+const service = require('../src/bot/service/greeter')
 const getUserData = require('./mocks/getUserData')
 const rozkladApiMock = require('./mocks/rozkladApiMock')
 const telegramMock = require('./mocks/telegramMock')
