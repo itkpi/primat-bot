@@ -13,6 +13,7 @@ function getRegistryMessage() {
 
 module.exports = {
   port: process.env.PORT || 3000,
+  appUrl: process.env.APP_URL,
   db: {
     url: process.env.MONGO_URL || 'mongodb://localhost/primat-bot',
   },
@@ -33,4 +34,5 @@ module.exports = {
   registryMessage: getRegistryMessage(),
   sessionFilter: ['date', '__v'],
   commands,
+  homeMessages: ['Домооой', 'Ладненько', 'Как скажешь', 'Эх', 'Приехали'],
 }

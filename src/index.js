@@ -12,7 +12,7 @@ const app = new Koa()
 const koaRouter = new KoaRouter()
 const router = serverRouter(koaRouter)
 
-if (app.env !== 'production' && config.db.url.match('prod')) {
+if (app.env !== 'production' && config.db.url.match('production')) {
   process.stderr.write('Error: Launched with production database in non-production environment!')
   process.exit(1)
 }
@@ -34,9 +34,6 @@ if (app.env === 'development') {
     }
     return next()
   })
-} else if (!app.env) {
-  process.stderr.write('Error: NODE_ENV doesn\'t specified!')
-  process.exit(1)
 }
 
 bot.start()

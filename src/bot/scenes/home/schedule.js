@@ -19,6 +19,6 @@ scene.hears(btns.yesterday, ctx => {})
 scene.hears(btns.thisWeek, ctx => {})
 scene.hears(btns.nextWeek, ctx => {})
 scene.hears(btns.lessons, ctx => ctx.replyWithHTML(service.time))
-scene.hears(btns.back, ctx => {})
+scene.hears(btns.back, ctx => ctx.home())
 
 module.exports = scene
