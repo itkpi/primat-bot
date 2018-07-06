@@ -26,8 +26,19 @@ if (app.env === 'development') {
     .then(() => telegraf.startPolling())
     .catch(e => app.emit('error', e))
 } else if (app.env === 'production') {
-  telegraf.telegram.setWebhook(`${config.appUrl}/bot${config.botToken}`)
-  app.use(telegraf.webhookCallback(`/bot${config.botToken}`))
+  const secretPath = `bot${config.botToken}`
+  telegraf.telegram.setWebhook(`${config.appUrl}/${secretPath}`)
+  app.use((ctx, next) => {
+    if (ctx.url === secretPath) {
+      return bot.handleUpdate(ctx.request.body, ctx.response)
+    }
+    return next()
+  })
+  // app.use((ctx, next) => ctx.method === 'POST' || ctx.url === secretPath
+  //   ? telegraf.handleUpdate(ctx.request.body, ctx.response)
+  //   : next()
+  // )
+  // app.use(telegraf.webhookCallback(`/bot${config.botToken}`))
 } else if (!app.env) {
   process.stderr.write('Error: NODE_ENV doesn\'t specified!')
   process.exit(1)
