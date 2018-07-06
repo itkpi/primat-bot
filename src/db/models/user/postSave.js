@@ -1,10 +1,10 @@
 const config = require('config')
 const logger = require('../../../utils/logger')
 const { telegram } = require('../../../modules/telegraf')
-const User = require('./')
+const mongoose = require('../../')
 
 async function sendMsgToGroupmates({ group, tgId, firstName }) {
-  const groupmates = await User.find({
+  const groupmates = await mongoose.models.User.find({
     group,
     $or: [{ unsubscriber: { $exists: false } }, { unsubscriber: false }],
     tgId: { $ne: tgId },
