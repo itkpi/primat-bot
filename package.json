@@ -6,7 +6,8 @@
   "scripts": {
     "test": "NODE_ENV=test npm run mocha",
     "pretest": "npm run lint",
-    "start": "NODE_ENV=development nodemon ./src",
+    "start": "NODE_ENV=development node ./src",
+    "start:dev": "NODE_ENV=development nodemon ./src",
     "lint": "node_modules/.bin/eslint .",
     "fix-eslint": "node_modules/.bin/eslint . --fix",
     "mocha": "NODE_ENV=test mocha"
