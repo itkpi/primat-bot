@@ -1,5 +1,6 @@
 const rozklad = require('node-rozklad-api')
 const User = require('../../db/models/user')
+const univerService = require('./univer')
 
 const service = {
   async processGroupByName(groupName) {
@@ -33,11 +34,11 @@ const service = {
     }
     const date = new Date()
     const year = date.getFullYear() % 10
-    const month = date.getMonth() + 1
     const groupYear = Number(group.slice(-2, -1))
-    const course = month > 7
-      ? year - groupYear + 1
-      : year - groupYear
+    const currSemester = await univerService.getCurrSemester()
+    const course = currSemester === 1
+      ? year - groupYear
+      : year - groupYear + 1
     if (course < 0 || course > 4) {
       return this.getCourseByOther(group)
     }

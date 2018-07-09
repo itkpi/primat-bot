@@ -1,14 +1,21 @@
 const config = require('config')
 const { assert } = require('chai')
 const service = require('../src/bot/service/greeter')
+const User = require('../src/db/models/user')
+const Univer = require('../src/db/models/univer')
 const getUserData = require('./mocks/getUserData')
 const rozkladApiMock = require('./mocks/rozkladApiMock')
 const telegramMock = require('./mocks/telegramMock')
 
 describe('greeter service', () => {
   describe('registerByGroup', () => {
-    before(() => {
+    before(async () => {
       telegramMock.sendMessage()
+      this.univerInfo = await Univer.create({ name: config.universityName, currentSemester: 1 })
+    })
+    after(async () => {
+      await User.collection.drop()
+      await this.univerInfo.remove()
     })
     describe('when register valid single group', () => {
       before(() => {

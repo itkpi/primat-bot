@@ -40,17 +40,12 @@ const User = new Schema({
     max: 6,
     trim: true,
   },
-  date: {
-    type: Date,
-    required: true,
-    default: Date.now,
-  },
   telegraph_token: String,
   telegraph_authurl: String,
   telegraph_user: Boolean,
   subscriber: { type: Boolean, default: true },
   hideLocationBtns: { type: Boolean, default: false },
-}, { strict: 'throw' })
+}, { strict: 'throw', timestamps: true })
 
 User.post('save', postSave)
 User.post('findOneAndUpdate', postUpdate)

@@ -35,4 +35,5 @@ module.exports = {
   sessionFilter: ['date', '__v'],
   commands,
   homeMessages: ['Домооой', 'Ладненько', 'Как скажешь', 'Эх', 'Приехали'],
+  universityName: 'KPI',
 }

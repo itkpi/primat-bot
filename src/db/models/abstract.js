@@ -16,8 +16,7 @@ const Abstract = new Schema({
   course: { type: Number, required: true },
   semester: { type: Number, required: true },
   flow: { type: String, required: true },
-  date: { type: Date, default: Date.now },
-}, { versionKey: false })
+}, { versionKey: false, timestamps: true })
 
 if (process.env.NODE_ENV === 'production') {
   Abstract.post('save', async data => {

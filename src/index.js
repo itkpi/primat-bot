@@ -20,7 +20,6 @@ if (app.env !== 'production' && config.db.url.match('production')) {
 app.use(errorHandler)
 app.use(bodyParser())
 app.use(router)
-console.log('node_env', app.env)
 
 if (app.env === 'development') {
   telegraf.telegram.deleteWebhook()
@@ -33,7 +32,6 @@ if (app.env === 'development') {
   logger.info('Bot setted webhook')
   app.use((ctx, next) => {
     if (ctx.url === secretPath) {
-      console.log('handle')
       return telegraf.handleUpdate(ctx.request.body, ctx.response)
     }
     return next()

@@ -1,7 +1,7 @@
 const rozklad = require('node-rozklad-api')
 
 const service = {
-  async getLessons() {
+  async getLessons(id, case) {
     const currDay = (new Date()).getDay()
     const nextDay = (currDay + 1) % 8 ? (currDay + 1) % 8 : 1
     const currWeek = await rozklad.currWeek()
