@@ -5,8 +5,8 @@ const apiService = require('../service/api')
 const api = new Router()
 
 module.exports = router => {
-  api.use((req, res, next) => {
-    res.set({
+  api.use((ctx, next) => {
+    ctx.set({
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
     })
