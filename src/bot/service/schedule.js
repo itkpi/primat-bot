@@ -90,9 +90,46 @@ const service = {
     }
     return ops.parse ? parseLessons(lessons, currDay, currWeek) : lessons
   },
+  async parseSchedule(groupId, requiredValue) {
+    const timetable = await rozklad.timetable(groupId)
+    const weeks = [1, 2]
+    const days = [1, 2, 3, 4, 5, 6]
+    const lessonNums = [0, 1, 2, 3, 4]
+    const result = {
+      subjects: [],
+      teachers: {},
+    }
+    weeks.forEach(week => days.forEach(dayNum => {
+      const day = timetable.weeks[week].days[dayNum]
+      if (!day) {
+        return
+      }
+      lessonNums.forEach(num => {
+        const {
+          teachers,
+          lesson_name: subject,
+          lesson_full_name: lessonFullName,
+        } = day.lessons[num] || {}
+        if (teachers && lessonFullName && teachers.length > 0) {
+          if (!result.teachers[lessonFullName]) {
+            result.teachers[lessonFullName] = []
+          }
+          const teacher = teachers[0].teacher_full_name || teachers[0].teacher_name
+          if (!result.teachers[lessonFullName].includes(teacher)) {
+            result.teachers[lessonFullName].push(teacher)
+          }
+        }
+        if (subject && !result.subjects.includes(subject)) {
+          result.subjects.push(subject)
+        }
+      })
+    }))
+    return result[requiredValue]
+  },
   getBuildingsLocationMarkup(buildings) {
     return Extra.markup(m => m.inlineKeyboard(buildings.map(num => m.callbackButton(num, num))))
   },
+
   time: config.lessonsSchedule,
 }
 

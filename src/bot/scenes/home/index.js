@@ -13,5 +13,7 @@ scene.enter(ctx => {
 })
 scene.hears(btns.schedule, ctx => ctx.scene.enter(config.scenes.home.schedule))
 scene.hears(btns.timeleft, ctx => ctx.reply(service.timeleft()))
+scene.hears(btns.teachers,
+  async ctx => ctx.replyWithHTML(await service.teachers(ctx.session.groupId, ctx.session.group)))
 
 module.exports = scene

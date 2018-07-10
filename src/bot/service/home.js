@@ -1,3 +1,5 @@
+const scheduleService = require('./schedule')
+
 const service = {
   timeleft() {
     const len = 60 + 35 // 1:35
@@ -30,6 +32,14 @@ const service = {
       }
     }
     return 'Сейчас не время пар - отдыхай!'
+  },
+  async teachers(groupId, group) {
+    const lessonTeachers = await scheduleService.parseSchedule(groupId, 'teachers')
+    const lessons = Object.keys(lessonTeachers)
+    const text = lessons
+      .map((lesson, i) => `<b>${i + 1}. ${lesson}</b><code>:</code> ${lessonTeachers[lesson].join(', ')}`)
+      .join('\n\n')
+    return `<code>${group.toUpperCase()}</code>:\n${text}`
   },
 }
 
