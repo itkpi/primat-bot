@@ -10,7 +10,7 @@ module.exports = router => {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
     })
-    next()
+    return next()
   })
   api.get('/timetable/:group', async ctx => {
     const timetable = await rozklad.timetable(ctx.params.group)
