@@ -52,7 +52,7 @@ const service = {
   },
   getChooseGroupScene(groups) {
     groups = groups.slice(0, 6)
-    const msg = ['Я не нашел этой группы, но попробуй кое-что похожее:\n']
+    const msg = ['У меня есть несколько вариантов для тебя:\n']
       .concat(groups.map((item, i) => `${i + 1}. ${item.group_full_name}`))
       .join('\n')
     const keyboardValues = groups.map((_, i) => (i + 1).toString())

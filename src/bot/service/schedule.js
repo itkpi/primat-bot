@@ -41,7 +41,7 @@ function parseLessons(lessons, currDay, currWeek) {
       acc.text += '<b>#|</b>'
     }
     acc.text += `<b>${lessonNumber}</b>. ${formatTime(timeStart)}<code>|</code> ${lessonName} `
-    if (lessonNumber) {
+    if (lessonRoom) {
       acc.text += `<code>${lessonRoom}</code>`
       acc.buildings = addBuildings(lessonRoom, acc.buildings)
     }

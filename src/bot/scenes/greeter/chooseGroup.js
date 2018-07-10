@@ -2,7 +2,7 @@ const config = require('config')
 const Scene = require('telegraf/scenes/base')
 const handleGroupRegistry = require('../../handlers/groupRegistry')
 const ignoreCommand = require('../../utils/ignoreCommand')
-const setSessionFromGroup = require('../../utils/setSessionFromGroup')
+const sessionService = require('../../service/session')
 
 const { scenes } = config
 const scene = new Scene(scenes.greeter.chooseGroup)
@@ -22,7 +22,7 @@ scene.hears(ignoreCommand, async ctx => {
     return ctx.reply('У тебя есть списочек из номеров')
   }
   if (ctx.scene.state.parent === config.scenes.home.cabinet.changeGroup) {
-    setSessionFromGroup(group, ctx.session)
+    sessionService.setByGroup(group, ctx.session)
     return ctx.scene.enter(config.scenes.home.cabinet.self, { msg: 'Все готово' })
   }
   ctx.scene.state.group = group

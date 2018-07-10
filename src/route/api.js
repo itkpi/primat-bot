@@ -5,6 +5,13 @@ const apiService = require('../service/api')
 const api = new Router()
 
 module.exports = router => {
+  api.use((req, res, next) => {
+    res.set({
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+    })
+    next()
+  })
   api.get('/timetable/:group', async ctx => {
     const timetable = await rozklad.timetable(ctx.params.group)
     ctx.body = ctx.query.table

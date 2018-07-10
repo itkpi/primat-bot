@@ -3,8 +3,8 @@ const Scene = require('telegraf/scenes/base')
 const { Markup } = require('telegraf')
 const groupService = require('../../../service/group')
 const greeterService = require('../../../service/greeter')
+const sessionService = require('../../../service/session')
 const ignoreCommand = require('../../../utils/ignoreCommand')
-const setSessionFromGroup = require('../../../utils/setSessionFromGroup')
 
 const sceneName = config.scenes.home.cabinet.changeGroup
 const scene = new Scene(sceneName)
@@ -26,7 +26,7 @@ scene.hears(ignoreCommand, async ctx => {
     const state = Object.assign({}, nextScene.state, { parent: sceneName })
     return ctx.scene.enter(nextScene.name, state)
   }
-  setSessionFromGroup(groupData, ctx.session)
+  sessionService.setByGroup(groupData, ctx.session)
   return ctx.scene.enter(config.scenes.home.cabinet.self, { msg: 'Все готово' })
 })
 

@@ -1,4 +1,8 @@
+const config = require('config')
+const { Markup } = require('telegraf')
 const scheduleService = require('./schedule')
+
+const btns = config.btns.home
 
 const service = {
   timeleft() {
@@ -40,6 +44,19 @@ const service = {
       .map((lesson, i) => `<b>${i + 1}. ${lesson}</b><code>:</code> ${lessonTeachers[lesson].join(', ')}`)
       .join('\n\n')
     return `<code>${group.toUpperCase()}</code>:\n${text}`
+  },
+  getKeyboard(role) {
+    switch (role) {
+      case config.roles.student: {
+        return Markup.keyboard(Object.values(btns.student), { columns: 2 }).resize().extra()
+      }
+      case config.roles.abiturient: {
+        return Markup.keyboard(Object.values(btns.abiturient), { columns: 2 }).resize().extra()
+      }
+      default: {
+        return false
+      }
+    }
   },
 }
 

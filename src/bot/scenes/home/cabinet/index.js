@@ -20,6 +20,9 @@ scene.hears(btns.changeSemester, ctx => {
   ctx.session.semester = newSemester || 1
   ctx.reply(`Ты благополучно покинул ${currSemester}-й семестр, сменив его на ${ctx.session.semester}-й`)
 })
+scene.hears(btns.whoAmI, ctx => {
+  ctx.reply('Кто-то')
+})
 scene.hears(btns.back, ctx => ctx.home())
 
 module.exports = scene
