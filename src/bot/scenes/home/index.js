@@ -12,6 +12,7 @@ scene.enter(ctx => {
   return ctx.replyWithHTML(msg, keyboard)
 })
 scene.hears(btns.schedule, ctx => ctx.scene.enter(config.scenes.home.schedule))
+scene.hears(btns.cabinet, ctx => ctx.scene.enter(config.scenes.home.cabinet.self))
 scene.hears(btns.timeleft, ctx => ctx.reply(service.timeleft()))
 scene.hears(btns.teachers,
   async ctx => ctx.replyWithHTML(await service.teachers(ctx.session.groupId, ctx.session.group)))

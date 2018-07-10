@@ -5,6 +5,23 @@ const userService = require('./user')
 
 const { scenes } = config
 
+function getSetCourseScene(registryData) {
+  const courses = new Array(6)
+  for (let i = 0; i < courses.length; i += 1) {
+    courses[i] = (i + 1).toString()
+  }
+  const keyboard = Markup.keyboard(courses, { columns: 3 }).resize().extra()
+  const nextScene = {
+    name: scenes.greeter.setCourse,
+    state: {
+      msg: 'Почти закончили. Напиши еще свой курс',
+      keyboard,
+      registryData,
+    },
+  }
+  return { nextScene }
+}
+
 const service = {
   welcome(firstName) {
     const msg = `Привет, <b>${firstName}</b>!\n\nЯ рад, что ты нашел меня. Я могу быть полезным, `
@@ -24,41 +41,31 @@ const service = {
       return { fail: 'Впервые вижу такую группу. Ты уверен, что все правильно написал? Попробуй еще раз' }
     }
     if (Array.isArray(groupData)) {
-      const groups = groupData.slice(0, 6)
-      const msg = ['Я не нашел этой группы, но попробуй кое-что похожее:\n']
-        .concat(groups.map((item, i) => `${i + 1}. ${item.group_full_name}`))
-        .join('\n')
-      const keyboardValues = groups.map((_, i) => (i + 1).toString())
-      const keyboard = Markup.keyboard(keyboardValues, { columns: 3 }).resize().extra()
-      const nextScene = {
-        name: scenes.greeter.chooseGroup,
-        state: {
-          msg,
-          keyboard,
-          groups,
-        },
-      }
-      return { nextScene }
+      return this.getChooseGroupScene(groupData)
     }
     const registryData = Object.assign({}, userData, groupData)
     if (!registryData.course) {
-      const courses = new Array(6)
-      for (let i = 0; i < courses.length; i += 1) {
-        courses[i] = (i + 1).toString()
-      }
-      const keyboard = Markup.keyboard(courses, { columns: 3 }).resize().extra()
-      const nextScene = {
-        name: scenes.greeter.setCourse,
-        state: {
-          msg: 'Почти закончили. Напиши еще свой курс',
-          keyboard,
-          registryData,
-        },
-      }
-      return { nextScene }
+      return getSetCourseScene(registryData)
     }
     const user = await this.register(registryData, config.roles.student)
     return { user }
+  },
+  getChooseGroupScene(groups) {
+    groups = groups.slice(0, 6)
+    const msg = ['Я не нашел этой группы, но попробуй кое-что похожее:\n']
+      .concat(groups.map((item, i) => `${i + 1}. ${item.group_full_name}`))
+      .join('\n')
+    const keyboardValues = groups.map((_, i) => (i + 1).toString())
+    const keyboard = Markup.keyboard(keyboardValues, { columns: 3 }).resize().extra()
+    const nextScene = {
+      name: scenes.greeter.chooseGroup,
+      state: {
+        msg,
+        keyboard,
+        groups,
+      },
+    }
+    return { nextScene }
   },
 }
 

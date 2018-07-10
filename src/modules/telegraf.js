@@ -6,10 +6,10 @@ const telegraf = new Telegraf(config.botToken) // , { telegram: { webhookReply: 
 
 module.exports = telegraf
 
-const setSession = require('../bot/utils/setSession')
+const setSessionFromUser = require('../bot/utils/setSessionFromUser')
 
 telegraf.context.finishRegistry = async function finishRegistry() {
-  await setSession(this.session.tgId, this.session)
+  await setSessionFromUser(this.session.tgId, this.session)
   delete this.session.tgId
   this.scene.enter(config.scenes.home.self, { msg: config.registryMessage })
 }

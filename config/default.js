@@ -43,4 +43,5 @@ module.exports = {
     + '<b>5.</b> 16:10 - 17:45\n',
   sessionFields: ['groupId', 'group', 'role'],
   seeBuildingLocationMsg: 'Посмотреть местоположение корпуса №',
+  removeMarkup: { reply_markup: { remove_keyboard: true } },
 }

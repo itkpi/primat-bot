@@ -22,4 +22,11 @@ module.exports = {
     lessons: '📜 Расписание пар',
     back: '🔙 Назад',
   },
+  cabinet: {
+    changeGroup: '🔀 Поменять группу',
+    changeSemester: '🔁 Сменить семестр',
+    whoAmI: '👤 Кто я?',
+    back: '🔙 Назад',
+  },
+  cancel: '🗙 Отмена',
 }
