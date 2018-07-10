@@ -12,7 +12,7 @@ scene.enter(ctx => {
 })
 
 scene.hears(ignoreCommand, ctx => {
-  const num = parseInt(ctx.message.text.trim().toLowerCase(), 10)
+  const num = parseInt(ctx.state.cleanedMsg, 10)
   if (!num) {
     return ctx.reply('Выбери какой-то номер')
   }

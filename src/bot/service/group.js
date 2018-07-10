@@ -1,5 +1,5 @@
 const rozklad = require('node-rozklad-api')
-const User = require('../../db/models/user')
+const userService = require('./user')
 const univerService = require('./univer')
 
 const service = {
@@ -15,7 +15,7 @@ const service = {
   },
   async transformGroup(group) {
     return {
-      rGroupId: group.group_id,
+      groupId: group.group_id,
       flow: group.group_prefix,
       groupOkr: group.group_okr,
       groupType: group.group_type,
@@ -25,7 +25,7 @@ const service = {
     }
   },
   async getCourseByOther(group) {
-    const user = await User.findOne({ group })
+    const user = await userService.getByGroup(group)
     return user && user.course
   },
   async getCourse(group) {

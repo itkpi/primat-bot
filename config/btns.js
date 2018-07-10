@@ -1,7 +1,7 @@
 module.exports = {
   home: {
     abstracts: '📝 Лекции',
-    schedule: '📜 Расписание',
+    schedule: '📇 Расписание',
     cabinet: '💼 Кабинет',
     timeleft: '🕐 Время до конца пары',
     teachers: '👨‍🏫 Мои преподаватели',
@@ -18,7 +18,8 @@ module.exports = {
     yesterday: 'Вчера',
     thisWeek: 'Эта неделя',
     nextWeek: 'Следующая неделя',
-    lessons: 'Расписание пар',
+    whole: 'Все расписание',
+    lessons: '📜 Расписание пар',
     back: '🔙 Назад',
   },
 }

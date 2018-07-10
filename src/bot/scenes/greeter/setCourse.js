@@ -10,7 +10,7 @@ scene.enter(ctx => {
   return ctx.reply(msg, keyboard)
 })
 scene.hears(ignoreCommand, async ctx => {
-  const course = Number(ctx.message.text.trim().toLowerCase())
+  const course = Number(ctx.state.cleanedMsg)
   if (!course || course < 1 || course > 6) {
     return ctx.reply('Не уверен, что там кто-то учится. У нас ведь всего шесть курсов? Попробуй еще')
   }

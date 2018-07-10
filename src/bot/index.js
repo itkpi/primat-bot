@@ -1,6 +1,6 @@
 const config = require('config')
 const mongoose = require('../db')
-const telegraf = require('../modules/telegraf')
+const { telegraf } = require('../modules')
 const middlewares = require('./middlewares')
 const commands = require('./commands')
 const logger = require('../utils/logger')
@@ -13,6 +13,7 @@ module.exports = {
     telegraf.use(session.middleware)
     telegraf.use(middlewares.auth)
     telegraf.use(middlewares.logger)
+    telegraf.use(middlewares.processMessage)
     telegraf.use(middlewares.scenes)
   },
   async start() {

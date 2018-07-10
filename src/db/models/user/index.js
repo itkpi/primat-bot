@@ -1,6 +1,4 @@
 const mongoose = require('../../')
-const postSave = require('./postSave')
-const postUpdate = require('./postUpdate')
 
 const { Schema } = mongoose
 const User = new Schema({
@@ -19,8 +17,7 @@ const User = new Schema({
     trim: true,
   },
   role: { type: String, required: true },
-  groupHubId: Number,
-  rGroupId: Number,
+  groupId: Number,
   teacherName: String,
   teacherFullName: String,
   teacherShortName: String,
@@ -47,7 +44,10 @@ const User = new Schema({
   hideLocationBtns: { type: Boolean, default: false },
 }, { strict: 'throw', timestamps: true })
 
+module.exports = mongoose.model('User', User)
+
+const postSave = require('./postSave')
+const postUpdate = require('./postUpdate')
+
 User.post('save', postSave)
 User.post('findOneAndUpdate', postUpdate)
-
-module.exports = mongoose.model('User', User)

@@ -1,6 +1,6 @@
 const config = require('config')
 const logger = require('../../../utils/logger')
-const { telegram } = require('../../../modules/telegraf')
+const { telegraf: { telegram } } = require('../../../modules')
 const mongoose = require('../../')
 
 async function sendMsgToGroupmates({ group, tgId, firstName }) {

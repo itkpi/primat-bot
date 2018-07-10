@@ -14,7 +14,7 @@ const service = {
     return { msg, keyboard }
   },
   register(data, role) {
-    return userService.createUser(Object.assign({}, data, { role }))
+    return userService.create(Object.assign({}, data, { role }))
   },
   async registerByGroup(group, userData) {
     const groupData = typeof group === 'string'
@@ -40,7 +40,7 @@ const service = {
       }
       return { nextScene }
     }
-    const registryData = Object.assign({}, userData, groupData, { role: 'student' })
+    const registryData = Object.assign({}, userData, groupData)
     if (!registryData.course) {
       const courses = new Array(6)
       for (let i = 0; i < courses.length; i += 1) {
@@ -57,7 +57,7 @@ const service = {
       }
       return { nextScene }
     }
-    const user = await userService.createUser(registryData)
+    const user = await this.register(registryData, config.roles.student)
     return { user }
   },
 }

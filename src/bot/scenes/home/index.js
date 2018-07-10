@@ -10,7 +10,6 @@ scene.enter(ctx => {
   const keyboard = Markup.keyboard(Object.values(btns), { columns: 2 }).resize().extra()
   return ctx.replyWithHTML(msg, keyboard)
 })
-
 scene.hears(btns.schedule, ctx => ctx.scene.enter(config.scenes.home.schedule))
 
 module.exports = scene

@@ -9,6 +9,7 @@ const scene = new Scene(config.scenes.greeter.self)
 const btns = config.btns.greeter
 
 scene.enter(ctx => {
+  ctx.session.tgId = ctx.from.id
   const { msg, keyboard } = service.welcome(ctx.from.first_name)
   return ctx.replyWithHTML(msg, keyboard)
 })

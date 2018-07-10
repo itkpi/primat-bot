@@ -1,6 +1,6 @@
 /* eslint-disable global-require */
 const fs = require('fs')
-const telegraf = require('../../modules/telegraf')
+const { telegraf } = require('../../modules')
 
 function cutExtension(file) {
   const dotIndx = file.indexOf('.')
