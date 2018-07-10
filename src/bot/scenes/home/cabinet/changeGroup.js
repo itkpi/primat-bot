@@ -1,9 +1,9 @@
 const config = require('config')
 const Scene = require('telegraf/scenes/base')
 const { Markup } = require('telegraf')
-const ignoreCommand = require('../../../utils/ignoreCommand')
 const groupService = require('../../../service/group')
 const greeterService = require('../../../service/greeter')
+const ignoreCommand = require('../../../utils/ignoreCommand')
 const setSessionFromGroup = require('../../../utils/setSessionFromGroup')
 
 const sceneName = config.scenes.home.cabinet.changeGroup
