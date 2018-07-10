@@ -1,6 +1,6 @@
 const mongoose = require('../')
 const User = require('./user')
-const { telegraf: { telegram } } = require('../../modules')
+const { telegram } = require('../../modules/telegraf')
 const logger = require('../../utils/logger')
 
 const { Schema } = mongoose

@@ -1,5 +1,6 @@
 const config = require('config')
 const rozklad = require('node-rozklad-api')
+const { Extra } = require('telegraf')
 
 const btns = config.btns.schedule
 
@@ -88,6 +89,9 @@ const service = {
       return null
     }
     return ops.parse ? parseLessons(lessons, currDay, currWeek) : lessons
+  },
+  getBuildingsLocationMarkup(buildings) {
+    return Extra.markup(m => m.inlineKeyboard(buildings.map(num => m.callbackButton(num, num))))
   },
   time: config.lessonsSchedule,
 }

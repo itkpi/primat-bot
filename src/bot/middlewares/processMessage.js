@@ -1,5 +1,5 @@
 module.exports = (ctx, next) => {
-  if (ctx.message.text) {
+  if (ctx.message) {
     ctx.state.cleanedMsg = ctx.message.text.trim().toLowerCase()
   }
   return next()

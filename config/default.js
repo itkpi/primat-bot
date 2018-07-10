@@ -41,4 +41,6 @@ module.exports = {
     + '<b>3.</b> 12:20 - 13:55\n'
     + '<b>4.</b> 14:15 - 15:50\n'
     + '<b>5.</b> 16:10 - 17:45\n',
+  sessionFields: ['groupId'],
+  seeBuildingLocationMsg: 'Посмотреть местоположение корпуса №',
 }

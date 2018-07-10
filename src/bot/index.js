@@ -1,9 +1,10 @@
 const config = require('config')
 const mongoose = require('../db')
-const { telegraf } = require('../modules')
+const telegraf = require('../modules/telegraf')
 const middlewares = require('./middlewares')
 const commands = require('./commands')
 const logger = require('../utils/logger')
+const callbackQueryHandler = require('./handlers/callbackQuery')
 
 const session = new middlewares.Session(mongoose.connections[0])
 
@@ -20,6 +21,9 @@ module.exports = {
     await session.setup()
     this.setMiddlewares()
     commands.set()
+
+    telegraf.on('callback_query', callbackQueryHandler)
+
     telegraf.catch(e => {
       logger.error(e)
       telegraf.telegram.sendMessage(config.ownerId, `Error: ${e.message}`)

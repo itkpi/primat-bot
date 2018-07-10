@@ -11,7 +11,11 @@ async function dayHandler(ctx) {
   if (!lessons) {
     return ctx.reply('А вот и выходной - ни одной пары!')
   }
-  return ctx.replyWithHTML(lessons.text)
+  await ctx.replyWithHTML(lessons.text)
+  if (lessons.buildings.length > 0 && !ctx.session.user.hideLocationsBtns) {
+    ctx.reply(config.seeBuildingLocationMsg, service.getBuildingsLocationMarkup(lessons.buildings))
+  }
+  return true
 }
 
 scene.enter(ctx => {

@@ -1,6 +1,6 @@
 const config = require('config')
 const logger = require('../../utils/logger')
-const { telegraf: { telegram } } = require('../../modules')
+const { telegram } = require('../../modules/telegraf')
 
 module.exports = async (ctx, next) => {
   try {
