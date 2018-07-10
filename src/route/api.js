@@ -7,7 +7,7 @@ const api = new Router()
 module.exports = router => {
   api.get('/timetable/:group', async ctx => {
     const timetable = await rozklad.timetable(ctx.params.group)
-    return ctx.query.table
+    ctx.body = ctx.query.table
       ? apiService.transformForTable(timetable)
       : timetable
   })
