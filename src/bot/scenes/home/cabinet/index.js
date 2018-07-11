@@ -1,6 +1,7 @@
 const config = require('config')
 const Scene = require('telegraf/scenes/base')
 const { Markup } = require('telegraf')
+const service = require('../../../service/cabinet')
 
 const sceneName = config.scenes.home.cabinet.self
 const scene = new Scene(sceneName)
@@ -21,7 +22,10 @@ scene.hears(btns.changeSemester, ctx => {
   ctx.reply(`Ты благополучно покинул ${currSemester}-й семестр, сменив его на ${ctx.session.semester}-й`)
 })
 scene.hears(btns.whoAmI, ctx => {
-  ctx.reply('Кто-то')
+  const { role } = ctx.session.user
+  const userGroup = ctx.session.user.group && ctx.session.user.group.toUpperCase()
+  const sessionGroup = ctx.session.group.toUpperCase()
+  return ctx.reply(service.whoAmI(role, sessionGroup, userGroup, ctx.session.semester))
 })
 scene.hears(btns.back, ctx => ctx.home())
 

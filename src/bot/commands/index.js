@@ -1,4 +1,3 @@
-/* eslint-disable global-require */
 const fs = require('fs')
 const telegraf = require('../../modules/telegraf')
 
