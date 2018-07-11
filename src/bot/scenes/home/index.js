@@ -3,6 +3,7 @@ const Scene = require('telegraf/scenes/base')
 const service = require('../../service/home')
 const univerService = require('../../service/univer')
 const protect = require('../../middlewares/protect')
+const convertLinksToMessage = require('../../utils/convertLinksToMessage')
 
 const scene = new Scene(config.scenes.home.self)
 const btns = config.btns.home
@@ -31,5 +32,7 @@ scene.hears(btns.student.teachers, protect(config.roles.student),
 // abiturient role
 scene.hears(btns.abiturient.location, protect(config.roles.abiturient),
   ctx => ctx.scene.enter(config.scenes.home.location))
+scene.hears(btns.abiturient.abitInternets, protect(config.roles.abiturient),
+  ctx => ctx.replyWithHTML(convertLinksToMessage(ctx.session.role)))
 
 module.exports = scene

@@ -9,9 +9,7 @@ const ignoreCommand = require('../../../utils/ignoreCommand')
 const sceneName = config.scenes.home.cabinet.changeGroup
 const scene = new Scene(sceneName)
 
-scene.enter(ctx => {
-  ctx.reply('К кому пойдем в гости? Назови группу', Markup.keyboard([config.btns.cancel]).resize().extra())
-})
+scene.enter(ctx => ctx.reply('К кому пойдем в гости? Назови группу', Markup.keyboard([config.btns.cancel]).resize().extra()))
 
 scene.hears(ignoreCommand, async ctx => {
   if (ctx.message.text === config.btns.cancel) {

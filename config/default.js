@@ -1,14 +1,13 @@
 const { stdTimeFunctions } = require('pino')
 const btns = require('./btns')
-const registryLinks = require('./registerLinks')
+const infoLinks = require('./infoLinks')
 const commands = require('./commands')
 const scenes = require('./scenes')
 
-function getRegistryMessage() {
-  const msg = 'Вот и все, теперь ты с нами. Не отказывай себе ни в чем\n\n'
-  const links = Object.keys(registryLinks)
-  const info = links.map(link => `<a href="${link}">Здесь</a> ${registryLinks[link]}`).join('\n')
-  return msg + info
+const roles = {
+  abiturient: 'abiturient',
+  student: 'student',
+  noKPI: 'nokpi',
 }
 
 module.exports = {
@@ -25,13 +24,9 @@ module.exports = {
   },
   btns,
   scenes,
-  roles: {
-    abiturient: 'abiturient',
-    student: 'student',
-    noKPI: 'nokpi',
-  },
+  roles,
   ownerId: 147615474,
-  registryMessage: getRegistryMessage(),
+  infoLinks,
   sessionFilter: ['date', '__v'],
   commands,
   homeMessages: ['Домооой', 'Ладненько', 'Как скажешь', 'Эх', 'Приехали'],

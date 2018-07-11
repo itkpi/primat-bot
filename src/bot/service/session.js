@@ -24,11 +24,12 @@ module.exports = service
 
 const userService = require('./user')
 
-module.exports.setByUser = async (tgId, session) => {
-  const [user, semester] = await Promise.all([
-    userService.getByTgId(tgId),
-    univerService.getCurrSemester(),
-  ])
+module.exports.setByUser = async (tgIdOrUser, session) => {
+  const tasks = [univerService.getCurrSemester()]
+  if (typeof tgIdOrUser === 'number') {
+    tasks.push(userService.getByTgId(tgIdOrUser))
+  }
+  const [semester, user = tgIdOrUser] = await Promise.all(tasks)
   session.user = user
   session.semester = semester
   config.sessionFields.forEach(field => {
