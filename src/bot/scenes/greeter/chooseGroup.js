@@ -23,7 +23,7 @@ scene.hears(ignoreCommand, async ctx => {
   }
   if (ctx.scene.state.parent === config.scenes.home.cabinet.changeGroup) {
     sessionService.setByGroup(group, ctx.session)
-    return ctx.scene.enter(config.scenes.home.cabinet.self, { msg: 'Все готово' })
+    return ctx.scene.enter(config.scenes.home.self, { msg: 'Все готово' })
   }
   ctx.scene.state.group = group
   return handleGroupRegistry(ctx)

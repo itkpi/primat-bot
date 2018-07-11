@@ -24,14 +24,20 @@ scene.hears(btns.student.schedule, protect(config.roles.student), async ctx => {
 })
 scene.hears(btns.student.timeleft, protect(config.roles.student),
   ctx => ctx.reply(service.timeleft()))
+
 scene.hears(btns.student.cabinet, protect(config.roles.student),
   ctx => ctx.scene.enter(config.scenes.home.cabinet.self))
+
 scene.hears(btns.student.teachers, protect(config.roles.student),
   async ctx => ctx.replyWithHTML(await service.teachers(ctx.session.groupId, ctx.session.group)))
 
 // abiturient role
 scene.hears(btns.abiturient.location, protect(config.roles.abiturient),
   ctx => ctx.scene.enter(config.scenes.home.location))
+
+scene.hears(btns.abiturient.setGroup, protect(config.roles.abiturient),
+  ctx => ctx.scene.enter(config.scenes.home.cabinet.changeGroup))
+
 scene.hears(btns.abiturient.abitInternets, protect(config.roles.abiturient),
   ctx => ctx.replyWithHTML(convertLinksToMessage(ctx.session.role)))
 

@@ -25,7 +25,7 @@ scene.hears(ignoreCommand, async ctx => {
     return ctx.scene.enter(nextScene.name, state)
   }
   sessionService.setByGroup(groupData, ctx.session)
-  return ctx.scene.enter(config.scenes.home.cabinet.self, { msg: 'Все готово' })
+  return ctx.scene.enter(config.scenes.home.self, { msg: 'Все готово' })
 })
 
 module.exports = scene

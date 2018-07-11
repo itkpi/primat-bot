@@ -16,7 +16,8 @@ const service = {
   },
   setByGroup(group, session) {
     session.groupId = group.group_id || group.groupId
-    session.group = group.group_full_name || group.groupFullName
+    session.group = group.group_full_name || group.group
+    session.role = config.roles.student
   },
 }
 
