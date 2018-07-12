@@ -11,7 +11,7 @@ scene.enter(ctx => {
   const keyboard = Markup.keyboard(Object.values(btns), { columns: 2 })
     .resize()
     .extra()
-  const msg = ctx.scene.state.msg || 'Здесь можешь сделать важные дела'
+  const msg = ctx.state.msg || 'Здесь можешь сделать важные дела'
   return ctx.reply(msg, keyboard)
 })
 scene.hears(btns.changeGroup, ctx => ctx.scene.enter(config.scenes.home.cabinet.changeGroup))
@@ -22,10 +22,15 @@ scene.hears(btns.changeSemester, ctx => {
   ctx.reply(`Ты благополучно покинул ${currSemester}-й семестр, сменив его на ${ctx.session.semester}-й`)
 })
 scene.hears(btns.whoAmI, ctx => {
-  const { role } = ctx.session.user
-  const userGroup = ctx.session.user.group && ctx.session.user.group.toUpperCase()
-  const sessionGroup = ctx.session.group.toUpperCase()
-  return ctx.reply(service.whoAmI(role, sessionGroup, userGroup, ctx.session.semester))
+  const info = {
+    course: ctx.session.course,
+    userCourse: ctx.session.user.course,
+    role: ctx.session.user.role,
+    semester: ctx.session.semester,
+    sessionGroup: ctx.session.group.toUpperCase(),
+    userGroup: ctx.session.user.group && ctx.session.user.group.toUpperCase(),
+  }
+  return ctx.replyWithHTML(service.whoAmI(info))
 })
 scene.hears(btns.back, ctx => ctx.home())
 

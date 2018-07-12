@@ -3,15 +3,18 @@ const userService = require('./user')
 const univerService = require('./univer')
 
 const service = {
-  async processGroupByName(groupName) {
-    const [group, possibleGroups] = await Promise.all([
-      rozklad.groups(groupName),
-      rozklad.groups({ search: { query: groupName } }),
+  async processGroup(group) {
+    if (group instanceof Object) {
+      return this.transformGroup(group)
+    }
+    const [groupInfo, possibleGroups] = await Promise.all([
+      rozklad.groups(group),
+      rozklad.groups({ search: { query: group } }),
     ])
-    if (!group || (possibleGroups && possibleGroups.length > 1)) {
+    if (!groupInfo || (possibleGroups && possibleGroups.length > 1)) {
       return possibleGroups
     }
-    return this.transformGroup(group)
+    return this.transformGroup(groupInfo)
   },
   async transformGroup(group) {
     return {

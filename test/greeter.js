@@ -47,7 +47,7 @@ describe('greeter service', () => {
       it('should return scene with group choosing', async () => {
         const result = await service.registerByGroup('кв-5', getUserData())
         const { nextScene } = result
-        assert.hasAllKeys(result, ['nextScene'])
+        assert.hasAllKeys(result, ['nextScene', 'currState'])
         assert.equal(nextScene.name, config.scenes.greeter.chooseGroup)
       })
     })
@@ -57,8 +57,8 @@ describe('greeter service', () => {
         rozkladApiMock.searchOneGroup()
       })
       it('should return scene with course setting', async () => {
-        const result = await service.registerByGroup('кв-61с')
-        assert.hasAllKeys(result, ['nextScene'])
+        const result = await service.registerByGroup('кв-61с', getUserData())
+        assert.hasAllKeys(result, ['nextScene', 'currState'])
         assert.equal(result.nextScene.name, config.scenes.greeter.setCourse)
       })
     })

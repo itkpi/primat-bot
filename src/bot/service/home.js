@@ -45,10 +45,14 @@ const service = {
       .join('\n\n')
     return `<code>${group.toUpperCase()}</code>:\n${text}`
   },
-  getKeyboard(role) {
+  getKeyboard(role, nativeRole) {
     switch (role) {
       case config.roles.student: {
-        return Markup.keyboard(Object.values(btns.student), { columns: 2 }).resize().extra()
+        const btnValues = Object.values(btns.student)
+        if (nativeRole === config.roles.abiturient) {
+          btnValues.push(btns.other.returnRole)
+        }
+        return Markup.keyboard(btnValues, { columns: 2 }).resize().extra()
       }
       case config.roles.abiturient: {
         return Markup.keyboard(Object.values(btns.abiturient), { columns: 2 }).resize().extra()

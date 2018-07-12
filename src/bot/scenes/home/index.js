@@ -9,8 +9,8 @@ const scene = new Scene(config.scenes.home.self)
 const btns = config.btns.home
 
 scene.enter(ctx => {
-  const { msg } = ctx.scene.state
-  const keyboard = service.getKeyboard(ctx.session.role)
+  const { msg } = ctx.state
+  const keyboard = service.getKeyboard(ctx.session.role, ctx.session.user.role)
   return ctx.replyWithHTML(msg, keyboard)
 })
 
@@ -40,5 +40,10 @@ scene.hears(btns.abiturient.setGroup, protect(config.roles.abiturient),
 
 scene.hears(btns.abiturient.abitInternets, protect(config.roles.abiturient),
   ctx => ctx.replyWithHTML(convertLinksToMessage(ctx.session.role)))
+
+scene.hears(btns.other.returnRole, ctx => {
+  ctx.session.role = ctx.session.user.role
+  return ctx.home()
+})
 
 module.exports = scene

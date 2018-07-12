@@ -15,25 +15,19 @@ const service = {
     return Session.findOneAndRemove({ key: getKey(id) })
   },
   setByGroup(group, session) {
-    session.groupId = group.group_id || group.groupId
-    session.group = group.group_full_name || group.group
+    session.groupId = group.groupId
+    session.group = group.group
+    session.course = group.course
     session.role = config.roles.student
+  },
+  async setByUser(user, session) {
+    const semester = await univerService.getCurrSemester()
+    session.user = user
+    session.semester = semester
+    config.sessionFields.forEach(field => {
+      session[field] = user[field]
+    })
   },
 }
 
 module.exports = service
-
-const userService = require('./user')
-
-module.exports.setByUser = async (tgIdOrUser, session) => {
-  const tasks = [univerService.getCurrSemester()]
-  if (typeof tgIdOrUser === 'number') {
-    tasks.push(userService.getByTgId(tgIdOrUser))
-  }
-  const [semester, user = tgIdOrUser] = await Promise.all(tasks)
-  session.user = user
-  session.semester = semester
-  config.sessionFields.forEach(field => {
-    session[field] = user[field]
-  })
-}
