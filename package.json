@@ -21,6 +21,7 @@
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
     "mathmode": "0.0.4",
     "mem": "^3.0.1",
     "mongoose": "^4.13.14",
