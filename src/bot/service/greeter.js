@@ -31,29 +31,35 @@ const service = {
     const user = await this.register(userData, config.roles.student)
     return { user }
   },
-  getChooseGroupScene(groups) {
+  getChooseGroupScene(groups, ops = {}) {
     groups = groups.slice(0, 6)
     const msg = ['У меня есть несколько вариантов для тебя:\n']
       .concat(groups.map((item, i) => `${i + 1}. ${item.group_full_name}`))
       .join('\n')
     const keyboardValues = groups.map((_, i) => (i + 1).toString())
+    if (ops.showCancel) {
+      keyboardValues.push(config.btns.cancel)
+    }
     const keyboard = Markup.keyboard(keyboardValues, { columns: 3 }).resize().extra()
     const nextScene = {
       name: scenes.greeter.chooseGroup,
-      state: { groups },
+      state: { groups, allowCancel: ops.showCancel },
     }
     return { nextScene, currState: { msg, keyboard } }
   },
-  getSetCourseScene(userData) {
+  getSetCourseScene(userData, ops = {}) {
     const courses = new Array(6)
     for (let i = 0; i < courses.length; i += 1) {
       courses[i] = (i + 1).toString()
+    }
+    if (ops.showCancel) {
+      courses.push(config.btns.cancel)
     }
     const keyboard = Markup.keyboard(courses, { columns: 3 }).resize().extra()
     const msg = 'Почти закончили. Укажи еще номер курса'
     const nextScene = {
       name: scenes.greeter.setCourse,
-      state: { userData },
+      state: { userData, allowCancel: ops.showCancel },
     }
     return { nextScene, currState: { msg, keyboard } }
   },

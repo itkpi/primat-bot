@@ -57,6 +57,9 @@ const service = {
       case config.roles.abiturient: {
         return Markup.keyboard(Object.values(btns.abiturient), { columns: 2 }).resize().extra()
       }
+      case config.roles.noKPI: {
+        return Markup.keyboard(Object.values(btns.noKPI), { columns: 2 }).resize().extra()
+      }
       default: {
         return false
       }

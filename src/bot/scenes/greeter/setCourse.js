@@ -11,13 +11,17 @@ scene.enter(ctx => {
   return ctx.reply(msg, keyboard)
 })
 scene.hears(ignoreCommand, async ctx => {
+  const { userData, allowCancel, parent: parentScene } = ctx.scene.state
+  if (allowCancel && ctx.message.text === config.btns.cancel) {
+    ctx.state.msg = 'Океюшки'
+    return ctx.scene.enter(config.scenes.home.self)
+  }
   const course = Number(ctx.state.cleanedMsg)
   if (!course || course < 1 || course > 6) {
     return ctx.reply('Не уверен, что там кто-то учится. У нас ведь всего шесть курсов? Попробуй еще')
   }
-  const { userData } = ctx.scene.state
   userData.course = course
-  if (ctx.scene.state.parent === config.scenes.home.cabinet.changeGroup) {
+  if (parentScene === config.scenes.home.cabinet.changeGroup) {
     ctx.state.groupData = userData
     return handleGroupChange(ctx)
   }

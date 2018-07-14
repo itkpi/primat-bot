@@ -10,7 +10,7 @@ function finish(ctx, groupData) {
 }
 
 function handleScene(ctx, getScene, groupData) {
-  const { nextScene, currState } = getScene.call(greeterService, groupData)
+  const { nextScene, currState } = getScene.call(greeterService, groupData, { showCancel: true })
   ctx.state = currState
   const parent = config.scenes.home.cabinet.changeGroup
   const sceneState = Object.assign({}, nextScene.state, { parent })
@@ -20,7 +20,7 @@ function handleScene(ctx, getScene, groupData) {
 module.exports = async ctx => {
   if (ctx.message.text === config.btns.cancel) {
     ctx.state.msg = 'В другой раз'
-    return ctx.scene.enter(ctx.scenes.home.cabinet.self)
+    return ctx.scene.enter(config.scenes.home.self)
   }
   if (ctx.state.groupData) {
     return finish(ctx, ctx.state.groupData)

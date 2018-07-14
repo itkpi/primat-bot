@@ -13,16 +13,21 @@ scene.enter(ctx => {
 })
 
 scene.hears(ignoreCommand, async ctx => {
+  const { allowCancel, groups, parent: parentScene } = ctx.scene.state
+  if (allowCancel && ctx.message.text === config.btns.cancel) {
+    ctx.state.msg = 'Ладненько'
+    return ctx.scene.enter(config.scenes.home.self)
+  }
   const num = parseInt(ctx.state.cleanedMsg, 10)
   if (!num) {
     return ctx.reply('Выбери какой-то номер')
   }
-  const group = ctx.scene.state.groups[num - 1]
+  const group = groups[num - 1]
   if (!group) {
     return ctx.reply('У тебя есть списочек из номеров')
   }
   ctx.state.group = group
-  if (ctx.scene.state.parent === config.scenes.home.cabinet.changeGroup) {
+  if (parentScene === config.scenes.home.cabinet.changeGroup) {
     return handleGroupChange(ctx)
   }
   return handleGroupRegistry(ctx)

@@ -1,4 +1,7 @@
 const back = '🔙 Назад'
+const setGroup = '📲 Взять группу для визита'
+const kpiInternets = '📡 КПИшные интернеты'
+const abitInternets = '📡 Абитурные интернеты'
 
 module.exports = {
   home: {
@@ -8,12 +11,17 @@ module.exports = {
       teachers: '👨‍🏫 Мои преподаватели',
       schedule: '📇 Расписание',
       abstracts: '📝 Лекции',
+      kpiInternets,
       // commands: '📃 Команды',
     },
     abiturient: {
       location: '🏠 Местоположение корпуса',
-      setGroup: '📲 Взять группу для визита',
-      abitInternets: '📡 Абитурные интернеты',
+      setGroup,
+      abitInternets,
+    },
+    noKPI: {
+      setGroup,
+      kpiInternets,
     },
     other: {
       returnRole: '↩️ Вернуться к себе',
@@ -42,4 +50,6 @@ module.exports = {
   },
   cancel: '🗙 Отмена',
   back,
+  kpiInternets,
+  abitInternets,
 }

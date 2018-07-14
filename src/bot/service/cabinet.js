@@ -18,6 +18,11 @@ const service = {
           + `Выбран ${semester}-й семестр`
         return msg
       }
+      case config.roles.noKPI: {
+        const msg = 'Ты не студент этого университета, но сейчас ты в гостях у '
+          + `<b>${sessionGroup}</b> (${course} курс). Выбран ${semester}-й семестр`
+        return msg
+      }
       default: {
         return 'Хз :c'
       }
