@@ -2,6 +2,7 @@ const config = require('config')
 const Scene = require('telegraf/scenes/base')
 const service = require('../../service/home')
 const univerService = require('../../service/univer')
+const scheduleService = require('../../service/schedule')
 const protect = require('../../middlewares/protect')
 const convertLinksToMessage = require('../../utils/convertLinksToMessage')
 
@@ -16,7 +17,10 @@ scene.enter(ctx => {
 })
 
 // student role
-scene.hears(btns.student.schedule, protect(roles.student), async ctx => {
+scene.hears(btns.student.schedule, protect(roles.student, true), async (ctx, next) => {
+  if (ctx.state.skip) {
+    return next()
+  }
   const currSemester = await univerService.getCurrSemester()
   if (currSemester !== ctx.session.semester) {
     return ctx.reply('На этот семестр нет расписания. Можешь поменять его в кабинете')
@@ -39,17 +43,27 @@ scene.hears(btns.student.kpiInternets,
 scene.hears(btns.abiturient.location, protect(roles.abiturient),
   ctx => ctx.scene.enter(scenes.home.location))
 
-scene.hears(btns.abiturient.setGroup, protect(roles.abiturient, roles.noKPI),
+scene.hears(btns.abiturient.setGroup, protect(roles.abiturient, roles.noKPI, roles.teacher),
   ctx => ctx.scene.enter(scenes.home.cabinet.changeGroup))
 
 scene.hears(btns.abiturient.abitInternets, protect(roles.abiturient),
   ctx => ctx.replyWithHTML(convertLinksToMessage(ctx.session.role)))
 
+// teacher role
+scene.hears(btns.teacher.schedule, protect(roles.teacher), async ctx => {
+  const lessons = await scheduleService.teacherLessons(ctx.session.user.tId)
+  await ctx.replyWithHTML(lessons.text)
+  if (lessons.buildings.length > 0 && !ctx.session.user.hideLocationBtns) {
+    const markup = scheduleService.getBuildingsLocationMarkup(lessons.buildings)
+    ctx.reply(config.seeBuildingLocationMsg, markup)
+  }
+})
+
 // noKPI role
 scene.hears(btns.noKPI.setGroup, protect(roles.noKPI),
   ctx => ctx.scene.enter(scenes.home.cabinet.changeGroup))
 
-scene.hears(btns.other.returnRole, protect(roles.abiturient, roles.noKPI), ctx => {
+scene.hears(btns.other.returnRole, protect(roles.abiturient, roles.noKPI, roles.teacher), ctx => {
   ctx.session.role = ctx.session.user.role
   return ctx.home('В родные места')
 })

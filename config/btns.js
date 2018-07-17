@@ -2,6 +2,7 @@ const back = '🔙 Назад'
 const setGroup = '📲 Взять группу для визита'
 const kpiInternets = '📡 КПИшные интернеты'
 const abitInternets = '📡 Абитурные интернеты'
+const schedule = '📇 Расписание'
 
 module.exports = {
   home: {
@@ -9,7 +10,7 @@ module.exports = {
       cabinet: '💼 Кабинет',
       timeleft: '🕐 Время до конца пары',
       teachers: '👨‍🏫 Мои преподаватели',
-      schedule: '📇 Расписание',
+      schedule,
       abstracts: '📝 Лекции',
       kpiInternets,
       // commands: '📃 Команды',
@@ -22,6 +23,10 @@ module.exports = {
     noKPI: {
       setGroup,
       kpiInternets,
+    },
+    teacher: {
+      setGroup,
+      schedule,
     },
     other: {
       returnRole: '↩️ Вернуться к себе',

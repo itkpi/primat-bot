@@ -18,5 +18,8 @@ module.exports = router => {
       ? apiService.transformForTable(timetable)
       : timetable
   })
+  api.get('/teacher-lessons/:id', async ctx => {
+    ctx.body = await rozklad.teacherLessons(ctx.params.id)
+  })
   router.use('/api', api.routes(), api.allowedMethods())
 }

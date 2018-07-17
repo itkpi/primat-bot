@@ -23,6 +23,11 @@ const service = {
           + `<b>${sessionGroup}</b> (${course} курс). Выбран ${semester}-й семестр`
         return msg
       }
+      case config.roles.teacher: {
+        const msg = 'У тебя очень важная миссия - передать знания. Возможно, эти счастливчики из группы '
+          + `<b>${sessionGroup}</b>`
+        return msg
+      }
       default: {
         return 'Хз :c'
       }

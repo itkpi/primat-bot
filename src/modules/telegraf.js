@@ -16,7 +16,6 @@ telegraf.context.home = function home(msg = getRandomHomeMsg()) {
 
 telegraf.context.finishRegistry = async function finishRegistry(user) {
   await sessionService.setByUser(user, this.session)
-  delete this.session.tgId
   const msg = 'Вот и все, теперь ты с нами. Не отказывай себе ни в чем\n\n'
   return this.home(msg + convertLinksToMessage(this.session.role))
 }

@@ -49,7 +49,7 @@ const service = {
     switch (role) {
       case config.roles.student: {
         const btnValues = Object.values(btns.student)
-        if (nativeRole === config.roles.abiturient) {
+        if (nativeRole !== config.roles.student) {
           btnValues.push(btns.other.returnRole)
         }
         return Markup.keyboard(btnValues, { columns: 2 }).resize().extra()
@@ -59,6 +59,9 @@ const service = {
       }
       case config.roles.noKPI: {
         return Markup.keyboard(Object.values(btns.noKPI), { columns: 2 }).resize().extra()
+      }
+      case config.roles.teacher: {
+        return Markup.keyboard(Object.values(btns.teacher), { columns: 2 }).resize().extra()
       }
       default: {
         return false

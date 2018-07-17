@@ -7,4 +7,5 @@ module.exports = {
   scenes: require('../scenes'),
   errorHandler: require('./errorHandler'),
   processMessage: require('./processMessage'),
+  triggerScene: require('./triggerScene'),
 }

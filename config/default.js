@@ -4,12 +4,6 @@ const infoLinks = require('./infoLinks')
 const commands = require('./commands')
 const scenes = require('./scenes')
 
-const roles = {
-  abiturient: 'abiturient',
-  student: 'student',
-  noKPI: 'nokpi',
-}
-
 module.exports = {
   port: process.env.PORT || 3000,
   appUrl: process.env.APP_URL,
@@ -24,7 +18,12 @@ module.exports = {
   },
   btns,
   scenes,
-  roles,
+  roles: {
+    abiturient: 'abiturient',
+    student: 'student',
+    noKPI: 'nokpi',
+    teacher: 'teacher',
+  },
   ownerId: 147615474,
   infoLinks,
   sessionFilter: ['date', '__v'],

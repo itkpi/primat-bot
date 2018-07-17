@@ -14,5 +14,7 @@ module.exports = {
     self: 'greeter',
     chooseGroup: 'chooseGroup',
     setCourse: 'setCourse',
+    teacher: 'teacher',
+    chooseTeacher: 'chooseTeacher',
   },
 }

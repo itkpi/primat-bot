@@ -8,7 +8,7 @@ const formatTime = time => time.split(':')
   .slice(0, 2)
   .join(':')
 
-const addBuildings = (lessonRoom, currBuildings) => lessonRoom.split(',').reduce((acc, room) => {
+const addBuildings = (lessonRoom, currBuildings = []) => lessonRoom.split(',').reduce((acc, room) => {
   const building = room.split('-')[1]
   return acc.includes(building) ? acc : acc.concat(building)
 }, currBuildings.slice())
@@ -30,7 +30,7 @@ function parseLessons(lessons, currDay, currWeek) {
     }
     if (Number(dayNumber) !== acc.prevLesson.dayNumber) {
       if (currWeek === Number(lessonWeek) && currDay === Number(dayNumber)) {
-        acc.text += `<b>Сьогодні: ${dayName}</b>\n`
+        acc.text += `#|<b>Сьогодні: ${dayName}</b>\n`
         acc.boldDay = true
       } else {
         acc.text += `<pre>${dayName}</pre>\n`
@@ -54,7 +54,6 @@ function parseLessons(lessons, currDay, currWeek) {
   }, {
     text: '',
     prevLesson: {},
-    buildings: [],
   })
 }
 
@@ -89,6 +88,56 @@ const service = {
       return null
     }
     return ops.parse ? parseLessons(lessons, currDay, currWeek) : lessons
+  },
+  async teacherLessons(id) {
+    const lessons = await rozklad.teacherLessons(id)
+    const currDay = (new Date()).getDay()
+    const currWeek = await rozklad.currWeek()
+    return lessons.reduce((acc, lesson) => {
+      const {
+        lesson_week: lessonWeek,
+        day_name: dayName,
+        day_number: dayNumber,
+        lesson_number: lessonNumber,
+        time_start: timeStart,
+        lesson_name: lessonName,
+        lesson_room: lessonRoom,
+        lesson_type: lessonType,
+        groups,
+      } = lesson
+      if (lessonWeek !== acc.prevWeek) {
+        acc.text += `\n<b>${lessonWeek}-й тиждень</b>\n`
+      }
+      if (dayName !== acc.prevDay) {
+        if (Number(lessonWeek) === currWeek && Number(dayNumber) === currDay) {
+          acc.text += `#|<b>Сьогодні: ${dayName}</b>\n`
+          acc.boldDay = true
+        } else {
+          acc.text += `<pre>${dayName}</pre>\n`
+          acc.boldDay = false
+        }
+      }
+      if (acc.boldDay) {
+        acc.text += '<b>#|</b>'
+      }
+      acc.text += `<b>${lessonNumber}</b>. ${formatTime(timeStart)}<code>|</code> ${lessonName} `
+      if (lessonRoom) {
+        acc.text += `<code>${lessonRoom}</code>`
+        acc.buildings = addBuildings(lessonRoom, acc.buildings)
+      }
+      if (lessonType) {
+        acc.text += ` <i>${lessonType}</i>`
+      }
+      if (groups && groups.length > 0) {
+        acc.text += ' <b>[</b>'
+        acc.text += groups.map(group => group.group_full_name.toUpperCase()).join(', ')
+        acc.text += '<b>]</b>'
+      }
+      acc.text += '\n'
+      acc.prevWeek = lessonWeek
+      acc.prevDay = dayName
+      return acc
+    }, { text: '' })
   },
   async parseSchedule(groupId, requiredValue) {
     const timetable = await rozklad.timetable(groupId)
@@ -129,7 +178,6 @@ const service = {
   getBuildingsLocationMarkup(buildings) {
     return Extra.markup(m => m.inlineKeyboard(buildings.map(num => m.callbackButton(num, num))))
   },
-
   time: config.lessonsSchedule,
 }
 

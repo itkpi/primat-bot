@@ -31,6 +31,18 @@ const service = {
     const user = await this.register(userData, config.roles.student)
     return { user }
   },
+  registerByTeacher(teacher, userData) {
+    const teacherData = {
+      tId: teacher.teacher_id,
+      tName: teacher.teacher_name,
+      tFullName: teacher.teacher_full_name,
+      tShortName: teacher.teacher_short_name,
+      tScheduleUrl: teacher.teacher_url,
+      tRating: teacher.teacher_rating,
+    }
+    userData.hideLocationBtns = true
+    return this.register(Object.assign({}, userData, teacherData), config.roles.teacher)
+  },
   getChooseGroupScene(groups, ops = {}) {
     groups = groups.slice(0, 6)
     const msg = ['У меня есть несколько вариантов для тебя:\n']
@@ -60,6 +72,18 @@ const service = {
     const nextScene = {
       name: scenes.greeter.setCourse,
       state: { userData, allowCancel: ops.showCancel },
+    }
+    return { nextScene, currState: { msg, keyboard } }
+  },
+  getChooseTeacherScene(teachers) {
+    const msg = ['Нужно выбрать:\n']
+      .concat(teachers.map((item, i) => `${i + 1}. ${item.teacher_full_name || item.teacher_name}`))
+      .join('\n')
+    const keyboardValues = teachers.map((_, i) => (i + 1).toString())
+    const keyboard = Markup.keyboard(keyboardValues, { columns: 3 }).resize().extra()
+    const nextScene = {
+      name: scenes.greeter.chooseTeacher,
+      state: { teachers },
     }
     return { nextScene, currState: { msg, keyboard } }
   },

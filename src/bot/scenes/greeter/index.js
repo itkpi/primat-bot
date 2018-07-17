@@ -21,8 +21,10 @@ scene.hears(btns.noKPI, async ctx => {
   const user = await service.register(msgFromDataToUserData(ctx.message.from), roles.noKPI)
   return ctx.finishRegistry(user)
 })
-scene.hears(btns.teacher, ctx => {
-  ctx.reply(btns.teacher)
+scene.hears(btns.teacher, async ctx => {
+  ctx.state.msg = 'Для регистрации и аутентификации введите полностью ФИО (на украинском)'
+  ctx.state.keyboard = config.removeMarkup
+  return ctx.scene.enter(config.scenes.greeter.teacher)
 })
 scene.hears(ignoreCommand, handleGroupRegistry)
 

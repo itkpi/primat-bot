@@ -16,6 +16,7 @@ module.exports = {
     telegraf.use(middlewares.logger)
     telegraf.use(middlewares.processMessage)
     telegraf.use(middlewares.scenes)
+    telegraf.use(middlewares.triggerScene)
   },
   async start() {
     await session.setup()
