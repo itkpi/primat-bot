@@ -3,6 +3,10 @@ module.exports = {
     // student
     self: 'home',
     schedule: 'schedule',
+    abstracts: {
+      self: 'abstracts',
+      chooseAbstracts: 'chooseAbstracts',
+    },
     cabinet: {
       self: 'cabinet',
       changeGroup: 'changeGroup',

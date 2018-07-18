@@ -30,6 +30,7 @@ module.exports = {
     },
     other: {
       returnRole: '↩️ Вернуться к себе',
+      home: '🏠 Домой',
     },
   },
   greeter: {
@@ -54,6 +55,8 @@ module.exports = {
     back,
   },
   cancel: '🗙 Отмена',
+  loadLecture: '📤 Загрузить лекцию',
+  all: '📚 Все',
   back,
   kpiInternets,
   abitInternets,

@@ -39,6 +39,9 @@ scene.hears(btns.student.teachers, protect(roles.student),
 scene.hears(btns.student.kpiInternets,
   ctx => ctx.replyWithHTML(convertLinksToMessage(ctx.message.text, { hideDefault: true })))
 
+scene.hears(btns.student.abstracts, protect(config.roles.student),
+  ctx => ctx.scene.enter(scenes.home.abstracts.self))
+
 // abiturient role
 scene.hears(btns.abiturient.location, protect(roles.abiturient),
   ctx => ctx.scene.enter(scenes.home.location))

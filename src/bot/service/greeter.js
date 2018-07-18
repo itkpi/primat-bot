@@ -48,11 +48,11 @@ const service = {
     const msg = ['У меня есть несколько вариантов для тебя:\n']
       .concat(groups.map((item, i) => `${i + 1}. ${item.group_full_name}`))
       .join('\n')
-    const keyboardValues = groups.map((_, i) => (i + 1).toString())
+    const buttons = groups.map((_, i) => (i + 1).toString())
     if (ops.showCancel) {
-      keyboardValues.push(config.btns.cancel)
+      buttons.push(config.btns.cancel)
     }
-    const keyboard = Markup.keyboard(keyboardValues, { columns: 3 }).resize().extra()
+    const keyboard = Markup.keyboard(buttons, { columns: 3 }).resize().extra()
     const nextScene = {
       name: scenes.greeter.chooseGroup,
       state: { groups, allowCancel: ops.showCancel },
@@ -79,8 +79,8 @@ const service = {
     const msg = ['Нужно выбрать:\n']
       .concat(teachers.map((item, i) => `${i + 1}. ${item.teacher_full_name || item.teacher_name}`))
       .join('\n')
-    const keyboardValues = teachers.map((_, i) => (i + 1).toString())
-    const keyboard = Markup.keyboard(keyboardValues, { columns: 3 }).resize().extra()
+    const buttons = teachers.map((_, i) => (i + 1).toString())
+    const keyboard = Markup.keyboard(buttons, { columns: 3 }).resize().extra()
     const nextScene = {
       name: scenes.greeter.chooseTeacher,
       state: { teachers },
