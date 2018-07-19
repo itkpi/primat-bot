@@ -16,6 +16,7 @@ module.exports = {
     prettyPrint: true,
     level: process.env.LOG_LEVEL || 'info',
   },
+  githubHookPath: process.env.GITHUB_HOOK_PATH || 'hook-path',
   btns,
   scenes,
   roles: {
