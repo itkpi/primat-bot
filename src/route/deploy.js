@@ -5,7 +5,7 @@ const logger = require('../utils/logger')
 
 module.exports = router => {
   router.post(config.githubHookPath, async ctx => {
-    const { ref } = ctx.req.body
+    const { ref } = ctx.request.body
     let stdout
     let stderr
     if (ref.includes('master')) {
