@@ -18,7 +18,7 @@ const User = new Schema({
   },
   role: { type: String, required: true },
   groupId: Number,
-  tId: Number,
+  teacherId: Number,
   tName: String,
   tFullName: String,
   tShortName: String,
@@ -42,7 +42,9 @@ const User = new Schema({
   telegraph_authurl: String,
   telegraph_user: Boolean,
   subscriber: { type: Boolean, default: true },
-  hideLocationBtns: { type: Boolean, default: false },
+  settings: {
+    hideLocationBtns: { type: Boolean, default: false },
+  },
 }, { strict: 'throw', timestamps: true })
 
 module.exports = mongoose.model('User', User)

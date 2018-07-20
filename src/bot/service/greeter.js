@@ -33,14 +33,14 @@ const service = {
   },
   registerByTeacher(teacher, userData) {
     const teacherData = {
-      tId: teacher.teacher_id,
+      teacherId: teacher.teacher_id,
       tName: teacher.teacher_name,
       tFullName: teacher.teacher_full_name,
       tShortName: teacher.teacher_short_name,
       tScheduleUrl: teacher.teacher_url,
       tRating: teacher.teacher_rating,
     }
-    userData.hideLocationBtns = true
+    userData.settings = { hideLocationBtns: true }
     return this.register(Object.assign({}, userData, teacherData), config.roles.teacher)
   },
   getChooseGroupScene(groups, ops = {}) {

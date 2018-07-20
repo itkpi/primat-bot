@@ -22,7 +22,15 @@ const service = {
   },
   async setByUser(user, session) {
     const semester = await univerService.getCurrSemester()
-    session.user = user
+    session.user = {
+      role: user.role,
+      teacherId: user.teacherId,
+      course: user.course,
+      group: user.group,
+      settings: {
+        hideLocationBtns: user.settings.hideLocationBtns,
+      },
+    }
     session.semester = semester
     config.sessionFields.forEach(field => {
       session[field] = user[field]

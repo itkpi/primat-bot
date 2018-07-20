@@ -54,9 +54,9 @@ scene.hears(btns.abiturient.abitInternets, protect(roles.abiturient),
 
 // teacher role
 scene.hears(btns.teacher.schedule, protect(roles.teacher), async ctx => {
-  const lessons = await scheduleService.teacherLessons(ctx.session.user.tId)
+  const lessons = await scheduleService.teacherLessons(ctx.session.user.teacherId)
   await ctx.replyWithHTML(lessons.text)
-  if (lessons.buildings.length > 0 && !ctx.session.user.hideLocationBtns) {
+  if (lessons.buildings.length > 0 && !ctx.session.user.settings.hideLocationBtns) {
     const markup = scheduleService.getBuildingsLocationMarkup(lessons.buildings)
     ctx.reply(config.seeBuildingLocationMsg, markup)
   }
