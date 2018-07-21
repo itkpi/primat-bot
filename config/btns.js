@@ -17,6 +17,7 @@ module.exports = {
     },
     abiturient: {
       location: '🏠 Местоположение корпуса',
+      studentUpgrade: '🚀 Апргрейд до студента',
       setGroup,
       abitInternets,
     },
@@ -57,6 +58,8 @@ module.exports = {
   cancel: '🗙 Отмена',
   loadLecture: '📤 Загрузить лекцию',
   all: '📚 Все',
+  yes: '✅ Да',
+  no: '🗙 Нет',
   back,
   kpiInternets,
   abitInternets,

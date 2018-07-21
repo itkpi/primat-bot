@@ -9,7 +9,7 @@ const service = {
     return Session.findOne({ key: getKey(id) })
   },
   updateByTgId(id, data) {
-    return Session.findOneAndUpdate({ key: getKey(id) }, { 'data.user': data })
+    return Session.findOneAndUpdate({ key: getKey(id) }, { data })
   },
   removeByTgId(id) {
     return Session.findOneAndRemove({ key: getKey(id) })
@@ -22,19 +22,25 @@ const service = {
   },
   async setByUser(user, session) {
     const semester = await univerService.getCurrSemester()
-    session.user = {
-      role: user.role,
-      teacherId: user.teacherId,
-      course: user.course,
-      group: user.group,
-      settings: {
-        hideLocationBtns: user.settings.hideLocationBtns,
+    const data = {
+      user: {
+        role: user.role,
+        teacherId: user.teacherId,
+        course: user.course,
+        group: user.group,
+        settings: {
+          hideLocationBtns: user.settings.hideLocationBtns,
+        },
       },
     }
-    session.semester = semester
+    data.semester = semester
     config.sessionFields.forEach(field => {
-      session[field] = user[field]
+      data[field] = user[field]
     })
+    if (!session) {
+      return this.updateByTgId(user.tgId, data)
+    }
+    return Object.assign(session, data)
   },
 }
 

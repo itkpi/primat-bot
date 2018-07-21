@@ -19,8 +19,7 @@ function handleScene(ctx, getScene, groupData) {
 
 module.exports = async ctx => {
   if (ctx.message.text === config.btns.cancel) {
-    ctx.state.msg = 'В другой раз'
-    return ctx.scene.enter(config.scenes.home.self)
+    return ctx.home('В другой раз')
   }
   if (ctx.state.groupData) {
     return finish(ctx, ctx.state.groupData)

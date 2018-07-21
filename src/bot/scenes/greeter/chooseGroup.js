@@ -2,6 +2,7 @@ const config = require('config')
 const Scene = require('telegraf/scenes/base')
 const handleGroupRegistry = require('../../handlers/groupRegistry')
 const handleGroupChange = require('../../handlers/groupChange')
+const handleUpgradeStudent = require('../../handlers/upgradeStudent')
 const ignoreCommand = require('../../utils/ignoreCommand')
 
 const { scenes } = config
@@ -29,6 +30,9 @@ scene.hears(ignoreCommand, async ctx => {
   ctx.state.group = group
   if (parentScene === config.scenes.home.cabinet.changeGroup) {
     return handleGroupChange(ctx)
+  }
+  if (parentScene === config.scenes.home.studentUpgrade.self) {
+    return handleUpgradeStudent(ctx)
   }
   return handleGroupRegistry(ctx)
 })

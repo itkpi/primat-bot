@@ -1,3 +1,4 @@
+const config = require('config')
 const User = require('../../db/models/user')
 
 const service = {
@@ -12,7 +13,10 @@ const service = {
     return User.findOne({ group })
   },
   updateById(tgId, data) {
-    return User.findOneAndUpdate({ tgId }, data)
+    return User.findOneAndUpdate({ tgId }, { $set: data }, { new: true })
+  },
+  upgradeAbiturientToStudent(tgId, groupData) {
+    return this.updateById(tgId, Object.assign({}, groupData, { role: config.roles.student }))
   },
 }
 

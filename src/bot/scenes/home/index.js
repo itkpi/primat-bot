@@ -52,6 +52,9 @@ scene.hears(btns.abiturient.setGroup, protect(roles.abiturient, roles.noKPI, rol
 scene.hears(btns.abiturient.abitInternets, protect(roles.abiturient),
   ctx => ctx.replyWithHTML(convertLinksToMessage(ctx.session.role)))
 
+scene.hears(btns.abiturient.studentUpgrade, protect(roles.abiturient),
+  ctx => ctx.scene.enter(scenes.home.studentUpgrade.self))
+
 // teacher role
 scene.hears(btns.teacher.schedule, protect(roles.teacher), async ctx => {
   const lessons = await scheduleService.teacherLessons(ctx.session.user.teacherId)

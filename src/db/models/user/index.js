@@ -1,4 +1,5 @@
 const mongoose = require('../../')
+const postSave = require('./postSave')
 
 const { Schema } = mongoose
 const User = new Schema({
@@ -47,10 +48,6 @@ const User = new Schema({
   },
 }, { strict: 'throw', timestamps: true })
 
-module.exports = mongoose.model('User', User)
-
-const postSave = require('./postSave')
-const postUpdate = require('./postUpdate')
-
 User.post('save', postSave)
-User.post('findOneAndUpdate', postUpdate)
+
+module.exports = mongoose.model('User', User)

@@ -13,6 +13,10 @@ module.exports = {
     },
     // abiturient
     location: 'location',
+    studentUpgrade: {
+      self: 'studentUpgrade',
+      confirmGroup: 'confirmGroup',
+    },
   },
   greeter: {
     self: 'greeter',
