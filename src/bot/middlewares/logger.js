@@ -11,8 +11,6 @@ function filterSessionFields(session) {
 }
 
 module.exports = (ctx, next) => {
-  // eslint-disable-next-line no-underscore-dangle
-  const currScene = ctx.session.__scenes && ctx.session.__scenes.current
   const {
     id,
     username,
@@ -37,6 +35,8 @@ module.exports = (ctx, next) => {
   if (lastName) {
     user += ` ${lastName}`
   }
+  // eslint-disable-next-line no-underscore-dangle
+  const currScene = ctx.session.__scenes && ctx.session.__scenes.current
   let msg = currScene ? `[${currScene}] ` : ''
   if (ctx.callbackQuery) {
     msg += `clicked on ${ctx.callbackQuery.message.text} -> ${ctx.callbackQuery.data}`

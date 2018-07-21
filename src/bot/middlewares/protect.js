@@ -1,14 +1,15 @@
 module.exports = (...requiredRoles) => (ctx, next) => {
   const lastArg = requiredRoles[requiredRoles.length - 1]
-  let forward
-  if (typeof lastArg === 'boolean') {
-    forward = lastArg
+  let ops = {}
+  if (typeof lastArg === 'object') {
+    ops = lastArg
     requiredRoles.pop()
   }
-  const isAllowed = requiredRoles.includes(ctx.session.role)
-    || requiredRoles.includes(ctx.session.user.role)
+  const isAllowed = ops.native
+    ? requiredRoles.includes(ctx.session.user.role)
+    : requiredRoles.includes(ctx.session.role)
   if (!isAllowed) {
-    if (forward) {
+    if (ops.forward) {
       ctx.state.skip = true
       return next()
     }

@@ -17,7 +17,7 @@ scene.enter(ctx => {
 })
 
 // student role
-scene.hears(btns.student.schedule, protect(roles.student, true), async (ctx, next) => {
+scene.hears(btns.student.schedule, protect(roles.student, { forward: true }), async (ctx, next) => {
   if (ctx.state.skip) {
     return next()
   }
@@ -69,9 +69,14 @@ scene.hears(btns.teacher.schedule, protect(roles.teacher), async ctx => {
 scene.hears(btns.noKPI.setGroup, protect(roles.noKPI),
   ctx => ctx.scene.enter(scenes.home.cabinet.changeGroup))
 
-scene.hears(btns.other.returnRole, protect(roles.abiturient, roles.noKPI, roles.teacher), ctx => {
-  ctx.session.role = ctx.session.user.role
-  return ctx.home('В родные места')
-})
+scene.hears(btns.other.returnRole,
+  protect(roles.abiturient, roles.noKPI, roles.teacher, { native: true }),
+  ctx => {
+    if (ctx.session.role === ctx.session.user.role) {
+      return false
+    }
+    ctx.session.role = ctx.session.user.role
+    return ctx.home('В родные места')
+  })
 
 module.exports = scene
