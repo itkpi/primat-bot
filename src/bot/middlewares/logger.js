@@ -19,7 +19,15 @@ module.exports = (ctx, next) => {
     first_name: firstName,
     last_name: lastName,
   } = ctx.from
-  let user = id
+  let user = ''
+  if (ctx.session.role) {
+    user += `${ctx.session.user.role}`
+    if (ctx.session.role !== ctx.session.user.role) {
+      user += `->${ctx.session.role}`
+    }
+    user += '|'
+  }
+  user += id
   if (username) {
     user += ` ${username}`
   }
