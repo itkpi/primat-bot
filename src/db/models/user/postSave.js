@@ -6,7 +6,6 @@ const mongoose = require('../../')
 async function sendMsgToGroupmates({ group, tgId, firstName }) {
   const groupmates = await mongoose.models.User.find({
     group,
-    $or: [{ unsubscriber: { $exists: false } }, { unsubscriber: false }],
     tgId: { $ne: tgId },
   })
   const msg = `Твой одногруппник ${firstName} так же начал пользоваться мной.\n`

@@ -1,8 +1,14 @@
+const settings = require('./settings')
+
 const back = '🔙 Назад'
 const setGroup = '📲 Взять группу для визита'
 const kpiInternets = '📡 КПИшные интернеты'
 const abitInternets = '📡 Абитурные интернеты'
 const schedule = '📇 Расписание'
+const settingsMessages = {
+  scheduleLocationShowing: 'Показывать местоположение корпусов под расписанием',
+  abstractSubscriber: 'Присылать уведомления о новых лекциях',
+}
 
 module.exports = {
   home: {
@@ -58,17 +64,19 @@ module.exports = {
   },
   settings: {
     on: {
-      scheduleLocationShowing: '🗙 Показывать местоположение корпусов под расписанием',
+      [settings.scheduleLocationShowing]: `❌ ${settingsMessages[settings.scheduleLocationShowing]}`,
+      [settings.abstractSubscriber]: `❌ ${settingsMessages[settings.abstractSubscriber]}`,
     },
     off: {
-      scheduleLocationShowing: '☑️ Показывать местоположение корпусов под расписанием',
+      [settings.scheduleLocationShowing]: `☑️ ${settingsMessages[settings.scheduleLocationShowing]}`,
+      [settings.abstractSubscriber]: `☑️ ${settingsMessages[settings.abstractSubscriber]}`,
     },
   },
-  cancel: '🗙 Отмена',
+  cancel: '❌ Отмена',
   loadLecture: '📤 Загрузить лекцию',
   all: '📚 Все',
   yes: '✅ Да',
-  no: '🗙 Нет',
+  no: '❌ Нет',
   back,
   kpiInternets,
   abitInternets,

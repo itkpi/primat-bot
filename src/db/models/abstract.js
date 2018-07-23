@@ -1,3 +1,4 @@
+const config = require('config')
 const mongoose = require('../')
 const User = require('./user')
 const { telegram } = require('../../modules/telegraf')
@@ -34,7 +35,7 @@ if (process.env.NODE_ENV === 'production') {
     const users = await User.find({
       flow,
       course,
-      $or: [{ unsubscriber: { $exists: false } }, { unsubscriber: false }],
+      [`settings.${config.settings.abstractSubscriber}`]: true,
       tgId: { $ne: authorId },
     })
 

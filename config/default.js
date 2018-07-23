@@ -3,6 +3,7 @@ const btns = require('./btns')
 const infoLinks = require('./infoLinks')
 const commands = require('./commands')
 const scenes = require('./scenes')
+const settings = require('./settings')
 
 module.exports = {
   port: process.env.PORT || 3000,
@@ -39,4 +40,5 @@ module.exports = {
   sessionFields: ['groupId', 'group', 'role', 'course', 'flow'],
   seeBuildingLocationMsg: 'Посмотреть местоположение корпуса №',
   removeMarkup: { reply_markup: { remove_keyboard: true } },
+  settings,
 }

@@ -1,3 +1,4 @@
+const config = require('config')
 const mongoose = require('../../')
 const postSave = require('./postSave')
 
@@ -42,9 +43,9 @@ const User = new Schema({
   telegraph_token: String,
   telegraph_authurl: String,
   telegraph_user: Boolean,
-  subscriber: { type: Boolean, default: true },
   settings: {
-    scheduleLocationShowing: { type: Boolean, default: true },
+    [config.settings.scheduleLocationShowing]: { type: Boolean, default: true },
+    [config.settings.abstractSubscriber]: { type: Boolean, default: true },
   },
 }, { strict: 'throw', timestamps: true })
 

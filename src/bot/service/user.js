@@ -18,6 +18,9 @@ const service = {
   upgradeAbiturientToStudent(tgId, groupData) {
     return this.updateById(tgId, Object.assign({}, groupData, { role: config.roles.student }))
   },
+  setSetting(tgId, setting, value) {
+    return this.updateById(tgId, { [`settings.${setting}`]: value })
+  },
 }
 
 module.exports = service
