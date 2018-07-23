@@ -27,7 +27,7 @@ module.exports = {
 
     telegraf.catch(e => {
       logger.error(e)
-      telegraf.telegram.sendMessage(config.ownerId, `Error: ${e.message}`)
+      telegraf.telegram.sendMessage(config.adminId, `Error: ${e.message}`)
     })
   },
 }

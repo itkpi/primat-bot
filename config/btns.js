@@ -77,6 +77,7 @@ module.exports = {
   all: '📚 Все',
   yes: '✅ Да',
   no: '❌ Нет',
+  next: '➡️ Далее',
   back,
   kpiInternets,
   abitInternets,

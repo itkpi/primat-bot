@@ -25,8 +25,14 @@ scene.enter(async ctx => {
 })
 
 scene.hears(config.btns.loadLecture, ctx => {
-  const msg = 'Пока некуда торопиться. Учебный год еще не начался, отдыхай :)'
-  return ctx.reply(msg)
+  if (ctx.from.id !== config.adminId) {
+    const msg = 'Пока некуда торопиться. Учебный год еще не начался, отдыхай :)'
+    return ctx.reply(msg)
+  }
+  if (!ctx.session.user.telegraphToken) {
+    return ctx.scene.enter(config.scenes.home.abstracts.setTelegraphToken)
+  }
+  return ctx.scene.enter(config.scenes.home.abstracts.loadLecture)
 })
 
 scene.hears(config.btns.home.other.home, ctx => ctx.home('Знания - сила!'))

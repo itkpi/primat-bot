@@ -23,7 +23,7 @@ module.exports = async data => {
   } = data
   const registryMsg = `New user ${username || firstName}|${role}${group ? ` from ${group}` : ''} has registered!`
   logger.info(registryMsg)
-  telegram.sendMessage(config.ownerId, registryMsg)
+  telegram.sendMessage(config.adminId, registryMsg)
   if (group && process.env.NODE_ENV === 'production') {
     await sendMsgToGroupmates({ group, tgId, firstName })
   }

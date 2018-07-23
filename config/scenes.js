@@ -6,6 +6,8 @@ module.exports = {
     abstracts: {
       self: 'abstracts',
       chooseAbstracts: 'chooseAbstracts',
+      setTelegraphToken: 'setTelegraphToken',
+      loadLecture: 'loadLecture',
     },
     cabinet: {
       self: 'cabinet',

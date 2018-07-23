@@ -29,6 +29,7 @@ const service = {
         course: user.course,
         group: user.group,
         settings: user.settings,
+        telegraphAccount: user.telegraphAccount,
       },
     }
     data.semester = semester

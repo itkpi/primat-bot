@@ -26,7 +26,7 @@ module.exports = {
     noKPI: 'nokpi',
     teacher: 'teacher',
   },
-  ownerId: 147615474,
+  adminId: 147615474,
   infoLinks,
   sessionFilter: ['date', '__v'],
   commands,

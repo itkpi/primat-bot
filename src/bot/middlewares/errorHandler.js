@@ -8,6 +8,6 @@ module.exports = async (ctx, next) => {
   } catch (e) {
     logger.error(e)
     ctx.reply('Ой, что-то пошло не так :c\nУже работаем над этим, попробуй позже')
-    telegram.sendMessage(config.ownerId, `${ctx.from.first_name}|Error: ${e.message}`)
+    telegram.sendMessage(config.adminId, `${ctx.from.first_name}|Error: ${e.message}`)
   }
 }
