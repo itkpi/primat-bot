@@ -53,7 +53,16 @@ module.exports = {
     changeGroup: '🔀 Поменять группу',
     changeSemester: '🔁 Сменить семестр',
     whoAmI: '👤 Кто я?',
+    settings: '⚙️ Настройки',
     back,
+  },
+  settings: {
+    on: {
+      scheduleLocationShowing: '🗙 Показывать местоположение корпусов под расписанием',
+    },
+    off: {
+      scheduleLocationShowing: '☑️ Показывать местоположение корпусов под расписанием',
+    },
   },
   cancel: '🗙 Отмена',
   loadLecture: '📤 Загрузить лекцию',

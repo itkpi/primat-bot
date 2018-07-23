@@ -91,6 +91,9 @@ const service = {
   },
   async teacherLessons(id) {
     const lessons = await rozklad.teacherLessons(id)
+    if (!lessons) {
+      return { text: 'Не нашел никаких пар :c', buildings: [] }
+    }
     const currDay = (new Date()).getDay()
     const currWeek = await rozklad.currWeek()
     return lessons.reduce((acc, lesson) => {

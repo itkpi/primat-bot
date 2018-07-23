@@ -28,9 +28,7 @@ const service = {
         teacherId: user.teacherId,
         course: user.course,
         group: user.group,
-        settings: {
-          hideLocationBtns: user.settings.hideLocationBtns,
-        },
+        settings: user.settings,
       },
     }
     data.semester = semester

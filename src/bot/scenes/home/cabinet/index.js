@@ -32,6 +32,7 @@ scene.hears(btns.whoAmI, ctx => {
   }
   return ctx.replyWithHTML(service.whoAmI(info))
 })
+scene.hears(btns.settings, ctx => ctx.scenes.enter(config.scenes.home.cabinet.settings))
 scene.hears(btns.back, ctx => ctx.home())
 
 module.exports = scene

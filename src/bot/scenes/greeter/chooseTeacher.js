@@ -14,13 +14,12 @@ scene.enter(ctx => {
 
 scene.hears(ignoreCommand, async ctx => {
   const { teachers } = ctx.scene.state
-  const num = parseInt(ctx.state.cleanedMsg, 10)
-  if (!num) {
-    return ctx.reply('Выбери какой-то номер')
-  }
-  const teacher = teachers[num - 1]
+  const teacherName = ctx.message.text
+  const teacher = teachers.find(
+    item => [item.teacher_full_name, item.teacher_name].includes(teacherName),
+  )
   if (!teacher) {
-    return ctx.reply('У тебя есть списочек из номеров')
+    return ctx.reply('Кнопочки существуют не просто так')
   }
   const userData = msgFromDataToUserData(ctx.message.from)
   const user = await greeterService.registerByTeacher(teacher, userData)

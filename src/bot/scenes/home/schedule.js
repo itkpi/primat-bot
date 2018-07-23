@@ -12,7 +12,7 @@ async function dayHandler(ctx) {
     return ctx.reply('А вот и выходной - ни одной пары!')
   }
   await ctx.replyWithHTML(lessons.text)
-  if (lessons.buildings.length > 0 && !ctx.session.user.settings.hideLocationBtns) {
+  if (lessons.buildings.length > 0 && ctx.session.user.settings.scheduleLocationShowing) {
     ctx.reply(config.seeBuildingLocationMsg, service.getBuildingsLocationMarkup(lessons.buildings))
   }
   return true

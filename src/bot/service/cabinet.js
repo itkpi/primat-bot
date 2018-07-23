@@ -24,7 +24,7 @@ const service = {
         return msg
       }
       case config.roles.teacher: {
-        const msg = 'У тебя очень важная миссия - передать знания. Возможно, эти счастливчики из группы '
+        const msg = 'У тебя очень важная миссия - передать знания. Возможно, даже счастливчикам из группы '
           + `<b>${sessionGroup}</b>`
         return msg
       }

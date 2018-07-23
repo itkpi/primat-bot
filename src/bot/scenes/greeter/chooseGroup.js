@@ -19,13 +19,10 @@ scene.hears(ignoreCommand, async ctx => {
     ctx.state.msg = 'Ладненько'
     return ctx.scene.enter(config.scenes.home.self)
   }
-  const num = parseInt(ctx.state.cleanedMsg, 10)
-  if (!num) {
-    return ctx.reply('Выбери какой-то номер')
-  }
-  const group = groups[num - 1]
+  const groupName = ctx.message.text
+  const group = groups.find(item => item.group_full_name === groupName)
   if (!group) {
-    return ctx.reply('У тебя есть списочек из номеров')
+    return ctx.reply('У тебя есть списочек, выбери из него')
   }
   ctx.state.group = group
   if (parentScene === config.scenes.home.cabinet.changeGroup) {

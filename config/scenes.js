@@ -10,6 +10,7 @@ module.exports = {
     cabinet: {
       self: 'cabinet',
       changeGroup: 'changeGroup',
+      settings: 'settings',
     },
     // abiturient
     location: 'location',

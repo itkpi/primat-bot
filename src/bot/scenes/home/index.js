@@ -59,7 +59,7 @@ scene.hears(btns.abiturient.studentUpgrade, protect(roles.abiturient),
 scene.hears(btns.teacher.schedule, protect(roles.teacher), async ctx => {
   const lessons = await scheduleService.teacherLessons(ctx.session.user.teacherId)
   await ctx.replyWithHTML(lessons.text)
-  if (lessons.buildings.length > 0 && !ctx.session.user.settings.hideLocationBtns) {
+  if (lessons.buildings.length > 0 && ctx.session.user.settings.scheduleLocationShowing) {
     const markup = scheduleService.getBuildingsLocationMarkup(lessons.buildings)
     ctx.reply(config.seeBuildingLocationMsg, markup)
   }

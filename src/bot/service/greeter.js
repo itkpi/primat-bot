@@ -40,15 +40,13 @@ const service = {
       tScheduleUrl: teacher.teacher_url,
       tRating: teacher.teacher_rating,
     }
-    userData.settings = { hideLocationBtns: true }
+    userData.settings = { scheduleLocationShowing: false }
     return this.register(Object.assign({}, userData, teacherData), config.roles.teacher)
   },
   getChooseGroupScene(groups, ops = {}) {
     groups = groups.slice(0, 6)
-    const msg = ['У меня есть несколько вариантов для тебя:\n']
-      .concat(groups.map((item, i) => `${i + 1}. ${item.group_full_name}`))
-      .join('\n')
-    const buttons = groups.map((_, i) => (i + 1).toString())
+    const msg = 'У меня есть несколько вариантов для тебя'
+    const buttons = groups.map(group => group.group_full_name)
     if (ops.showCancel) {
       buttons.push(config.btns.cancel)
     }
@@ -76,10 +74,8 @@ const service = {
     return { nextScene, currState: { msg, keyboard } }
   },
   getChooseTeacherScene(teachers) {
-    const msg = ['Нужно выбрать:\n']
-      .concat(teachers.map((item, i) => `${i + 1}. ${item.teacher_full_name || item.teacher_name}`))
-      .join('\n')
-    const buttons = teachers.map((_, i) => (i + 1).toString())
+    const msg = 'Еще немножко'
+    const buttons = teachers.map(item => item.teacher_full_name || item.teacher_name)
     const keyboard = Markup.keyboard(buttons, { columns: 3 }).resize().extra()
     const nextScene = {
       name: scenes.greeter.chooseTeacher,

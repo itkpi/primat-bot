@@ -44,7 +44,7 @@ const User = new Schema({
   telegraph_user: Boolean,
   subscriber: { type: Boolean, default: true },
   settings: {
-    hideLocationBtns: { type: Boolean, default: false },
+    scheduleLocationShowing: { type: Boolean, default: true },
   },
 }, { strict: 'throw', timestamps: true })
 
