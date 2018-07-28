@@ -3,6 +3,8 @@ const Scene = require('telegraf/scenes/base')
 const { Markup } = require('telegraf')
 const Abstract = require('../../../../db/models/abstract')
 const ignoreCommand = require('../../../utils/ignoreCommand')
+const scheduleService = require('../../../service/schedule')
+const protect = require('../../../middlewares/protect')
 
 const sceneName = config.scenes.home.abstracts.self
 const scene = new Scene(sceneName)
@@ -13,7 +15,11 @@ scene.enter(async ctx => {
     flow: ctx.session.flow,
     semester: ctx.session.semester,
   })
-  const buttons = subjects.concat(config.btns.loadLecture).concat(config.btns.home.other.home)
+  const buttons = subjects
+  if (ctx.session.user.role === config.roles.student) {
+    buttons.push(config.btns.loadLecture)
+  }
+  buttons.push(config.btns.back)
   const keyboard = Markup.keyboard(buttons, { columns: 2 }).resize().extra()
   if (subjects.length === 0) {
     const { group, semester } = ctx.session
@@ -24,18 +30,27 @@ scene.enter(async ctx => {
   return ctx.reply('Выбирай предмет', keyboard)
 })
 
-scene.hears(config.btns.loadLecture, ctx => {
+scene.hears(config.btns.loadLecture, protect(config.roles.student), async ctx => {
   if (ctx.from.id !== config.adminId) {
     const msg = 'Пока некуда торопиться. Учебный год еще не начался, отдыхай :)'
     return ctx.reply(msg)
   }
-  if (!ctx.session.user.telegraphToken) {
+  if (ctx.session.groupId !== ctx.session.user.groupId) {
+    const msg = 'Увы, но загружать лекции можно только от лица своей группы. '
+      + 'Можешь вернуть свою группу в кабинете'
+    return ctx.reply(msg)
+  }
+  const subjects = await scheduleService.parseSchedule(ctx.session.user.groupId, 'subjects')
+  if (subjects.length === 0) {
+    return ctx.home('Сорян, не смог найти ни единого предмета твоей группы :c')
+  }
+  if (!ctx.session.user.telegraph) {
     return ctx.scene.enter(config.scenes.home.abstracts.setTelegraphToken)
   }
-  return ctx.scene.enter(config.scenes.home.abstracts.loadLecture)
+  return ctx.scene.enter(config.scenes.home.abstracts.chooseLoadSubject, { subjects })
 })
 
-scene.hears(config.btns.home.other.home, ctx => ctx.home('Знания - сила!'))
+scene.hears(config.btns.back, ctx => ctx.home('Знания - сила!'))
 
 scene.hears(ignoreCommand, async ctx => {
   const subject = ctx.message.text.trim()

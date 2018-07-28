@@ -23,6 +23,7 @@ app.use(serveStatic(`${__dirname}/static`))
 app.use(bodyParser())
 app.use(router)
 
+
 if (app.env === 'development') {
   telegraf.telegram.deleteWebhook()
     .then(() => telegraf.startPolling())

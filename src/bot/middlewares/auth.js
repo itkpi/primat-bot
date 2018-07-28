@@ -7,8 +7,11 @@ module.exports = async (ctx, next) => {
     const user = await userService.getByTgId(ctx.from.id)
     if (user) {
       await sessionService.setByUser(user, ctx.session)
+      ctx.state.triggerSceneMsg = 'Какой-то злой колдун украл твою сессию, '
+        + 'но я уже все починил. Попробуй еще раз'
+      ctx.state.triggerScene = config.scenes.home.self
     } else {
-      ctx.state.scene = config.scenes.greeter.self
+      ctx.state.triggerScene = config.scenes.greeter.self
     }
   }
   return next()

@@ -18,6 +18,9 @@ module.exports = {
     level: process.env.LOG_LEVEL || 'info',
   },
   githubHookPath: process.env.GITHUB_HOOK_PATH || 'hook-path',
+  googleClientId: process.env.GOOGLE_CLIENT_ID,
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  picasaRefreshToken: process.env.PICASA_REFRESH_TOKEN,
   btns,
   scenes,
   roles: {
@@ -41,4 +44,5 @@ module.exports = {
   seeBuildingLocationMsg: 'Посмотреть местоположение корпуса №',
   removeMarkup: { reply_markup: { remove_keyboard: true } },
   settings,
+  picasaAlbumId: '6483466156901120049',
 }

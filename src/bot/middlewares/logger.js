@@ -43,8 +43,13 @@ module.exports = (ctx, next) => {
     logger.info(user, msg)
   }
   if (ctx.message) {
-    msg += `sended ${ctx.message.text}`
-    logger.info(user, msg)
+    if (ctx.message.text) {
+      msg += `sended ${ctx.message.text}`
+      logger.info(user, msg)
+    } else if (ctx.message.document) {
+      msg += 'sended document'
+      logger.info(user, msg, ctx.message.document)
+    }
   }
   logger.info(filterSessionFields(ctx.session))
   return next()

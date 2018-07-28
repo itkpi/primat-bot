@@ -40,13 +40,19 @@ const User = new Schema({
     max: 6,
     trim: true,
   },
-  telegraph_token: String,
-  telegraph_authurl: String,
-  telegraph_user: Boolean,
+  telegraph: {
+    accessToken: String,
+    authorName: String,
+    authorUrl: String,
+    shortName: String,
+    authUrl: String,
+    pageCount: Number,
+  },
   settings: {
     [config.settings.scheduleLocationShowing]: { type: Boolean, default: true },
     [config.settings.abstractSubscriber]: { type: Boolean, default: true },
   },
+  registeredWithSite: { type: Boolean, default: false },
 }, { strict: 'throw', timestamps: true })
 
 User.post('save', postSave)

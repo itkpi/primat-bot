@@ -1,3 +1,5 @@
+const RequestError = require('../errors/RequestError')
+
 if (!('toJSON' in Error.prototype)) {
   Object.defineProperty(Error.prototype, 'toJSON', { // eslint-disable-line no-extend-native
     value() {
@@ -18,6 +20,9 @@ module.exports = async (ctx, next) => {
   } catch (e) {
     e.status = e.status || 500
     ctx.status = e.status
+    if (e instanceof RequestError) {
+      ctx.message = e.message
+    }
     if (ctx.app.env === 'development') {
       ctx.body = e
     }
