@@ -29,7 +29,7 @@ module.exports = router => {
     await user.save()
     return user
   })
-  auth.post('/login', async ctx => {
+  auth.get('/login', async ctx => {
     const { id: tgId } = ctx.request.body
     const user = await User.findOne({ tgId })
     if (!user) {
@@ -38,5 +38,9 @@ module.exports = router => {
     return user
   })
   auth.get('/group/:id', async ctx => ctx.body = await groupService.processGroup(ctx.params.id))
+  auth.post('/group', async ctx => {
+    const { group } = ctx.request.body
+    return ctx.body = await groupService.processGroup(group)
+  })
   router.use('/auth', auth.routes())
 }

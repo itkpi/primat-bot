@@ -11,7 +11,6 @@ const service = {
       rozklad.groups(group),
       rozklad.groups({ search: { query: group } }),
     ])
-    console.log('groupInfo', groupInfo)
     if (!groupInfo || (possibleGroups && possibleGroups.length > 1)) {
       return possibleGroups
     }
