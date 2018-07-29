@@ -8,10 +8,12 @@ const auth = new KoaRouter()
 
 module.exports = router => {
   auth.use((ctx, next) => {
-    ctx.set({
-      'Access-Control-Allow-Origin': 'https://kpibot.me',
-      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-    })
+    if (process.env.NODE_ENV === 'production') {
+      ctx.set({
+        'Access-Control-Allow-Origin': 'https://kpibot.me',
+        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+      })
+    }
     return next()
   })
   auth.use((ctx, next) => {
@@ -29,8 +31,9 @@ module.exports = router => {
     await user.save()
     return user
   })
-  auth.get('/login', async ctx => {
-    const { id: tgId } = ctx.request.body
+  auth.get('/login/:tgId', async ctx => {
+    /* TODO: check hash */
+    const { tgId } = ctx.params
     const user = await User.findOne({ tgId })
     if (!user) {
       return ctx.body = null
