@@ -2,11 +2,11 @@ const config = require('config')
 const Koa = require('koa')
 const KoaRouter = require('koa-router')
 const bodyParser = require('koa-bodyparser')
-const serveStatic = require('koa-static')
 const telegraf = require('./modules/telegraf')
 const serverRouter = require('./route')
 const logger = require('./utils/logger')
 const errorHandler = require('./middlewares/errorHandler')
+const loggerMiddleware = require('./middlewares/logger')
 const bot = require('./bot')
 
 const app = new Koa()
@@ -19,7 +19,7 @@ if (app.env !== 'production' && config.db.url.match('production')) {
 }
 
 app.use(errorHandler)
-app.use(serveStatic(`${__dirname}/static`))
+app.use(loggerMiddleware)
 app.use(bodyParser())
 app.use(router)
 

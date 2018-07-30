@@ -21,6 +21,11 @@ const service = {
   setSetting(tgId, setting, value) {
     return this.updateById(tgId, { [`settings.${setting}`]: value })
   },
+  filterSensitiveFields(user) {
+    const copy = { ...user }
+    config.userSensitiveFields.forEach(field => delete copy[field])
+    return copy
+  },
 }
 
 module.exports = service

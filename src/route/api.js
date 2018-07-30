@@ -7,13 +7,6 @@ const api = new KoaRouter()
 
 module.exports = router => {
   api.use((ctx, next) => {
-    ctx.set({
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-    })
-    return next()
-  })
-  api.use((ctx, next) => {
     logger.info(ctx.method, ctx.path)
     return next()
   })

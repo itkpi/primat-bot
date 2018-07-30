@@ -1,23 +1,19 @@
+// const config = require('config')
 const KoaRouter = require('koa-router')
 const User = require('../db/models/user')
 const groupService = require('../bot/service/group')
-const logger = require('../utils/logger')
+const userService = require('../bot/service/user')
+// const logger = require('../utils/logger')
 const errors = require('../errors')
 
 const auth = new KoaRouter()
 
 module.exports = router => {
-  if (process.env.NODE_ENV === 'production') {
-    auth.use((ctx, next) => {
-      ctx.set({
-        'Access-Control-Allow-Origin': 'https://kpibot.me',
-        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-      })
-      return next()
-    })
-  }
   auth.use((ctx, next) => {
-    logger.info(ctx.method, ctx.path)
+    ctx.set({
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+    })
     return next()
   })
   auth.post('/', async ctx => {
@@ -28,17 +24,16 @@ module.exports = router => {
     }
     userData.registeredWithSite = true
     const user = new User(userData)
-    await user.save()
-    return user
+    return ctx.body = await user.save()
   })
   auth.get('/login/:tgId', async ctx => {
     /* TODO: check hash */
     const { tgId } = ctx.params
     const user = await User.findOne({ tgId })
     if (!user) {
-      return ctx.body = null
+      return errors.notFound('User with such telegram id is not registered')
     }
-    return user
+    return ctx.body = userService.filterSensitiveFields(user)
   })
   auth.get('/group/:id', async ctx => ctx.body = await groupService.processGroup(ctx.params.id))
   auth.post('/group', async ctx => {

@@ -45,4 +45,5 @@ module.exports = {
   removeMarkup: { reply_markup: { remove_keyboard: true } },
   settings,
   picasaAlbumId: '6483466156901120049',
+  filterSensitiveFields: ['telegraph'],
 }
