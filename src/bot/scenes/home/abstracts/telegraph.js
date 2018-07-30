@@ -1,13 +1,11 @@
 const config = require('config')
 const Scene = require('telegraf/scenes/base')
-const objectMapper = require('object-mapper')
 const { Markup } = require('telegraf')
 const telegraph = require('../../../../modules/telegraph')
 const userService = require('../../../service/user')
-const sessionService = require('../../../service/session')
-// const ignoreCommand = require('../../../utils/ignoreCommand')
+const cabinetService = require('../../../service/cabinet')
 
-const sceneName = config.scenes.home.abstracts.setTelegraphToken
+const sceneName = config.scenes.home.abstracts.telegraph
 const scene = new Scene(sceneName)
 
 scene.enter(async ctx => {
@@ -23,17 +21,8 @@ scene.hears(config.btns.next, async ctx => {
     author_name: `KPIbot-${ctx.from.username || ctx.from.first_name}`,
     author_url: ctx.from.username ? `https:/t.me/${ctx.from.username}` : '',
   })
-  const map = {
-    access_token: 'accessToken',
-    author_name: 'authorName',
-    author_url: 'authorUrl',
-    short_name: 'shortName',
-    auth_url: 'authUrl',
-    page_count: 'pageCount',
-  }
-  const telegraphData = objectMapper(telegraphAccount, map)
-  const user = await userService.updateById(ctx.from.id, { telegraph: telegraphData })
-  await sessionService.setByUser(user, ctx.session)
+  const telegraphData = cabinetService.mapTelegraphInfo(telegraphAccount)
+  await userService.updateById(ctx.from.id, { telegraph: telegraphData })
   ctx.reply('Вот и все, теперь ты тоже в теме телеграфа')
   return ctx.scene.enter(config.scenes.home.abstracts.loadLecture)
 })

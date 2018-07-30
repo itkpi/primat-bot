@@ -7,7 +7,7 @@ module.exports = (...requiredRoles) => (ctx, next) => {
     requiredRolesCopy.pop()
   }
   const isAllowed = ops.native
-    ? requiredRolesCopy.includes(ctx.session.user.role)
+    ? requiredRolesCopy.includes(ctx.state.user.role)
     : requiredRolesCopy.includes(ctx.session.role)
   if (!isAllowed) {
     if (ops.forward) {

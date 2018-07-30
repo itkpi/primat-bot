@@ -31,7 +31,7 @@ module.exports = {
   },
   adminId: 147615474,
   infoLinks,
-  sessionFilter: ['date', '__v'],
+  sessionFilter: ['date', '__v', 'telegraph'],
   commands,
   homeMessages: ['Домооой', 'Ладненько', 'Как скажешь', 'Эх', 'Приехали'],
   universityName: 'KPI',
@@ -45,5 +45,5 @@ module.exports = {
   removeMarkup: { reply_markup: { remove_keyboard: true } },
   settings,
   picasaAlbumId: '6483466156901120049',
-  filterSensitiveFields: ['telegraph'],
+  userSensitiveFields: ['telegraph'],
 }

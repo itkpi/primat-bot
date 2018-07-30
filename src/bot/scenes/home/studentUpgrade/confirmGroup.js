@@ -14,6 +14,7 @@ scene.enter(ctx => {
 scene.hears(config.btns.yes, async ctx => {
   ctx.scene.state.groupData.course = 1
   const user = await userService.upgradeAbiturientToStudent(ctx.from.id, ctx.scene.state.groupData)
+  ctx.state.user = user
   await sessionService.setByUser(user, ctx.session)
   return ctx.home('Поздравляю, больше ты не абитуриент!')
 })

@@ -1,7 +1,6 @@
 const config = require('config')
 const Scene = require('telegraf/scenes/base')
 const { Markup } = require('telegraf')
-const sessionService = require('../../../service/session')
 const userService = require('../../../service/user')
 
 const { settings } = config.btns
@@ -21,12 +20,11 @@ function getSettingsKeyboard(userSettings) {
 
 const settingHandler = (setting, value, msg) => async ctx => {
   const user = await userService.setSetting(ctx.from.id, setting, value)
-  await sessionService.setByUser(user, ctx.session)
-  return ctx.reply(msg, getSettingsKeyboard(ctx.session.user.settings))
+  return ctx.reply(msg, getSettingsKeyboard(user.settings))
 }
 
 scene.enter(ctx => {
-  const keyboard = getSettingsKeyboard(ctx.session.user.settings)
+  const keyboard = getSettingsKeyboard(ctx.state.user.settings)
   return ctx.reply('Оп, настроечки', keyboard)
 })
 

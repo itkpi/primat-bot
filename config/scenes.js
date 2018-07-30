@@ -7,7 +7,7 @@ module.exports = {
       self: 'abstracts',
       chooseAbstracts: 'chooseAbstracts',
       chooseLoadSubject: 'chooseLoadSubject',
-      setTelegraphToken: 'setTelegraphToken',
+      telegraph: 'telegraph',
       loadLecture: 'loadLecture',
       loadPhoto: 'loadPhoto',
     },
@@ -15,6 +15,7 @@ module.exports = {
       self: 'cabinet',
       changeGroup: 'changeGroup',
       settings: 'settings',
+      telegraph: 'telegraph',
     },
     // abiturient
     location: 'location',

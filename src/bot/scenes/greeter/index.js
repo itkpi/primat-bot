@@ -10,18 +10,19 @@ const scene = new Scene(config.scenes.greeter.self)
 const btns = config.btns.greeter
 const { roles } = config
 
+const handler = role => async ctx => {
+  const userData = msgFromDataToUserData(ctx.message.from)
+  const user = await service.register(userData, role, ctx.session)
+  ctx.state.user = user
+  return ctx.home(getRegMsg(user.role))
+}
+
 scene.enter(ctx => {
   const { msg, keyboard } = service.welcome(ctx.from.first_name)
   return ctx.replyWithHTML(msg, keyboard)
 })
-scene.hears(btns.abiturient, async ctx => {
-  await service.register(msgFromDataToUserData(ctx.message.from), roles.abiturient, ctx.session)
-  return ctx.home(getRegMsg(ctx.session.role))
-})
-scene.hears(btns.noKPI, async ctx => {
-  await service.register(msgFromDataToUserData(ctx.message.from), roles.noKPI, ctx.session)
-  return ctx.home(getRegMsg(ctx.session.role))
-})
+scene.hears(btns.abiturient, handler(roles.abiturient))
+scene.hears(btns.noKPI, handler(roles.noKPI))
 scene.hears(btns.teacher, async ctx => {
   ctx.state.msg = 'Для регистрации и аутентификации введите полностью ФИО (на украинском)'
   ctx.state.keyboard = config.removeMarkup

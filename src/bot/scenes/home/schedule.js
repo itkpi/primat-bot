@@ -12,7 +12,7 @@ async function dayHandler(ctx) {
     return ctx.reply('А вот и выходной - ни одной пары!')
   }
   await ctx.replyWithHTML(lessons.text)
-  const showLocationSettingOn = ctx.session.user.settings[config.settings.scheduleLocationShowing]
+  const showLocationSettingOn = ctx.state.user.settings[config.settings.scheduleLocationShowing]
   if (lessons.buildings.length > 0 && showLocationSettingOn) {
     ctx.reply(config.seeBuildingLocationMsg, service.getBuildingsLocationMarkup(lessons.buildings))
   }

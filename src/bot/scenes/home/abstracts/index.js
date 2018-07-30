@@ -16,7 +16,7 @@ scene.enter(async ctx => {
     semester: ctx.session.semester,
   })
   const buttons = subjects.slice()
-  const { role: userRole, group: userGroup } = ctx.session.user
+  const { role: userRole, group: userGroup } = ctx.state.user
   const { group: sessionGroup, semester: sessionSemester } = ctx.session
   if (userRole === config.roles.student && userGroup === sessionGroup) {
     buttons.push(config.btns.loadLecture)
@@ -38,17 +38,17 @@ scene.hears(config.btns.loadLecture, protect(config.roles.student), async ctx =>
     const msg = 'Пока некуда торопиться. Учебный год еще не начался, отдыхай :)'
     return ctx.reply(msg)
   }
-  if (ctx.session.groupId !== ctx.session.user.groupId) {
+  if (ctx.session.groupId !== ctx.state.user.groupId) {
     const msg = 'Увы, но загружать лекции можно только от лица своей группы. '
       + 'Можешь вернуть свою группу в кабинете'
     return ctx.reply(msg)
   }
-  const subjects = await scheduleService.parseSchedule(ctx.session.user.groupId, 'subjects')
+  const subjects = await scheduleService.parseSchedule(ctx.state.user.groupId, 'subjects')
   if (subjects.length === 0) {
     return ctx.home('Сорян, не смог найти ни единого предмета твоей группы :c')
   }
-  if (!ctx.session.user.telegraph) {
-    return ctx.scene.enter(config.scenes.home.abstracts.setTelegraphToken)
+  if (!ctx.state.user.telegraph) {
+    return ctx.scene.enter(config.scenes.home.abstracts.telegraph)
   }
   return ctx.scene.enter(config.scenes.home.abstracts.chooseLoadSubject, { subjects })
 })

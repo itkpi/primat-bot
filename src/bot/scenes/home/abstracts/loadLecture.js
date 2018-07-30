@@ -8,7 +8,7 @@ const { Markup } = require('telegraf')
 // const sessionService = require('../../../service/session')
 const abstractService = require('../../../service/abstract')
 const ignoreCommand = require('../../../utils/ignoreCommand')
-const getPicasaAccessToken = require('../../../utils/getPicasaAccessToken')
+// const getPicasaAccessToken = require('../../../utils/getPicasaAccessToken')
 
 const sceneName = config.scenes.home.abstracts.loadLecture
 const scene = new Scene(sceneName)
@@ -24,37 +24,19 @@ scene.on('document', async ctx => {
   }
   const lectureLink = await ctx.telegram.getFileLink(ctx.message.document.file_id)
   const { body: lectureText } = await got(lectureLink)
-  const {
-    page,
-    lectureName,
-    photosAmount,
-    latexExpressions,
-  } = abstractService.parse(lectureText)
-
-  const picasaToken = (photosAmount > 0 || latexExpressions.length > 0)
-    ? await getPicasaAccessToken()
-    : null
-
-  const pageData = {
-    page,
-    lectureName,
-    picasaToken,
-    photosAmount,
-    latexExpressions,
-    photoLinks: [],
-    subject: ctx.scene.state.subject,
+  const pageData = abstractService.parse(lectureText)
+  pageData.subject = ctx.scene.state.subject
+  if (pageData.photosAmount > 0 || pageData.latexExpressions.length > 0) {
+    pageData.picasaToken = await abstractService.getPicasaAccessToken()
   }
-
-  if (photosAmount > 0) {
-    ctx.scene.state.pageData = pageData
-    // ctx.session.cabinet = Object.assign({}, pageData, { nextCondition: 'photo' })
-    return ctx.scene.enter(config.scenes.home.abstracts.loadPhoto)
+  if (pageData.latexExpressions.length > 0) {
+    pageData.latexPhotoLinks = await abstractService.uploadLatexExpressions(pageData)
   }
-  // const latexPicasaLinks = await abstractService.getPhotosFromLatex(ctx.session.user, pageData)
-  // const response = await createPage(ctx, lectureName, page, { latexPicasaLinks })
-
-  return ctx.reply('Ты просто лучший! Только не забывай исправлять ошибки, вдруг что')
-  // return ctx.state.home(response.url)
+  if (pageData.photosAmount > 0) {
+    return ctx.scene.enter(config.scenes.home.abstracts.loadPhoto, Object.assign({}, { pageData }))
+  }
+  const response = await abstractService.createTelegraphPage(ctx.from.id, pageData)
+  return ctx.reply('Ты просто лучший! Только не забывай исправлять ошибки, вдруг что\n\n' + response.url)
 })
 
 scene.hears(config.btns.cancel, ctx => ctx.home('Как скажешь'))

@@ -2,6 +2,10 @@ const config = require('config')
 const mathmode = require('mathmode')
 const { parseFragment } = require('parse5')
 const picasa = require('../../modules/picasa')
+const telegraph = require('../../modules/telegraph')
+const User = require('../../db/models/user')
+const Abstract = require('../../db/models/abstract')
+const univerService = require('./univer')
 
 const getReg = num => new RegExp(`[${num}]`, 'g')
 
@@ -65,6 +69,20 @@ function uploadPhotos(binariesGenTasks, user, pageData) {
   return Promise.all(binariesGenTasks.map(upload))
 }
 
+function insertPhotoLinks(page, photoLinks = [], latexPhotoLinks = []) {
+  if (photoLinks.length > 0 || latexPhotoLinks.length > 0) {
+    let src = JSON.stringify(page)
+    photoLinks.forEach((link, indx) => {
+      src = src.replace(`${indx + 1}${process.env.REPLACE_STRING}`, link)
+    })
+    latexPhotoLinks.forEach((link, indx) => {
+      src = src.replace(`${indx}latex${process.env.REPLACE_STRING}`, link)
+    })
+    return JSON.parse(src)
+  }
+  return page
+}
+
 module.exports = {
   parse(text) {
     const lectureName = text.slice(0, text.indexOf('\n'))
@@ -90,7 +108,34 @@ module.exports = {
     )
     return uploadPhotos(binariesGenTasks, user, pageData)
   },
-  createTelegraphPage() {
-
+  async createTelegraphPage(tgId, data) {
+    data.page = insertPhotoLinks(data.page, data.photoLinks, data.latexPhotoLinks)
+    // console.dir(data, {depth: 100})
+    const { telegraph: { accessToken }, flow, course } = await User.findOne({ tgId })
+    const ops = { return_content: true }
+    const telegraphPage = await telegraph.createPage(accessToken, data.name, data.page, ops)
+    // console.dir(telegraphPage, { depth: 100 })
+    const abstract = new Abstract({
+      flow,
+      course,
+      subject: data.subject,
+      semester: await univerService.getCurrSemester(),
+      authorId: tgId,
+      name: '',
+      url: telegraphPage.url,
+      path: telegraphPage.path,
+      title: telegraphPage.title,
+    })
+    return abstract.save()
+  },
+  getPicasaAccessToken() {
+    return new Promise((resolve, reject) => {
+      const params = {
+        clientId: config.googleClientId,
+        clientSecret: config.googleClientSecret,
+      }
+      picasa.renewAccessToken(params, config.picasaRefreshToken,
+        (err, token) => err ? reject(err) : resolve(token))
+    })
   },
 }

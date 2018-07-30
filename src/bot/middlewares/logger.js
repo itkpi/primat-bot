@@ -19,8 +19,8 @@ module.exports = (ctx, next) => {
   } = ctx.from
   let user = ''
   if (ctx.session.role) {
-    user += `${ctx.session.user.role}`
-    if (ctx.session.role !== ctx.session.user.role) {
+    user += `${ctx.state.user.role}`
+    if (ctx.session.role !== ctx.state.user.role) {
       user += `->${ctx.session.role}`
     }
     user += '|'

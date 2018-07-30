@@ -12,7 +12,7 @@ const scene = new Scene(scenes.home.self)
 
 scene.enter(ctx => {
   const { msg } = ctx.state
-  const keyboard = service.getKeyboard(ctx.session.role, ctx.session.user.role)
+  const keyboard = service.getKeyboard(ctx.session.role, ctx.state.user.role)
   return ctx.replyWithHTML(msg, keyboard)
 })
 
@@ -57,9 +57,9 @@ scene.hears(btns.abiturient.studentUpgrade, protect(roles.abiturient),
 
 // teacher role
 scene.hears(btns.teacher.schedule, protect(roles.teacher), async ctx => {
-  const lessons = await scheduleService.teacherLessons(ctx.session.user.teacherId)
+  const lessons = await scheduleService.teacherLessons(ctx.state.user.teacherId)
   await ctx.replyWithHTML(lessons.text)
-  const showLocationSettingOn = ctx.session.user.settings[config.settings.scheduleLocationShowing]
+  const showLocationSettingOn = ctx.state.user.settings[config.settings.scheduleLocationShowing]
   if (lessons.buildings.length > 0 && showLocationSettingOn) {
     const markup = scheduleService.getBuildingsLocationMarkup(lessons.buildings)
     ctx.reply(config.seeBuildingLocationMsg, markup)
@@ -73,10 +73,10 @@ scene.hears(btns.noKPI.setGroup, protect(roles.noKPI),
 scene.hears(btns.other.returnRole,
   protect(roles.abiturient, roles.noKPI, roles.teacher, { native: true }),
   ctx => {
-    if (ctx.session.role === ctx.session.user.role) {
+    if (ctx.session.role === ctx.state.user.role) {
       return false
     }
-    ctx.session.role = ctx.session.user.role
+    ctx.session.role = ctx.state.user.role
     return ctx.home('В родные места')
   })
 

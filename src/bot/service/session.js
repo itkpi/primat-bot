@@ -25,25 +25,7 @@ const service = {
     session.role = config.roles.student
   },
   async setByUser(user, session) {
-    const semester = await univerService.getCurrSemester()
-    const data = {
-      semester,
-      user: {
-        role: user.role,
-        teacherId: user.teacherId,
-        course: user.course,
-        group: user.group,
-        groupId: user.groupId,
-        settings: user.settings,
-      },
-    }
-    if (user.telegraph) {
-      data.user.telegraph = {
-        authorName: user.telegraph.authorName,
-        authorUrl: user.telegraph.authorUrl,
-        shortName: user.telegraph.shortName,
-      }
-    }
+    const data = { semester: await univerService.getCurrSemester() }
     config.sessionFields.forEach(field => {
       data[field] = user[field]
     })

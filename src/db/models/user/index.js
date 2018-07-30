@@ -44,8 +44,8 @@ const User = new Schema({
     accessToken: String,
     authorName: String,
     authorUrl: String,
-    shortName: String,
     authUrl: String,
+    shortName: String,
     pageCount: Number,
   },
   settings: {

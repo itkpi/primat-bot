@@ -35,6 +35,7 @@ module.exports = async ctx => {
     return ctx.scene.enter(config.scenes.home.studentUpgrade.confirmGroup, { groupData })
   }
   const user = await userService.upgradeAbiturientToStudent(ctx.from.id, groupData)
+  ctx.state.user = user
   await sessionService.setByUser(user, ctx.session)
   return ctx.home('Поздравляю, больше ты не абитуриент!')
 }

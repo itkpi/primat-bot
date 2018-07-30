@@ -8,7 +8,11 @@ const scene = new Scene(sceneName)
 const btns = config.btns.cabinet
 
 scene.enter(ctx => {
-  const keyboard = Markup.keyboard(Object.values(btns), { columns: 2 })
+  const buttons = Object.values(btns)
+  if (ctx.state.user.telegraph.accessToken) {
+    buttons.unshift(config.btns.ph)
+  }
+  const keyboard = Markup.keyboard(buttons, { columns: 2 })
     .resize()
     .extra()
   const msg = ctx.state.msg || 'Здесь можешь сделать важные дела'
@@ -24,15 +28,16 @@ scene.hears(btns.changeSemester, ctx => {
 scene.hears(btns.whoAmI, ctx => {
   const info = {
     course: ctx.session.course,
-    userCourse: ctx.session.user.course,
-    role: ctx.session.user.role,
+    userCourse: ctx.state.user.course,
+    role: ctx.state.user.role,
     semester: ctx.session.semester,
     sessionGroup: ctx.session.group.toUpperCase(),
-    userGroup: ctx.session.user.group && ctx.session.user.group.toUpperCase(),
+    userGroup: ctx.state.user.group && ctx.state.user.group.toUpperCase(),
   }
   return ctx.replyWithHTML(service.whoAmI(info))
 })
 scene.hears(btns.settings, ctx => ctx.scene.enter(config.scenes.home.cabinet.settings))
+scene.hears(config.btns.ph, ctx => ctx.scene.enter(config.scenes.home.cabinet.telegraph))
 scene.hears(btns.back, ctx => ctx.home())
 
 module.exports = scene

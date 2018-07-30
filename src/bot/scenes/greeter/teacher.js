@@ -24,7 +24,7 @@ scene.hears(ignoreCommand, async ctx => {
     return ctx.scene.enter(nextScene.name, nextScene.state)
   }
   const userData = msgFromDataToUserData(ctx.message.from)
-  await greeterService.registerByTeacher(teacher, userData, ctx.session)
+  ctx.state.user = await greeterService.registerByTeacher(teacher, userData, ctx.session)
   return ctx.home(getRegMsg(ctx.session.role))
 })
 

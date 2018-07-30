@@ -23,7 +23,8 @@ scene.hears(ignoreCommand, async ctx => {
     return ctx.reply('Кнопочки существуют не просто так')
   }
   const userData = msgFromDataToUserData(ctx.message.from)
-  await greeterService.registerByTeacher(teacher, userData, ctx.session)
+  const user = await greeterService.registerByTeacher(teacher, userData, ctx.session)
+  ctx.state.user = user
   return ctx.home(getRegMsg(ctx.session.role))
 })
 

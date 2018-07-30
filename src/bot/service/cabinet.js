@@ -1,4 +1,5 @@
 const config = require('config')
+const objectMapper = require('object-mapper')
 
 const service = {
   whoAmI({ role, sessionGroup, userGroup, semester, course, userCourse }) { // eslint-disable-line
@@ -32,6 +33,21 @@ const service = {
         return 'Хз :c'
       }
     }
+  },
+  mapTelegraphInfo(info) {
+    const map = {
+      access_token: 'accessToken',
+      author_name: 'authorName',
+      author_url: 'authorUrl',
+      short_name: 'shortName',
+      page_count: 'pageCount',
+    }
+    return objectMapper(info, map)
+  },
+  getTelegraphInfoMsg(info) {
+    const msg = `Short name: ${info.shortName}\nAuthor name: ${info.authorName}\n`
+      + `Author url: ${info.authorUrl}\nPage count: ${info.pageCount}\n\nПояснения - http://telegra.ph/api#Account`
+    return msg
   },
 }
 
