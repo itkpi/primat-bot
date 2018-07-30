@@ -7,15 +7,15 @@ const errors = require('../errors')
 const auth = new KoaRouter()
 
 module.exports = router => {
-  auth.use((ctx, next) => {
-    if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production') {
+    auth.use((ctx, next) => {
       ctx.set({
         'Access-Control-Allow-Origin': 'https://kpibot.me',
         'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
       })
-    }
-    return next()
-  })
+      return next()
+    })
+  }
   auth.use((ctx, next) => {
     logger.info(ctx.method, ctx.path)
     return next()
