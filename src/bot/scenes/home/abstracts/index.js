@@ -15,16 +15,19 @@ scene.enter(async ctx => {
     flow: ctx.session.flow,
     semester: ctx.session.semester,
   })
-  const buttons = subjects
-  if (ctx.session.user.role === config.roles.student) {
+  const buttons = subjects.slice()
+  const { role: userRole, group: userGroup } = ctx.session.user
+  const { group: sessionGroup, semester: sessionSemester } = ctx.session
+  if (userRole === config.roles.student && userGroup === sessionGroup) {
     buttons.push(config.btns.loadLecture)
   }
   buttons.push(config.btns.back)
   const keyboard = Markup.keyboard(buttons, { columns: 2 }).resize().extra()
   if (subjects.length === 0) {
-    const { group, semester } = ctx.session
-    const msg = `Увы, в группе <b>${group.toUpperCase()}</b> за ${semester}-й семестр нет никаких лекций.\n`
-      + 'Но ты всегда можешь загрузить первую!'
+    let msg = `Увы, в группе <b>${sessionGroup.toUpperCase()}</b> за ${sessionSemester}-й семестр нет никаких лекций.\n`
+    if (sessionGroup === userGroup) {
+      msg += 'Но ты всегда можешь загрузить первую!'
+    }
     return ctx.replyWithHTML(msg, keyboard)
   }
   return ctx.reply('Выбирай предмет', keyboard)

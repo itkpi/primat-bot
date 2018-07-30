@@ -9,7 +9,11 @@ const service = {
     return Session.findOne({ key: getKey(id) })
   },
   updateByTgId(id, data) {
-    return Session.findOneAndUpdate({ key: getKey(id) }, { data })
+    const update = {
+      $set: { data },
+      $setOnInsert: { key: getKey(id) },
+    }
+    return Session.findOneAndUpdate({ key: getKey(id) }, update, { upsert: true })
   },
   removeByTgId(id) {
     return Session.findOneAndRemove({ key: getKey(id) })

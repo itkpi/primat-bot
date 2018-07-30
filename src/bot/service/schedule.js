@@ -144,6 +144,9 @@ const service = {
   },
   async parseSchedule(groupId, requiredValue) {
     const timetable = await rozklad.timetable(groupId)
+    if (!timetable) {
+      return null
+    }
     const weeks = [1, 2]
     const days = [1, 2, 3, 4, 5, 6]
     const lessonNums = [0, 1, 2, 3, 4]

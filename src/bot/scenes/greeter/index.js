@@ -4,6 +4,7 @@ const service = require('../../service/greeter')
 const handleGroupRegistry = require('../../handlers/groupRegistry')
 const msgFromDataToUserData = require('../../utils/msgFromDataToUserData')
 const ignoreCommand = require('../../utils/ignoreCommand')
+const getRegMsg = require('../../../utils/getRegMsg')
 
 const scene = new Scene(config.scenes.greeter.self)
 const btns = config.btns.greeter
@@ -14,12 +15,12 @@ scene.enter(ctx => {
   return ctx.replyWithHTML(msg, keyboard)
 })
 scene.hears(btns.abiturient, async ctx => {
-  const user = await service.register(msgFromDataToUserData(ctx.message.from), roles.abiturient)
-  return ctx.finishRegistry(user)
+  await service.register(msgFromDataToUserData(ctx.message.from), roles.abiturient, ctx.session)
+  return ctx.home(getRegMsg(ctx.session.role))
 })
 scene.hears(btns.noKPI, async ctx => {
-  const user = await service.register(msgFromDataToUserData(ctx.message.from), roles.noKPI)
-  return ctx.finishRegistry(user)
+  await service.register(msgFromDataToUserData(ctx.message.from), roles.noKPI, ctx.session)
+  return ctx.home(getRegMsg(ctx.session.role))
 })
 scene.hears(btns.teacher, async ctx => {
   ctx.state.msg = 'Для регистрации и аутентификации введите полностью ФИО (на украинском)'

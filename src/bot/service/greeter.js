@@ -2,6 +2,7 @@ const config = require('config')
 const { Markup } = require('telegraf')
 const groupService = require('./group')
 const userService = require('./user')
+const sessionService = require('./session')
 
 const { scenes } = config
 
@@ -13,10 +14,12 @@ const service = {
     const keyboard = Markup.keyboard(Object.values(config.btns.greeter)).resize().extra()
     return { msg, keyboard }
   },
-  register(data, role) {
-    return userService.create(Object.assign({}, data, { role }))
+  async register(data, role, session) {
+    const user = await userService.create(Object.assign({}, data, { role }))
+    await sessionService.setByUser(user, session)
+    return user
   },
-  async registerByGroup(group, userData) {
+  async registerByGroup(group, userData, session) {
     const groupData = await groupService.processGroup(group)
     if (!groupData) {
       return { fail: 'Впервые вижу такую группу. Ты уверен, что все правильно написал? Попробуй еще раз' }
@@ -28,10 +31,10 @@ const service = {
     if (!userData.course) {
       return this.getSetCourseScene(userData)
     }
-    const user = await this.register(userData, config.roles.student)
+    const user = await this.register(userData, config.roles.student, session)
     return { user }
   },
-  registerByTeacher(teacher, userData) {
+  registerByTeacher(teacher, userData, session) {
     const teacherData = {
       teacherId: teacher.teacher_id,
       tName: teacher.teacher_name,
@@ -41,7 +44,7 @@ const service = {
       tRating: teacher.teacher_rating,
     }
     userData.settings = { scheduleLocationShowing: false }
-    return this.register(Object.assign({}, userData, teacherData), config.roles.teacher)
+    return this.register(Object.assign({}, userData, teacherData), config.roles.teacher, session)
   },
   getChooseGroupScene(groups, ops = {}) {
     groups = groups.slice(0, 6)

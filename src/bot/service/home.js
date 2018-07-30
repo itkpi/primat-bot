@@ -39,6 +39,9 @@ const service = {
   },
   async teachers(groupId, group) {
     const lessonTeachers = await scheduleService.parseSchedule(groupId, 'teachers')
+    if (!lessonTeachers) {
+      return 'В моей папочке нет никаких данных о твоих преподователях. Попробуй другую группу'
+    }
     const lessons = Object.keys(lessonTeachers)
     const text = lessons
       .map((lesson, i) => `<b>${i + 1}. ${lesson}</b><code>:</code> ${lessonTeachers[lesson].join(', ')}`)

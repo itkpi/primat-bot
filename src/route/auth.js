@@ -1,9 +1,8 @@
-// const config = require('config')
 const KoaRouter = require('koa-router')
 const User = require('../db/models/user')
 const groupService = require('../bot/service/group')
 const userService = require('../bot/service/user')
-// const logger = require('../utils/logger')
+const service = require('../service/auth')
 const errors = require('../errors')
 
 const auth = new KoaRouter()
@@ -22,9 +21,7 @@ module.exports = router => {
     if (dbUser) {
       return errors.badRequest('User already exists')
     }
-    userData.registeredWithSite = true
-    const user = new User(userData)
-    return ctx.body = await user.save()
+    return ctx.body = await service.register(userData)
   })
   auth.get('/login/:tgId', async ctx => {
     /* TODO: check hash */
