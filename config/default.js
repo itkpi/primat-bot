@@ -6,7 +6,7 @@ const scenes = require('./scenes')
 const settings = require('./settings')
 
 module.exports = {
-  port: process.env.PORT || 3000,
+  port: process.env.PORT || 3200,
   appUrl: process.env.APP_URL,
   db: {
     url: process.env.MONGO_URL || 'mongodb://localhost/primat-bot',
@@ -31,7 +31,6 @@ module.exports = {
   },
   adminId: 147615474,
   infoLinks,
-  sessionFilter: ['date', '__v', 'telegraph'],
   commands,
   homeMessages: ['Домооой', 'Ладненько', 'Как скажешь', 'Эх', 'Приехали'],
   universityName: 'KPI',

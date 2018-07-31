@@ -1,14 +1,4 @@
-const config = require('config')
 const logger = require('../../utils/logger')
-
-function filterSessionFields(session) {
-  const { ...result } = session
-  const { user } = result
-  if (user) {
-    config.sessionFilter.forEach(field => delete user[field])
-  }
-  return result
-}
 
 module.exports = (ctx, next) => {
   const {
@@ -17,7 +7,7 @@ module.exports = (ctx, next) => {
     first_name: firstName,
     last_name: lastName,
   } = ctx.from
-  let user = ''
+  let user = `${ctx.state.user._id} `
   if (ctx.session.role) {
     user += `${ctx.state.user.role}`
     if (ctx.session.role !== ctx.state.user.role) {
@@ -35,7 +25,6 @@ module.exports = (ctx, next) => {
   if (lastName) {
     user += ` ${lastName}`
   }
-  // eslint-disable-next-line no-underscore-dangle
   const currScene = ctx.session.__scenes && ctx.session.__scenes.current
   let msg = currScene ? `[${currScene}] ` : ''
   if (ctx.callbackQuery) {
@@ -51,6 +40,6 @@ module.exports = (ctx, next) => {
       logger.info(user, msg, ctx.message.document)
     }
   }
-  logger.info(filterSessionFields(ctx.session))
+  logger.info(ctx.session)
   return next()
 }

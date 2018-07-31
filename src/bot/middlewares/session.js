@@ -72,10 +72,9 @@ class MongoSession {
     if (!data || Object.keys(data).length === 0) {
       return this.collection.deleteOne({ key })
     }
-    if (!data.__dirty) { // eslint-disable-line no-underscore-dangle
+    if (!data.__dirty) {
       return false
     }
-    // eslint-disable-next-line no-underscore-dangle
     return this.collection.updateOne({ key }, data.__changeset, { upsert: true })
   }
 

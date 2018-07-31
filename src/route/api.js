@@ -1,15 +1,10 @@
 const KoaRouter = require('koa-router')
 const rozklad = require('node-rozklad-api')
 const service = require('../service/api')
-const logger = require('../utils/logger')
 
 const api = new KoaRouter()
 
 module.exports = router => {
-  api.use((ctx, next) => {
-    logger.info(ctx.method, ctx.path)
-    return next()
-  })
   api.get('/timetable/group/:id', async ctx => {
     const { id } = ctx.params
     if (ctx.query.table) {

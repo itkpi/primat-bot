@@ -13,5 +13,6 @@
     "no-return-assign": 0,
     "no-confusing-arrow": 0,
     "prefer-template": 0,
+    "no-underscore-dangle": 0,
   }
 }
