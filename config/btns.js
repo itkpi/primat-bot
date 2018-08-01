@@ -5,6 +5,7 @@ const setGroup = '📲 Взять группу для визита'
 const kpiInternets = '📡 КПИшные интернеты'
 const abitInternets = '📡 Абитурные интернеты'
 const schedule = '📇 Расписание'
+const timeleft = '🕐 Время до конца пары'
 const settingsMessages = {
   scheduleLocationShowing: 'Показывать местоположение корпусов под расписанием',
   abstractSubscriber: 'Присылать уведомления о новых лекциях',
@@ -14,10 +15,10 @@ module.exports = {
   home: {
     student: {
       cabinet: '💼 Кабинет',
-      timeleft: '🕐 Время до конца пары',
       teachers: '👨‍🏫 Мои преподаватели',
-      schedule,
       abstracts: '📝 Лекции',
+      timeleft,
+      schedule,
       kpiInternets,
       // commands: '📃 Команды',
     },
@@ -34,6 +35,7 @@ module.exports = {
     teacher: {
       setGroup,
       schedule,
+      timeleft,
     },
     other: {
       returnRole: '↩️ Вернуться к себе',

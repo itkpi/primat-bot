@@ -27,7 +27,7 @@ scene.hears(btns.student.schedule, protect(roles.student, { forward: true }), as
   }
   return ctx.scene.enter(scenes.home.schedule)
 })
-scene.hears(btns.student.timeleft, protect(roles.student),
+scene.hears(btns.student.timeleft, protect(roles.student, roles.teacher),
   ctx => ctx.reply(service.timeleft()))
 
 scene.hears(btns.student.cabinet, protect(roles.student),

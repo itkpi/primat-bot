@@ -10,7 +10,8 @@ const scene = new Scene(sceneName)
 
 scene.enter(ctx => {
   const buttons = [config.btns.cancel]
-  if (ctx.session.group !== ctx.state.user.group) {
+  const isStudent = ctx.state.user.role === config.roles.student
+  if (isStudent && ctx.session.group !== ctx.state.user.group) {
     buttons.unshift(config.btns.domoi)
   }
   const keyboard = Markup.keyboard(buttons, { columns: 2 }).resize().extra()
@@ -18,6 +19,9 @@ scene.enter(ctx => {
 })
 
 scene.hears(config.btns.domoi, ctx => {
+  if (ctx.state.user.role !== config.roles.student) {
+    return false
+  }
   sessionService.setByGroup(ctx.state.user, ctx.session)
   return ctx.home('В родные места')
 })

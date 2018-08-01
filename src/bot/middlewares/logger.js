@@ -7,7 +7,7 @@ module.exports = (ctx, next) => {
     first_name: firstName,
     last_name: lastName,
   } = ctx.from
-  let user = `${ctx.state.user._id} `
+  let user = ctx.state.user ? `${ctx.state.user._id} ` : ''
   if (ctx.session.role) {
     user += `${ctx.state.user.role}`
     if (ctx.session.role !== ctx.state.user.role) {
