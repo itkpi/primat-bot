@@ -7,7 +7,7 @@ module.exports = {
       self: 'abstracts',
       chooseAbstracts: 'chooseAbstracts',
       chooseLoadSubject: 'chooseLoadSubject',
-      telegraph: 'telegraph',
+      createTelegraph: 'createTelegraph',
       loadLecture: 'loadLecture',
       loadPhoto: 'loadPhoto',
       checkOwnLectures: 'checkOwnLectures',

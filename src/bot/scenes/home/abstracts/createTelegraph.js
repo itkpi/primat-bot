@@ -5,7 +5,7 @@ const telegraph = require('../../../../modules/telegraph')
 const userService = require('../../../service/user')
 const cabinetService = require('../../../service/cabinet')
 
-const sceneName = config.scenes.home.abstracts.telegraph
+const sceneName = config.scenes.home.abstracts.createTelegraph
 const scene = new Scene(sceneName)
 
 scene.enter(async ctx => {

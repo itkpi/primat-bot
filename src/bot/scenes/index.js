@@ -7,12 +7,10 @@ function getScenes(path) {
       return scenes
     }
     const filePath = `${path}/${file}`
-    const module = require(filePath) // eslint-disable-line
-    const stats = fs.statSync(filePath)
-    if (stats.isDirectory()) {
+    if (fs.statSync(filePath).isDirectory()) {
       scenes.push(...getScenes(filePath))
     }
-    return scenes.concat(module)
+    return scenes.concat(require(filePath)) // eslint-disable-line
   }, [])
 }
 

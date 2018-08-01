@@ -53,6 +53,7 @@ const User = new Schema({
     [config.settings.abstractSubscriber]: { type: Boolean, default: true },
   },
   registeredWithSite: { type: Boolean, default: false },
+  allowLectureUpload: { type: Boolean, default: false },
 }, { strict: 'throw', timestamps: true })
 
 User.post('save', postSave)

@@ -46,10 +46,14 @@ scene.hears(config.btns.loadLecture, protect(config.roles.student), async ctx =>
   }
   const subjects = await scheduleService.parseSchedule(ctx.state.user.groupId, 'subjects')
   if (subjects.length === 0) {
-    return ctx.home('Сорян, не смог найти ни единого предмета твоей группы :c')
+    return ctx.reply('Сорян, не смог найти ни единого предмета твоей группы :c')
   }
-  if (!ctx.state.user.telegraph) {
-    return ctx.scene.enter(config.scenes.home.abstracts.telegraph)
+  if (!ctx.state.user.allowLectureUpload) {
+    const msg = 'У тебя пока нет доступа к загрузке. Свяжись с @Fowi3, чтобы получить его'
+    return ctx.reply(msg)
+  }
+  if (!ctx.state.user.telegraph.accessToken) {
+    return ctx.scene.enter(config.scenes.home.abstracts.createTelegraph)
   }
   return ctx.scene.enter(config.scenes.home.abstracts.chooseLoadSubject, { subjects })
 })
