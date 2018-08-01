@@ -20,7 +20,6 @@ module.exports = {
       timeleft,
       schedule,
       kpiInternets,
-      // commands: '📃 Команды',
     },
     abiturient: {
       location: '🏠 Местоположение корпуса',
