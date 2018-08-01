@@ -5,6 +5,13 @@ const service = require('../service/api')
 const api = new KoaRouter()
 
 module.exports = router => {
+  api.use((ctx, next) => {
+    ctx.set({
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+    })
+    return next()
+  })
   api.get('/timetable/group/:id', async ctx => {
     const { id } = ctx.params
     if (ctx.query.table) {
