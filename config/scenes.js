@@ -10,6 +10,7 @@ module.exports = {
       telegraph: 'telegraph',
       loadLecture: 'loadLecture',
       loadPhoto: 'loadPhoto',
+      checkOwnLectures: 'checkOwnLectures',
     },
     cabinet: {
       self: 'cabinet',

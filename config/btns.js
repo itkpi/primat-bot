@@ -36,6 +36,7 @@ module.exports = {
       setGroup,
       schedule,
       timeleft,
+      kpiInternets,
     },
     other: {
       returnRole: '↩️ Вернуться к себе',
@@ -86,6 +87,7 @@ module.exports = {
   next: '➡️ Далее',
   ph: '📠 Телеграф',
   domoi: '🏠 Домой',
+  myLectures: '👨‍🔬 Мои лекции',
   back,
   kpiInternets,
   abitInternets,

@@ -21,7 +21,7 @@ scene.hears(ignoreCommand, async ctx => {
     flow: ctx.session.flow,
     semester: ctx.session.semester,
   }
-  const abstracts = await Abstract.find(query, { telegraph_url: 1 })
+  const abstracts = await Abstract.find(query, { url: 1 })
     .sort({ date: 1 })
     .skip(skip)
     .limit(limit)
@@ -29,7 +29,7 @@ scene.hears(ignoreCommand, async ctx => {
     return ctx.reply('Лекции под таким номером нет, попробуй еще раз')
   }
   for (let i = 0; i < abstracts.length; i += 1) {
-    await ctx.reply(abstracts[i].telegraph_url) // eslint-disable-line no-await-in-loop
+    await ctx.reply(abstracts[i].url) // eslint-disable-line no-await-in-loop
   }
   return ctx.reply(`Держи, бро\n+${abstracts.length} к защите от отчисления`)
 })
