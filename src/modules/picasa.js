@@ -1,3 +1,9 @@
+const util = require('util')
 const Picasa = require('picasa')
 
-module.exports = new Picasa()
+const picasa = new Picasa()
+
+picasa.getAlbums = util.promisify(picasa.getAlbums)
+picasa.postPhoto = util.promisify(picasa.postPhoto)
+
+module.exports = picasa

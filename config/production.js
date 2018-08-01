@@ -3,5 +3,5 @@ module.exports = {
     timestamp: true,
     prettyPrint: false,
   },
-  websiteUrl: 'https://kpibot.me',
+  picasaAlbumId: '6483466156901120049',
 }

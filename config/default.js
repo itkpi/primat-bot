@@ -21,6 +21,7 @@ module.exports = {
   googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
   picasaRefreshToken: process.env.PICASA_REFRESH_TOKEN,
+  textPhotosNumPostfix: process.env.TEXT_PHOTOS_NUM_POSTFIX || '_|_neveroyatna_|_',
   btns,
   scenes,
   roles: {
@@ -43,6 +44,6 @@ module.exports = {
   seeBuildingLocationMsg: 'Посмотреть местоположение корпуса №',
   removeMarkup: { reply_markup: { remove_keyboard: true } },
   settings,
-  picasaAlbumId: '6483466156901120049',
+  picasaAlbumId: '6581909187263057105',
   userSensitiveFields: ['telegraph'],
 }

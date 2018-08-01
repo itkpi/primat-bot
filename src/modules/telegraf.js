@@ -9,4 +9,8 @@ telegraf.context.home = function home(msg = getRandomHomeMsg()) {
   return this.scene.enter(config.scenes.home.self)
 }
 
+telegraf.context.finishAbstractLoading = function finishAbstractLoading(telegraphPage) {
+  return this.home('Ты просто лучший! Только не забывай исправлять ошибки, вдруг что\n\n' + telegraphPage.url)
+}
+
 module.exports = telegraf
