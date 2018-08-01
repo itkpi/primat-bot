@@ -17,7 +17,7 @@ module.exports = {
     prettyPrint: true,
     level: process.env.LOG_LEVEL || 'info',
   },
-  githubHookPath: process.env.GITHUB_HOOK_PATH || 'hook-path',
+  githubHookPath: process.env.GITHUB_HOOK_PATH,
   googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
   picasaRefreshToken: process.env.PICASA_REFRESH_TOKEN,

@@ -16,17 +16,6 @@ const service = {
     }
     return this.transformGroup(groupInfo)
   },
-  async transformGroup(group) {
-    return {
-      groupId: group.group_id,
-      flow: group.group_prefix,
-      groupOkr: group.group_okr,
-      groupType: group.group_type,
-      group: group.group_full_name,
-      groupScheduleUrl: group.group_url,
-      course: await this.getCourse(group.group_full_name),
-    }
-  },
   async getCourseByOther(group) {
     const user = await userService.getByGroup(group)
     return user && user.course
@@ -46,6 +35,17 @@ const service = {
       return this.getCourseByOther(group)
     }
     return course
+  },
+  async transformGroup(group) {
+    return {
+      groupId: group.group_id,
+      flow: group.group_prefix,
+      groupOkr: group.group_okr,
+      groupType: group.group_type,
+      group: group.group_full_name,
+      groupScheduleUrl: group.group_url,
+      course: await this.getCourse(group.group_full_name),
+    }
   },
 }
 
