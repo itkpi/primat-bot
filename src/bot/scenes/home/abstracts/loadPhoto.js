@@ -19,14 +19,13 @@ scene.on('photo', async ctx => {
   if (!ctx.scene.state.left) {
     ctx.scene.state.left = pageData.photosAmount
     pageData.photos = []
-    pageData.photoLinks = []
   }
   const { photo: photos } = ctx.message
   pageData.photos.push(photos)
   pageData.photoLinks.push(await ctx.telegram.getFileLink(photos[photos.length - 1]))
   ctx.scene.state.left -= 1
   if (ctx.scene.state.left !== 0) {
-    return ctx.reply(`Оп, забрал. Еще не достает: <b>${ctx.scene.state.left}</b>`)
+    return ctx.replyWithHTML(`Оп, забрал. Еще не достает: <b>${ctx.scene.state.left}</b>`)
   }
   const [sendedMsg, telegraphPage] = await Promise.all([
     ctx.reply('Делаю всю магию...'),

@@ -1,7 +1,7 @@
 const config = require('config')
 const got = require('got')
-// const mathmode = require('mathmode')
 const { parseFragment } = require('parse5')
+const mathmode = require('mathmode')
 const picasa = require('../../modules/picasa')
 const telegraph = require('../../modules/telegraph')
 const Abstract = require('../../db/models/abstract')
@@ -14,11 +14,13 @@ const convert = info => nodes => nodes.map(node => {
   }
   let src
   if (node.tagName === 'img') {
-    src = node.attrs.find(i => i.name === 'src')
-    if (src && parseInt(src.value, 10) === info.photosAmount + 1) {
-      src.value = `${info.photosAmount}${config.textPhotosNumPostfix}`
-      info.photosAmount += 1
+    const attr = {
+      name: 'src',
+      value: `${info.photosAmount}${config.textPhotosNumPostfix}`,
     }
+    src = attr
+    node.attrs.push(attr)
+    info.photosAmount += 1
   }
   if (node.tagName === 'l') {
     const [target] = node.childNodes
@@ -70,6 +72,40 @@ function getPicasaAccessToken() {
   })
 }
 
+function storePhoto(binary, num, pageData, user, token, entity) {
+  const photoData = {
+    title: `${entity} #${num}. ${user.course} course. ${pageData.subject}`,
+    summary: `${pageData.title}. Created by ${user.username || user.tgId}.`,
+    contentType: 'image/jpg',
+    binary,
+  }
+  return picasa.postPhoto(token, config.picasaAlbumId, photoData)
+}
+
+async function storePhotos(data, user) {
+  const token = await getPicasaAccessToken()
+  return Promise.all(data.photoLinks.map((link, num) => got(link, { encoding: null })
+    .then(({ body }) => storePhoto(body, num, data, user, token, 'Photo'))))
+}
+
+async function storeLatexExpressions(pageData, user) {
+  const token = await getPicasaAccessToken()
+  const tasks = pageData.latexExpressions.map(
+    (expression, num) => new Promise((resolve, reject) => {
+      const render = mathmode(expression)
+      const bufs = []
+      render.on('data', data => {
+        bufs.push(data)
+      })
+      render.on('error', reject)
+      render.on('finish', () => {
+        resolve(storePhoto(Buffer.concat(bufs), num, pageData, user, token, 'Expression'))
+      })
+    }),
+  )
+  return Promise.all(tasks)
+}
+
 module.exports = {
   parse(text) {
     const title = text.slice(0, text.indexOf('\n'))
@@ -81,32 +117,20 @@ module.exports = {
       page,
       photosAmount: info.photosAmount,
       latexExpressions: info.latexExpressions,
+      photoLinks: [],
     }
   },
-  // storeLatexExpressions(user, pageData) {
-  //   const binariesGenTasks = pageData.latexExpressions.map(
-  //     expression => new Promise((resolve, reject) => {
-  //       const render = mathmode(expression)
-  //       const bufs = []
-  //       render.on('data', data => bufs.push(data))
-  //       render.on('error', reject)
-  //       render.on('finish', () => resolve(Buffer.concat(bufs)))
-  //     }),
-  //   )
-  //   return uploadPhotos(binariesGenTasks, user, pageData)
-  // },
   async createTelegraphPage(user, data) {
-    const { photoLinks, latexExpressions, title } = data
     const tasks = [
       univerService.getCurrSemester(),
-      photoLinks && this.storePhotos(data, user),
-      latexExpressions && this.storeLatexExpressions(latexExpressions, user),
+      storePhotos(data, user),
+      storeLatexExpressions(data, user),
     ]
-    const [semester, storedPhotos = [], storedLatexPhotos = []] = await Promise.all(tasks)
+    const [semester, storedPhotos, storedLatexPhotos] = await Promise.all(tasks)
     data.page = insertPhotoLinks(data.page, storedPhotos, storedLatexPhotos)
     const { telegraph: { accessToken }, flow, course } = user
     const ops = { return_content: true }
-    const telegraphPage = await telegraph.createPage(accessToken, title, data.page, ops)
+    const telegraphPage = await telegraph.createPage(accessToken, data.title, data.page, ops)
     const abstract = new Abstract({
       flow,
       course,
@@ -120,23 +144,5 @@ module.exports = {
       storedPhotos: storedPhotos.concat(storedLatexPhotos),
     })
     return abstract.save()
-  },
-  async storePhotos(pageData, user) {
-    const picasaToken = await getPicasaAccessToken()
-    const { course, username, tgId } = user
-    const { subject, title, photoLinks } = pageData
-    const summary = `${title}. Created by ${username || tgId}.`
-    const getTitle = num => `Photo #${num}. ${course} course. ${subject}`
-    const photoData = {
-      summary,
-      contentType: 'image/jpg',
-    }
-    const tasks = photoLinks.map((url, num) => got(url, { encoding: null })
-      .then(({ body: binary }) => picasa.postPhoto(
-        picasaToken,
-        config.picasaAlbumId,
-        Object.assign({}, photoData, { title: getTitle(num + 1), binary }),
-      )))
-    return Promise.all(tasks)
   },
 }

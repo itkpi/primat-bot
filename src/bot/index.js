@@ -10,8 +10,8 @@ const session = new middlewares.Session(mongoose.connections[0])
 
 module.exports = {
   setMiddlewares() {
-    telegraf.use(middlewares.errorHandler)
     telegraf.use(session.middleware)
+    telegraf.use(middlewares.errorHandler)
     telegraf.use(middlewares.auth)
     telegraf.use(middlewares.logger)
     telegraf.use(middlewares.processMessage)

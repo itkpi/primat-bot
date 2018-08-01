@@ -38,6 +38,9 @@ module.exports = (ctx, next) => {
     } else if (ctx.message.document) {
       msg += 'sended document'
       logger.info(user, msg, ctx.message.document)
+    } else if (ctx.message.photo) {
+      msg += 'sended photo'
+      logger.info(user, msg, ctx.message.photo[ctx.message.photo.length - 1])
     }
   }
   logger.info(ctx.session)

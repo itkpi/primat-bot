@@ -22,7 +22,7 @@ const service = {
     return this.updateById(tgId, { [`settings.${setting}`]: value })
   },
   filterSensitiveFields(user) {
-    const copy = { ...user }
+    const copy = Object.assign({}, user)
     config.userSensitiveFields.forEach(field => delete copy[field])
     return copy
   },
