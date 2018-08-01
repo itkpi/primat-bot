@@ -37,7 +37,6 @@ module.exports = {
     },
     other: {
       returnRole: '↩️ Вернуться к себе',
-      home: '🏠 Домой',
     },
   },
   greeter: {
@@ -84,6 +83,7 @@ module.exports = {
   no: '❌ Нет',
   next: '➡️ Далее',
   ph: '📠 Телеграф',
+  domoi: '🏠 Домой',
   back,
   kpiInternets,
   abitInternets,

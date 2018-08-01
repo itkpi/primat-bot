@@ -9,7 +9,8 @@ const sceneName = config.scenes.home.cabinet.telegraph
 const scene = new Scene(sceneName)
 
 scene.enter(ctx => {
-  const keyboard = Markup.keyboard(Object.values(config.btns.telegraph)).resize().extra()
+  const buttons = Object.values(config.btns.telegraph)
+  const keyboard = Markup.keyboard(buttons, { columns: 2 }).resize().extra()
   return ctx.reply('А здесь все для Телеграфа', keyboard)
 })
 
