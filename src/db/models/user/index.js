@@ -3,6 +3,15 @@ const mongoose = require('../../')
 const postSave = require('./postSave')
 
 const { Schema } = mongoose
+
+const groupSchema = new Schema({
+  groupId: Number,
+  group: String,
+  flow: String,
+  groupOkr: String,
+  groupType: String,
+}, { _id: false })
+
 const User = new Schema({
   tgId: {
     type: String,
@@ -54,6 +63,8 @@ const User = new Schema({
   },
   registeredWithSite: { type: Boolean, default: false },
   allowLectureUpload: { type: Boolean, default: false },
+  masterGroup: groupSchema,
+  bachelorGroup: groupSchema,
 }, { strict: 'throw', timestamps: true })
 
 User.post('save', postSave)

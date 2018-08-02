@@ -8,6 +8,11 @@ module.exports = async (ctx, next) => {
   } catch (e) {
     logger.error(e)
     telegram.sendMessage(config.adminId, `${ctx.from.first_name}|Error: ${e.message}`)
-    ctx.home('Ой, что-то пошло не так :c\nУже работаем над этим, попробуй позже')
+    const msg = 'Ой, что-то пошло не так :c\nУже работаем над этим, попробуй позже'
+    if (ctx.state.user) {
+      ctx.home(msg)
+    } else {
+      ctx.reply(msg)
+    }
   }
 }

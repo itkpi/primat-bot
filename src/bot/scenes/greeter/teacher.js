@@ -15,7 +15,15 @@ scene.enter(ctx => {
 scene.hears(ignoreCommand, async ctx => {
   const teacher = await rozklad.teachers(ctx.state.cleanedMsg)
   if (!teacher) {
-    const teachers = await rozklad.teachers({ search: { query: ctx.state.cleanedMsg } })
+    let teachers
+    try {
+      teachers = await rozklad.teachers({ search: { query: ctx.state.cleanedMsg } })
+    } catch (e) {
+      if (e.statusCode !== 400) {
+        throw e
+      }
+      return ctx.reply('Честно, это не очень похоже на какое-либо имя :)')
+    }
     if (!teachers) {
       return ctx.reply('У меня нет ни малейшего представления об этом имени. Попробуйте еще раз')
     }
