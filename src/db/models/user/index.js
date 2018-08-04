@@ -65,6 +65,7 @@ const User = new Schema({
   allowLectureUpload: { type: Boolean, default: false },
   masterGroup: groupSchema,
   bachelorGroup: groupSchema,
+  upgradedGraduate: { type: Boolean, default: false },
 }, { strict: 'throw', timestamps: true })
 
 User.post('save', postSave)

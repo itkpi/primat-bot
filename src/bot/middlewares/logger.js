@@ -44,5 +44,8 @@ module.exports = (ctx, next) => {
     }
   }
   logger.info(ctx.session)
+  if (process.env.NODE_ENV === 'development' && ctx.state.user) {
+    logger.info(ctx.state.user.toString())
+  }
   return next()
 }

@@ -19,10 +19,14 @@ const service = {
     return Session.findOneAndRemove({ key: getKey(id) })
   },
   setByGroup(group, session) {
-    session.groupId = group.groupId
-    session.group = group.group
-    session.course = group.course
-    session.role = config.roles.student
+    const upd = {
+      groupId: group.groupId,
+      group: group.group,
+      course: group.course,
+      role: config.roles.student,
+    }
+    Object.assign(session, upd)
+    return upd
   },
   async setByUser(user, session) {
     const data = { semester: await univerService.getCurrSemester() }

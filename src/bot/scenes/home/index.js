@@ -46,7 +46,8 @@ scene.hears(btns.student.abstracts, protect(config.roles.student),
 scene.hears(btns.abiturient.location, protect(roles.abiturient),
   ctx => ctx.scene.enter(scenes.home.location))
 
-scene.hears(btns.abiturient.setGroup, protect(roles.abiturient, roles.noKPI, roles.teacher),
+scene.hears(btns.abiturient.setGroup,
+  protect(roles.abiturient, roles.noKPI, roles.teacher, roles.bachelor, roles.master),
   ctx => ctx.scene.enter(scenes.home.cabinet.changeGroup))
 
 scene.hears(btns.abiturient.abitInternets, protect(roles.abiturient),
@@ -71,7 +72,12 @@ scene.hears(btns.noKPI.setGroup, protect(roles.noKPI),
   ctx => ctx.scene.enter(scenes.home.cabinet.changeGroup))
 
 scene.hears(btns.other.returnRole,
-  protect(roles.abiturient, roles.noKPI, roles.teacher, { native: true }),
+  protect(roles.abiturient,
+    roles.noKPI,
+    roles.teacher,
+    roles.bachelor,
+    roles.master,
+    { native: true }),
   ctx => {
     if (ctx.session.role === ctx.state.user.role) {
       return false

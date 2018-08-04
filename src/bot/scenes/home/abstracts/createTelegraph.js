@@ -22,7 +22,7 @@ scene.hears(config.btns.next, async ctx => {
     author_url: ctx.from.username ? `https:/t.me/${ctx.from.username}` : '',
   })
   const telegraphData = cabinetService.mapTelegraphInfo(telegraphAccount)
-  await userService.updateById(ctx.from.id, { telegraph: telegraphData })
+  await userService.update(ctx.from.id, { telegraph: telegraphData })
   ctx.reply('Вот и все, теперь ты тоже в теме телеграфа')
   return ctx.scene.enter(config.scenes.home.abstracts.loadLecture)
 })

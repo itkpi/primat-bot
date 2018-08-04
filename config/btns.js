@@ -1,6 +1,7 @@
 const settings = require('./settings')
 
 const back = '🔙 Назад'
+const next = '➡️ Далее'
 const setGroup = '📲 Взять группу для визита'
 const kpiInternets = '📡 КПИшные интернеты'
 const abitInternets = '📡 Абитурные интернеты'
@@ -35,6 +36,14 @@ module.exports = {
       setGroup,
       schedule,
       timeleft,
+      kpiInternets,
+    },
+    bachelor: {
+      setGroup,
+      kpiInternets,
+    },
+    master: {
+      setGroup,
       kpiInternets,
     },
     other: {
@@ -78,15 +87,16 @@ module.exports = {
     info: 'ℹ️ Информация',
     back,
   },
+  rejectUpgradeToMaster: '😔 Я больше не студент',
   cancel: '❌ Отмена',
   loadLecture: '📤 Загрузить лекцию',
   all: '📚 Все',
   yes: '✅ Да',
   no: '❌ Нет',
-  next: '➡️ Далее',
   ph: '📠 Телеграф',
   domoi: '🏠 Домой',
   myLectures: '👨‍🔬 Мои лекции',
+  next,
   back,
   kpiInternets,
   abitInternets,

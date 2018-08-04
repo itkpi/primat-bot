@@ -29,6 +29,12 @@ const service = {
           + `<b>${sessionGroup}</b>`
         return msg
       }
+      case config.roles.bachelor: {
+        return `Ты почетный выпускник бакалаврата. Сейчас зашел в гости к ${sessionGroup}`
+      }
+      case config.roles.master: {
+        return `Ты уже целый магистр, ого. А сейчас зашел в гости к ${sessionGroup}`
+      }
       default: {
         return 'Хз :c'
       }

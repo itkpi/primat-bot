@@ -66,6 +66,12 @@ const service = {
       case config.roles.teacher: {
         return Markup.keyboard(Object.values(btns.teacher), { columns: 2 }).resize().extra()
       }
+      case config.roles.bachelor: {
+        return Markup.keyboard(Object.values(btns.bachelor), { columns: 2 }).resize().extra()
+      }
+      case config.roles.master: {
+        return Markup.keyboard(Object.values(btns.master), { columns: 2 }).resize().extra()
+      }
       default: {
         return false
       }

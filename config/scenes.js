@@ -32,4 +32,5 @@ module.exports = {
     teacher: 'teacher',
     chooseTeacher: 'chooseTeacher',
   },
+  upgradeGraduate: 'upgradeGraduate',
 }

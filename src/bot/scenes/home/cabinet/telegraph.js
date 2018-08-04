@@ -18,7 +18,7 @@ scene.hears(config.btns.telegraph.authUrl, async ctx => {
   const { accessToken } = ctx.state.user.telegraph
   const { auth_url: authUrl } = await telegraph.getAccountInfo(accessToken, { fields: ['auth_url'] })
   const upd = Object.assign({}, ctx.state.user.toObject().telegraph, { authUrl })
-  await userService.updateById(ctx.from.id, { telegraph: upd })
+  await userService.update(ctx.from.id, { telegraph: upd })
   const msg = 'Вот линк для авторизации в твоем телеграф аккаунте от меня. После авторизации '
     + 'ты сможешь редактировать свои лекции\n\n' + authUrl
   return ctx.reply(msg)
@@ -30,7 +30,7 @@ scene.hears(config.btns.telegraph.info, async ctx => {
   const info = cabinetService.mapTelegraphInfo(await telegraph.getAccountInfo(accessToken, query))
   ctx.reply(cabinetService.getTelegraphInfoMsg(info))
   const upd = Object.assign({}, ctx.state.user.toObject().telegraph, info)
-  await userService.updateById(ctx.from.id, { telegraph: upd })
+  await userService.update(ctx.from.id, { telegraph: upd })
 })
 
 scene.hears(config.btns.back, ctx => {

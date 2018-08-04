@@ -6,20 +6,20 @@ const service = {
     const user = new User(data)
     return user.save()
   },
-  getByTgId(tgId) {
+  get(tgId) {
     return User.findOne({ tgId })
   },
   getByGroup(group) {
     return User.findOne({ group })
   },
-  updateById(tgId, data) {
+  update(tgId, data) {
     return User.findOneAndUpdate({ tgId }, { $set: data }, { new: true })
   },
   upgradeAbiturientToStudent(tgId, groupData) {
-    return this.updateById(tgId, Object.assign({}, groupData, { role: config.roles.student }))
+    return this.update(tgId, Object.assign({}, groupData, { role: config.roles.student }))
   },
   setSetting(tgId, setting, value) {
-    return this.updateById(tgId, { [`settings.${setting}`]: value })
+    return this.update(tgId, { [`settings.${setting}`]: value })
   },
   filterSensitiveFields(user) {
     const copy = Object.assign({}, user)
