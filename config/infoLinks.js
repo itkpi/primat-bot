@@ -11,6 +11,7 @@ module.exports = {
     'https://t.me/hochu_v_kpi': 'канал с самой актуальной информацией\n',
   },
   [btns.kpiInternets]: {
-    'http://telegra.ph/KPIshnyj-internet-v-telegramme-05-28': 'собрано все, что тебе нужно',
+    'http://telegra.ph/KPIshnyj-internet-v-telegramme-05-28': 'ты найдешь все',
+    'https://t.me/itkpi/1036': 'все чатики IT KPI',
   },
 }
