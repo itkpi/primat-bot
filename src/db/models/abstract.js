@@ -17,7 +17,7 @@ const Abstract = new Schema({
   semester: { type: Number, required: true },
   storedPhotos: { type: Array, default: [] },
   photos: { type: Array, default: [] },
-}, { versionKey: false, timestamps: true })
+}, { versionKey: false, timestamps: true, strict: 'throw' })
 
 Abstract.index({
   flow: 1,
