@@ -17,6 +17,7 @@ const User = new Schema({
     type: String,
     required: true,
     unique: true,
+    index: true,
   },
   username: String,
   firstName: { type: String, required: true },
@@ -70,4 +71,7 @@ const User = new Schema({
 
 User.post('save', postSave)
 
-module.exports = mongoose.model('User', User)
+const Model = mongoose.model('User', User)
+Model.ensureIndexes()
+
+module.exports = Model

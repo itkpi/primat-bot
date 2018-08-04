@@ -15,7 +15,7 @@ function getSettingsKeyboard(userSettings) {
   })
   buttons.sort((a, b) => a.split('').reverse() > b.split('').reverse())
   buttons.push(config.btns.back)
-  return Markup.keyboard(buttons, { columns: 2 }).extra()
+  return Markup.keyboard(buttons).resize().extra()
 }
 
 const settingHandler = (setting, value, msg) => async ctx => {

@@ -19,6 +19,13 @@ const Abstract = new Schema({
   photos: { type: Array, default: [] },
 }, { versionKey: false, timestamps: true })
 
+Abstract.index({
+  flow: 1,
+  course: 1,
+  semester: 1,
+  subject: 1,
+})
+
 Abstract.post('save', async data => {
   const {
     flow,
@@ -43,4 +50,7 @@ Abstract.post('save', async data => {
   users.forEach(({ tgId }) => telegram.sendMessage(tgId, msg, { parse_mode: 'HTML' }))
 })
 
-module.exports = mongoose.model('Abstract', Abstract)
+const Model = mongoose.model('Abstract', Abstract)
+Model.ensureIndexes()
+
+module.exports = Model
