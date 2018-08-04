@@ -1,5 +1,6 @@
 const config = require('config')
 const User = require('../../db/models/user')
+const Chat = require('../../db/models/chat')
 
 const service = {
   create(data) {
@@ -25,6 +26,9 @@ const service = {
     const copy = Object.assign({}, user)
     config.userSensitiveFields.forEach(field => delete copy[field])
     return copy
+  },
+  getChat(tgId) {
+    return Chat.findOne({ tgId })
   },
 }
 

@@ -21,13 +21,13 @@ module.exports = {
     telegraf.use(middlewares.triggerScene)
   },
   async start() {
+    telegraf.on('new_chat_members', chatInviteHandler)
+    telegraf.on('left_chat_member', chatLeaveHandler)
     await session.setup()
     this.setMiddlewares()
     commands.set()
 
     telegraf.on('callback_query', callbackQueryHandler)
-    telegraf.on('new_chat_members', chatInviteHandler)
-    telegraf.on('left_chat_member', chatLeaveHandler)
 
     telegraf.catch(e => {
       logger.error(e)

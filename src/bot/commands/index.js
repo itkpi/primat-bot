@@ -8,10 +8,15 @@ function cutExtension(file) {
 }
 
 function protectAdminCommand(ctx, next) {
-  if (ctx.from.id !== config.adminId) {
-    return Promise.resolve()
-  }
-  return next()
+  return ctx.from.id === config.adminId ? next() : Promise.resolve()
+}
+
+function protectChatCommand(ctx, next) {
+  return ctx.session.isChat ? next() : Promise.resolve()
+}
+
+function protectFromChat(ctx, next) {
+  return ctx.session.isChat ? Promise.resolve() : next()
 }
 
 function set() {
@@ -19,12 +24,17 @@ function set() {
     if (command === 'index.js') {
       return false
     }
-    const commandName = cutExtension(command).toLowerCase()
+    const commandName = cutExtension(command)
     const module = require(`./${command}`) // eslint-disable-line
-    if (commandName.substring(0, 5) === 'admin') {
-      return telegraf.command('/' + commandName.slice(5), protectAdminCommand, module)
+    const parts = commandName.split('-')
+    const prefix = parts[0]
+    if (prefix === 'admin') {
+      return telegraf.command('/' + parts[1], protectAdminCommand, module)
     }
-    return telegraf.command('/' + commandName, module)
+    if (prefix === 'chat') {
+      return telegraf.command('/' + parts[1], protectChatCommand, module)
+    }
+    return telegraf.command('/' + commandName, protectFromChat, module)
   })
 }
 

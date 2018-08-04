@@ -13,7 +13,7 @@ function mapChat(chatData) {
   return objectMapper(chatData, map)
 }
 
-module.exports = ctx => {
+module.exports = (ctx, next) => {
   if (ctx.message.new_chat_members.find(member => member.id === config.botId)) {
     const { chat: chatData, from } = ctx.message
     const chat = new Chat(Object.assign(
@@ -22,7 +22,9 @@ module.exports = ctx => {
       { inviter: msgFromDataToUserData(from) },
     ))
     chat.save()
-    return ctx.reply('Ухх, всем дарова. Че делать будем?')
+    ctx.state.chat = chat
+    ctx.reply('Ухх, всем дарова. Че делать будем?')
+    return next()
   }
   return Promise.resolve()
 }
