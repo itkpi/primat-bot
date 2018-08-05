@@ -19,7 +19,7 @@ module.exports = async ctx => {
     const token = await getPicasaAccessToken()
     const data = {
       contentType: 'image/jpg',
-      title: expression,
+      title: ctx.inlineQuery.id,
       binary,
     }
     const photoSizes = sizeOf(binary)
