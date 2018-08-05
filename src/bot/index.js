@@ -5,6 +5,7 @@ const middlewares = require('./middlewares')
 const commands = require('./commands')
 const logger = require('../utils/logger')
 const callbackQueryHandler = require('./handlers/callbackQuery')
+const inlineQueryHandler = require('./handlers/inlineQuery')
 const chatInviteHandler = require('./handlers/chatInvite')
 const chatLeaveHandler = require('./handlers/chatLeave')
 
@@ -21,6 +22,7 @@ module.exports = {
     telegraf.use(middlewares.triggerScene)
   },
   async start() {
+    telegraf.on('inline_query', inlineQueryHandler)
     telegraf.on('new_chat_members', chatInviteHandler)
     telegraf.on('left_chat_member', chatLeaveHandler)
     await session.setup()

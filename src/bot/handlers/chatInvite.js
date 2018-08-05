@@ -14,7 +14,6 @@ function mapChat(chatData) {
 }
 
 module.exports = (ctx, next) => {
-  console.log('ctx.message.new_chat_members', ctx.message.new_chat_members)
   if (ctx.message.new_chat_members.find(member => member.id === config.botId)) {
     const { chat: chatData, from } = ctx.message
     const chat = new Chat(Object.assign(

@@ -6,6 +6,7 @@ const picasa = require('../../modules/picasa')
 const telegraph = require('../../modules/telegraph')
 const Abstract = require('../../db/models/abstract')
 const univerService = require('./univer')
+const getPicasaAccessToken = require('../utils/getPicasaAccessToken')
 
 const convert = info => nodes => nodes.map(node => {
   if (node.value && node.value.trim() === '') return false
@@ -61,17 +62,6 @@ function insertPhotoLinks(page, photos, latexPhotoLinks) {
   return page
 }
 
-function getPicasaAccessToken() {
-  return new Promise((resolve, reject) => {
-    const params = {
-      clientId: config.googleClientId,
-      clientSecret: config.googleClientSecret,
-    }
-    picasa.renewAccessToken(params, config.picasaRefreshToken,
-      (err, token) => err ? reject(err) : resolve(token))
-  })
-}
-
 function storePhoto(binary, num, pageData, user, token, entity) {
   const photoData = {
     title: `${entity} #${num}. ${user.course} course. ${pageData.subject}`,
@@ -98,7 +88,7 @@ async function storeLatexExpressions(pageData, user) {
         bufs.push(data)
       })
       render.on('error', reject)
-      render.on('finish', () => {
+      render.on('end', () => {
         resolve(storePhoto(Buffer.concat(bufs), num, pageData, user, token, 'Expression'))
       })
     }),

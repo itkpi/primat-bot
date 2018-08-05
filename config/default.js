@@ -47,5 +47,7 @@ module.exports = {
   removeMarkup: { reply_markup: { remove_keyboard: true } },
   settings,
   picasaAlbumId: '6581909187263057105',
+  picasaLatexAlbumId: '6586243140246025649',
   userSensitiveFields: ['telegraph'],
+  inlineCacheTime: 60 * 60 * 24 * 20000, // 20 000 days
 }
