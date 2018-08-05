@@ -8,7 +8,9 @@ function cutExtension(file) {
 }
 
 function protectAdminCommand(ctx, next) {
-  return ctx.from.id === config.adminId ? next() : Promise.resolve()
+  return config.commandWhiteList.includes(ctx.from.id)
+    ? next()
+    : Promise.resolve()
 }
 
 function protectChatCommand(ctx, next) {

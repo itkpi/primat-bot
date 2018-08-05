@@ -5,6 +5,8 @@ const commands = require('./commands')
 const scenes = require('./scenes')
 const settings = require('./settings')
 
+const adminId = 147615474
+
 module.exports = {
   port: process.env.PORT || 3200,
   appUrl: process.env.APP_URL,
@@ -32,7 +34,7 @@ module.exports = {
     bachelor: 'bachelor',
     master: 'master',
   },
-  adminId: 147615474,
+  adminId,
   infoLinks,
   commands,
   homeMessages: ['Домооой', 'Ладненько', 'Как скажешь', 'Эх', 'Приехали'],
@@ -50,4 +52,5 @@ module.exports = {
   picasaLatexAlbumId: '6586243140246025649',
   userSensitiveFields: ['telegraph'],
   inlineCacheTime: 60 * 60 * 24 * 20000, // 20 000 days
+  commandWhiteList: [adminId, 250646651],
 }
