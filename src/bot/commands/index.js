@@ -8,7 +8,7 @@ function cutExtension(file) {
 }
 
 function protectAdminCommand(ctx, next) {
-  return config.commandWhiteList.includes(ctx.from.id)
+  return config.whiteList.includes(ctx.from.id)
     ? next()
     : Promise.resolve()
 }
