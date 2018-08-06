@@ -17,6 +17,9 @@ module.exports = router => {
   })
   auth.post('/', async ctx => {
     const { user: userData } = ctx.request.body
+    if (!userData) {
+      return errors.badRequest('User field doesn\'t provided')
+    }
     const dbUser = await User.findOne({ tgId: userData.tgId })
     if (dbUser) {
       return errors.badRequest('User already exists')
