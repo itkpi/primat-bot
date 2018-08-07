@@ -5,7 +5,9 @@ const logger = require('../utils/logger')
 
 module.exports = router => {
   if (process.env.NODE_ENV === 'development') {
+    logger.info('setted github hook path')
     router.post(config.githubHookPath, async ctx => {
+      logger.info('on commit')
       const { ref } = ctx.request.body
       let stdout
       let stderr
