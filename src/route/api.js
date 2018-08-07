@@ -24,5 +24,5 @@ module.exports = router => {
       : service.transformTeacherLessons(lessons)
     ctx.body = Object.assign({}, timetable, { teacher })
   })
-  router.use('/api', api.routes(), api.allowedMethods(), cors())
+  router.use('/api', cors(), api.routes(), api.allowedMethods())
 }

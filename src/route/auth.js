@@ -34,5 +34,5 @@ module.exports = router => {
     const { group } = ctx.request.body
     return ctx.body = await groupService.processGroup(group)
   })
-  router.use('/auth', auth.routes(), auth.allowedMethods(), cors())
+  router.use('/auth', cors(), auth.routes(), auth.allowedMethods())
 }
