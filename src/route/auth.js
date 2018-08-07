@@ -9,7 +9,6 @@ const errors = require('../errors')
 const auth = new KoaRouter()
 
 module.exports = router => {
-  auth.use(cors())
   auth.post('/', async ctx => {
     const { user: userData } = ctx.request.body
     if (!userData) {
@@ -35,5 +34,5 @@ module.exports = router => {
     const { group } = ctx.request.body
     return ctx.body = await groupService.processGroup(group)
   })
-  router.use('/auth', auth.routes(), auth.allowedMethods())
+  router.use('/auth', auth.routes(), auth.allowedMethods(), cors())
 }

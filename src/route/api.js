@@ -6,7 +6,6 @@ const service = require('../service/api')
 const api = new KoaRouter()
 
 module.exports = router => {
-  api.use(cors())
   api.get('/timetable/group/:id', async ctx => {
     const { id } = ctx.params
     if (ctx.query.table) {
@@ -25,5 +24,5 @@ module.exports = router => {
       : service.transformTeacherLessons(lessons)
     ctx.body = Object.assign({}, timetable, { teacher })
   })
-  router.use('/api', api.routes(), api.allowedMethods())
+  router.use('/api', api.routes(), api.allowedMethods(), cors())
 }
