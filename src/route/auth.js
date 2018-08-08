@@ -1,5 +1,4 @@
 const KoaRouter = require('koa-router')
-const cors = require('koa2-cors')
 const User = require('../db/models/user')
 const groupService = require('../bot/service/group')
 const userService = require('../bot/service/user')
@@ -9,6 +8,14 @@ const errors = require('../errors')
 const auth = new KoaRouter()
 
 module.exports = router => {
+  auth.use((ctx, next) => {
+    ctx.set({
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+      'Access-Control-Allow-Methods': 'POST, GET, PUT, DELETE, OPTIONS',
+    })
+    return next()
+  })
   auth.post('/', async ctx => {
     const { user: userData } = ctx.request.body
     if (!userData) {
@@ -34,5 +41,5 @@ module.exports = router => {
     const { group } = ctx.request.body
     return ctx.body = await groupService.processGroup(group)
   })
-  router.use('/auth', cors(), auth.routes(), auth.allowedMethods())
+  router.use('/auth', auth.routes(), auth.allowedMethods())
 }
