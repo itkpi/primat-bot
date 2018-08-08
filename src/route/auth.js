@@ -17,6 +17,10 @@ module.exports = router => {
   //   })
   //   return next()
   // })
+  auth.use((ctx, next) => {
+    console.log('headers', ctx.request.header)
+    return next()
+  })
   auth.use(cors({ origin: '*' }))
   auth.post('/', async ctx => {
     const { user: userData } = ctx.request.body
