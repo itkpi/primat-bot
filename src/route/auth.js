@@ -17,11 +17,25 @@ module.exports = router => {
   //   })
   //   return next()
   // })
-  auth.use((ctx, next) => {
-    console.log('headers', ctx.request.header)
-    return next()
+  // auth.use((ctx, next) => {
+  //   console.log('headers', ctx.request.header)
+  //   return next()
+  // })
+  // auth.use(cors({ origin: '*' }))
+  auth.use(async (ctx, next) => {
+    ctx.set('Access-Control-Allow-Credentials', 'true')
+    ctx.set('Access-Control-Allow-Origin', '*')
+    await next()
   })
-  auth.use(cors({ origin: '*' }))
+
+  // api options method
+  auth.options('*', async (ctx, next) => {
+    ctx.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    ctx.set('Access-Control-Allow-Origin', '*')
+    ctx.status = 204
+    await next()
+  })
+
   auth.post('/', async ctx => {
     const { user: userData } = ctx.request.body
     if (!userData) {
