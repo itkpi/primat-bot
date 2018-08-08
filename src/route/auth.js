@@ -36,7 +36,7 @@ module.exports = router => {
   //   ctx.status = 204
   //   await next()
   // })
-
+  auth.use(cors())
   auth.post('/', async ctx => {
     const { user: userData } = ctx.request.body
     if (!userData) {
