@@ -1,6 +1,7 @@
 const KoaRouter = require('koa-router')
 const cors = require('koa2-cors')
 const rozklad = require('node-rozklad-api')
+const Abstract = require('../db/models/abstract')
 const service = require('../service/api')
 
 const api = new KoaRouter()
@@ -23,6 +24,53 @@ module.exports = router => {
       ? service.transformTeacherLessonsForTable(lessons)
       : service.transformTeacherLessons(lessons)
     ctx.body = Object.assign({}, timetable, { teacher })
+  })
+  api.get('/abstracts/info', async ctx => {
+    const $group = {
+      _id: '$flow',
+      result: { $addToSet: { course: '$course', semester: '$semester' } },
+    }
+    const $facet = {
+      flow: [{ $group: { _id: '$_id' } }],
+      kek: [{ $unwind: '$result' },
+        {
+          $group: {
+            _id: { course: '$result.course' },
+            semesters: { $addToSet: '$result.semester' },
+          },
+        },
+      ],
+    }
+    const $project1 = {
+      flow: { $arrayElemAt: ['$flow', 0] },
+      result: {
+        $map: {
+          input: '$kek',
+          in: {
+            course: { $substr: ['$$this._id.course', 0, -1] },
+            semesters: '$$this.semesters',
+          },
+        },
+      },
+    }
+    const $project2 = {
+      flow: '$flow._id',
+      courses: {
+        $arrayToObject: {
+          $map: {
+            input: '$result',
+            in: ['$$this.course', '$$this.semesters'],
+          },
+        },
+      },
+    }
+    const aggregate = [
+      { $group },
+      { $facet },
+      { $project: $project1 },
+      { $project: $project2 },
+    ]
+    return ctx.body = await Abstract.aggregate(aggregate)
   })
   router.use('/api', cors(), api.routes(), api.allowedMethods())
 }
