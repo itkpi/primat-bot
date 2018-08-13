@@ -1,3 +1,4 @@
+const config = require('config')
 const KoaRouter = require('koa-router')
 const cors = require('koa2-cors')
 const User = require('../db/models/user')
@@ -9,33 +10,6 @@ const errors = require('../errors')
 const auth = new KoaRouter()
 
 module.exports = router => {
-  // auth.use((ctx, next) => {
-  //   ctx.set({
-  //     'Access-Control-Allow-Origin': '*',
-  //     'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-  //     'Access-Control-Allow-Methods': 'POST, GET, PUT, DELETE, OPTIONS',
-  //   })
-  //   return next()
-  // })
-  // auth.use((ctx, next) => {
-  //   console.log('headers', ctx.request.header)
-  //   return next()
-  // })
-  // auth.use(cors({ origin: '*' }))
-  // auth.use(async (ctx, next) => {
-  //   ctx.set('Access-Control-Allow-Credentials', 'true')
-  //   'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-  //   ctx.set('Access-Control-Allow-Origin', '*')
-  //   await next()
-  // })
-
-  // api options method
-  // auth.options('*', async (ctx, next) => {
-  //   ctx.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-  //   ctx.set('Access-Control-Allow-Origin', '*')
-  //   ctx.status = 204
-  //   await next()
-  // })
   auth.use(cors())
   auth.post('/', async ctx => {
     const { user: userData } = ctx.request.body
@@ -48,10 +22,11 @@ module.exports = router => {
     }
     return ctx.body = await service.register(userData)
   })
-  auth.get('/login/:tgId', async ctx => {
-    /* TODO: check hash */
-    const { tgId } = ctx.params
-    const user = await User.findOne({ tgId })
+  auth.post('/login', async ctx => {
+    if (!auth.checkSignature(config.botToken, ctx.body)) {
+      return errors.logonFailed('Hash or user data is invalid')
+    }
+    const user = await User.findOne({ tgId: ctx.body.id })
     if (!user) {
       return errors.notFound('User with such telegram id is not registered')
     }
