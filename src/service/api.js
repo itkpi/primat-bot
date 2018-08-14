@@ -1,3 +1,5 @@
+const Abstract = require('../db/models/abstract')
+
 const weeksNums = [1, 2]
 const daysNums = [1, 2, 3, 4, 5, 6]
 const lessonsNums = [1, 2, 3, 4, 5]
@@ -49,6 +51,91 @@ const service = {
       })
       return acc
     }, {})
+  },
+  getAbstractsInfo() {
+    const $group = {
+      _id: '$flow',
+      result: { $addToSet: { course: '$course', semester: '$semester' } },
+    }
+    const $facet = {
+      flow: [{ $group: { _id: '$_id' } }],
+      courses: [
+        { $unwind: '$result' },
+        {
+          $group: {
+            _id: { course: '$result.course' },
+            semesters: { $addToSet: '$result.semester' },
+          },
+        },
+      ],
+    }
+    const $project1 = {
+      flow: { $arrayElemAt: ['$flow', 0] },
+      result: {
+        $map: {
+          input: '$courses',
+          in: {
+            course: { $toString: '$$this._id.course' },
+            semesters: '$$this.semesters',
+          },
+        },
+      },
+    }
+    const $project2 = {
+      flow: '$flow._id',
+      courses: {
+        $arrayToObject: {
+          $map: {
+            input: '$result',
+            in: ['$$this.course', '$$this.semesters'],
+          },
+        },
+      },
+    }
+    const aggregate = [
+      { $group },
+      { $facet },
+      { $project: $project1 },
+      { $project: $project2 },
+    ]
+    return Abstract.aggregate(aggregate)
+  },
+  getAbstracts({ flow, course, semester }) {
+    const aggregate = [{
+      $match: {
+        semester: { $eq: Number(semester) },
+        flow: { $eq: flow },
+        course: { $eq: Number(course) },
+      },
+    }, {
+      $group: {
+        _id: '$subject',
+        abstracts: {
+          $push: {
+            id: '$_id',
+            flow: '$flow',
+            course: '$course',
+            author: '$author',
+            semester: '$semester',
+            authorId: '$authorId',
+            date: '$date',
+            url: '$url',
+            path: '$path',
+            title: '$title',
+          },
+        },
+      },
+    }, {
+      $project: {
+        _id: 0,
+        subject: '$_id',
+        abstracts: '$abstracts',
+      },
+    }]
+    return Abstract.aggregate(aggregate)
+  },
+  getAbstractById(id) {
+    return Abstract.findById(id, '-__v')
   },
 }
 

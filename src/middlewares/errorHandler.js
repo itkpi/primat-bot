@@ -14,18 +14,18 @@ if (!('toJSON' in Error.prototype)) {
   })
 }
 
-module.exports = async (ctx, next) => {
+module.exports = async (ctx, next) => { // eslint-disable-line consistent-return
   try {
     await next()
   } catch (e) {
     e.status = e.status || 500
     ctx.status = e.status
     if (e instanceof RequestError) {
-      ctx.message = e.message
+      return ctx.message = e.message
     }
     if (ctx.app.env === 'development') {
       ctx.body = e
     }
-    ctx.app.emit('error', e, ctx)
+    ctx.app.emit('error', e)
   }
 }

@@ -1,8 +1,9 @@
 const KoaRouter = require('koa-router')
 const cors = require('koa2-cors')
 const rozklad = require('node-rozklad-api')
-const Abstract = require('../db/models/abstract')
+const mongoose = require('mongoose')
 const service = require('../service/api')
+const errors = require('../errors')
 
 const api = new KoaRouter()
 
@@ -26,51 +27,24 @@ module.exports = router => {
     ctx.body = Object.assign({}, timetable, { teacher })
   })
   api.get('/abstracts/info', async ctx => {
-    const $group = {
-      _id: '$flow',
-      result: { $addToSet: { course: '$course', semester: '$semester' } },
+    ctx.body = await service.getAbstractsInfo()
+  })
+  api.get('/abstracts/:id?', async ctx => {
+    const { id } = ctx.params
+    if (!id) {
+      const { flow, course, semester } = ctx.query
+      if (!(semester && flow && course)) {
+        return errors.badRequest('Semester, flow and course are required query params')
+      }
+      return ctx.body = await service.getAbstracts(ctx.query)
     }
-    const $facet = {
-      flow: [{ $group: { _id: '$_id' } }],
-      kek: [{ $unwind: '$result' },
-        {
-          $group: {
-            _id: { course: '$result.course' },
-            semesters: { $addToSet: '$result.semester' },
-          },
-        },
-      ],
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return errors.badRequest('Invalid id')
     }
-    const $project1 = {
-      flow: { $arrayElemAt: ['$flow', 0] },
-      result: {
-        $map: {
-          input: '$kek',
-          in: {
-            course: { $substr: ['$$this._id.course', 0, -1] },
-            semesters: '$$this.semesters',
-          },
-        },
-      },
-    }
-    const $project2 = {
-      flow: '$flow._id',
-      courses: {
-        $arrayToObject: {
-          $map: {
-            input: '$result',
-            in: ['$$this.course', '$$this.semesters'],
-          },
-        },
-      },
-    }
-    const aggregate = [
-      { $group },
-      { $facet },
-      { $project: $project1 },
-      { $project: $project2 },
-    ]
-    return ctx.body = await Abstract.aggregate(aggregate)
+    const abstract = await service.getAbstractById(id)
+    return abstract
+      ? ctx.body = abstract
+      : errors.notFound('Abstract with such id doesn\'t exist')
   })
   router.use('/api', cors(), api.routes(), api.allowedMethods())
 }
