@@ -23,11 +23,10 @@ module.exports = router => {
     return ctx.body = await service.register(userData)
   })
   auth.post('/login', async ctx => {
-    console.log('ctx.request.body', ctx.request.body)
     if (!service.checkSignature(config.botToken, ctx.request.body)) {
       return errors.logonFailed('Hash or user data is invalid')
     }
-    const user = await User.findOne({ tgId: ctx.body.id })
+    const user = await User.findOne({ tgId: ctx.request.body.id })
     if (!user) {
       return errors.notFound('User with such telegram id is not registered')
     }
