@@ -23,7 +23,7 @@ module.exports = router => {
     return ctx.body = await service.register(userData)
   })
   auth.post('/login', async ctx => {
-    if (!auth.checkSignature(config.botToken, ctx.body)) {
+    if (!service.checkSignature(config.botToken, ctx.body)) {
       return errors.logonFailed('Hash or user data is invalid')
     }
     const user = await User.findOne({ tgId: ctx.body.id })
