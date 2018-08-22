@@ -23,6 +23,7 @@ module.exports = router => {
     return ctx.body = await service.register(userData)
   })
   auth.post('/login', async ctx => {
+    console.log('ctx.request.body', ctx.request.body)
     if (!service.checkSignature(config.botToken, ctx.request.body)) {
       return errors.logonFailed('Hash or user data is invalid')
     }
