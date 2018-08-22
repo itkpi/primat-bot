@@ -2,6 +2,7 @@ const config = require('config')
 const Koa = require('koa')
 const KoaRouter = require('koa-router')
 const bodyParser = require('koa-bodyparser')
+const helmet = require('koa-helmet')
 const telegraf = require('./modules/telegraf')
 const serverRouter = require('./route')
 const logger = require('./utils/logger')
@@ -19,6 +20,10 @@ if (app.env !== 'production' && config.db.url.match('production')) {
 }
 
 app.use(errorHandler)
+app.use(helmet.hidePoweredBy({ setTo: 'PHP 7.3.0' }))
+app.use(helmet.hsts({
+  maxAge: 5184000, // 60 days
+}))
 app.use(loggerMiddleware)
 app.use(bodyParser())
 app.use(router)

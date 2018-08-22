@@ -22,6 +22,7 @@
     "image-size": "^0.6.3",
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.1",
+    "koa-helmet": "^4.0.0",
     "koa-router": "^7.4.0",
     "koa2-cors": "^2.0.6",
     "mathmode": "0.0.4",
