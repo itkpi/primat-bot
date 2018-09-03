@@ -54,6 +54,7 @@ function parseLessons(lessons, currDay, currWeek) {
   }, {
     text: '',
     prevLesson: {},
+    buildings: [],
   })
 }
 
