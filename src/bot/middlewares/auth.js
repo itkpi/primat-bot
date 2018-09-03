@@ -3,9 +3,6 @@ const userService = require('../service/user')
 const sessionService = require('../service/session')
 
 module.exports = async (ctx, next) => {
-  if (!config.whiteList.includes(ctx.from.id)) {
-    return ctx.reply('Ждем начала семестра <3')
-  }
   if (ctx.state.chat) {
     return Object.assign(ctx.session, { isChat: true, tgId: ctx.state.chat.tgId })
   }
