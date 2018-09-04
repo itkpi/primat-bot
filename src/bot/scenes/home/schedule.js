@@ -31,7 +31,6 @@ scene.hears(btns.yesterday, dayHandler)
 scene.hears(btns.thisWeek, dayHandler)
 scene.hears(btns.nextWeek, dayHandler)
 scene.hears(btns.whole, dayHandler)
-
 scene.hears(btns.lessons, ctx => ctx.replyWithHTML(service.time))
 scene.hears(btns.back, ctx => ctx.home())
 
