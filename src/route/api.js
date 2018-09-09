@@ -12,10 +12,16 @@ module.exports = router => {
     const { id } = ctx.params
     if (ctx.query.table) {
       const [group, timetable] = await Promise.all([rozklad.groups(id), rozklad.timetable(id)])
+      if (!timetable) {
+        return errors.notFound('There is no any schedule for this group')
+      }
       const tableData = service.transformForTable(timetable)
       return ctx.body = Object.assign({}, { group }, tableData)
     }
     const timetable = await rozklad.timetable(id)
+    if (!timetable) {
+      return errors.notFound('There is no any schedule for this group')
+    }
     return ctx.body = timetable
   })
   api.get('/timetable/teacher/:id', async ctx => {
