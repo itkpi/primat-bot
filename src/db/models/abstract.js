@@ -32,22 +32,25 @@ Abstract.post('save', async data => {
     course,
     semester,
     authorId,
-    author,
     subject,
     telegraphUrl,
     title,
   } = data
-  logger.info(`${author || authorId} has saved new lecture`
+  logger.info(`${authorId} has saved new lecture`
     + `[${flow}, ${course} course, ${semester} semester]: ${subject} | ${title}`)
-  const users = await User.find({
+  const groupmatesQuery = {
     flow,
     course,
     [`settings.${config.settings.abstractSubscriber}`]: true,
     tgId: { $ne: authorId },
-  })
-
-  const msg = `${author} сохранил лекцию по предмету ${subject} <a href="${telegraphUrl}">здесь</a>`
-  users.forEach(({ tgId }) => telegram.sendMessage(tgId, msg, { parse_mode: 'HTML' }))
+  }
+  const tasks = [User.find({ tgId: authorId }), User.find(groupmatesQuery)]
+  const [author, users] = await Promise.all(tasks)
+  const authorName = author.username // eslint-disable-line no-nested-ternary
+    ? `@${author.username}`
+    : author.lastName ? `${author.firstName} ${author.lastName}` : author.firstName
+  const msg = `${authorName} сохранил лекцию по предмету ${subject}\n\n${telegraphUrl}`
+  users.forEach(({ tgId }) => telegram.sendMessage(tgId, msg))
 })
 
 const Model = mongoose.model('Abstract', Abstract)
