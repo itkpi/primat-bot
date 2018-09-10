@@ -3,6 +3,7 @@ const mongoose = require('../')
 const User = require('./user')
 const { telegram } = require('../../modules/telegraf')
 const logger = require('../../utils/logger')
+const extractUsername = require('../../utils/extractUsername')
 
 const { Schema } = mongoose
 const Abstract = new Schema({
@@ -46,10 +47,7 @@ Abstract.post('save', async data => {
   }
   const tasks = [User.findOne({ tgId: authorId }), User.find(groupmatesQuery)]
   const [author, users] = await Promise.all(tasks)
-  const authorName = author.username // eslint-disable-line no-nested-ternary
-    ? `@${author.username}`
-    : author.lastName ? `${author.firstName} ${author.lastName}` : author.firstName
-  const msg = `${authorName} сохранил лекцию по предмету ${subject}\n\n${url}`
+  const msg = `${extractUsername(author)} сохранил лекцию по предмету ${subject}\n\n${url}`
   users.forEach(({ tgId }) => telegram.sendMessage(tgId, msg))
 })
 
