@@ -33,7 +33,7 @@ Abstract.post('save', async data => {
     semester,
     authorId,
     subject,
-    telegraphUrl,
+    url,
     title,
   } = data
   logger.info(`${authorId} has saved new lecture`
@@ -44,12 +44,12 @@ Abstract.post('save', async data => {
     [`settings.${config.settings.abstractSubscriber}`]: true,
     tgId: { $ne: authorId },
   }
-  const tasks = [User.find({ tgId: authorId }), User.find(groupmatesQuery)]
+  const tasks = [User.findOne({ tgId: authorId }), User.find(groupmatesQuery)]
   const [author, users] = await Promise.all(tasks)
   const authorName = author.username // eslint-disable-line no-nested-ternary
     ? `@${author.username}`
     : author.lastName ? `${author.firstName} ${author.lastName}` : author.firstName
-  const msg = `${authorName} сохранил лекцию по предмету ${subject}\n\n${telegraphUrl}`
+  const msg = `${authorName} сохранил лекцию по предмету ${subject}\n\n${url}`
   users.forEach(({ tgId }) => telegram.sendMessage(tgId, msg))
 })
 
