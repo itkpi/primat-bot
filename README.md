@@ -1,3 +1,5 @@
+[![NPM version][npm-image]][npm-url]
+
 # BotKPI
 [@primat_bot](https://t.me/primat_bot) helps with your life.
 He was created for reduce writing lectures and share them with everyone.
