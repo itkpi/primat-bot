@@ -52,5 +52,5 @@ module.exports = {
   picasaLatexAlbumId: '6586243140246025649',
   userSensitiveFields: ['telegraph'],
   inlineCacheTime: 60 * 60 * 24 * 20000, // 20 000 days
-  whiteList: [adminId, 250646651],
+  whiteList: [adminId, 250646651, 120689771],
 }
