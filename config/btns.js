@@ -10,6 +10,7 @@ const timeleft = '🕐 Время до конца пары'
 const settingsMessages = {
   scheduleLocationShowing: 'Показывать местоположение корпусов под расписанием',
   abstractSubscriber: 'Присылать уведомления о новых лекциях',
+  abstractSubscriberGlobal: 'Присылать уведомления о всех новых лекциях',
 }
 
 module.exports = {
@@ -76,10 +77,12 @@ module.exports = {
     on: {
       [settings.scheduleLocationShowing]: `❌ ${settingsMessages[settings.scheduleLocationShowing]}`,
       [settings.abstractSubscriber]: `❌ ${settingsMessages[settings.abstractSubscriber]}`,
+      [settings.abstractSubscriberGlobal]: `❌ ${settingsMessages[settings.abstractSubscriberGlobal]}`,
     },
     off: {
       [settings.scheduleLocationShowing]: `☑️ ${settingsMessages[settings.scheduleLocationShowing]}`,
       [settings.abstractSubscriber]: `☑️ ${settingsMessages[settings.abstractSubscriber]}`,
+      [settings.abstractSubscriberGlobal]: `☑️ ${settingsMessages[settings.abstractSubscriberGlobal]}`,
     },
   },
   telegraph: {

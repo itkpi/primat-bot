@@ -61,6 +61,7 @@ const User = new Schema({
   settings: {
     [config.settings.scheduleLocationShowing]: { type: Boolean, default: true },
     [config.settings.abstractSubscriber]: { type: Boolean, default: true },
+    [config.settings.abstractSubscriberGlobal]: { type: Boolean, default: true },
   },
   registeredWithSite: { type: Boolean, default: false },
   allowLectureUpload: { type: Boolean, default: false },

@@ -16,11 +16,12 @@ scene.enter(async ctx => {
 })
 
 scene.hears(config.btns.next, async ctx => {
-  const telegraphAccount = await telegraph.createAccount('KPIbot', {
+  const userData = {
     short_name: `KPIbot-${ctx.from.username || ctx.from.first_name}`,
     author_name: `KPIbot-${ctx.from.username || ctx.from.first_name}`,
     author_url: ctx.from.username ? `https:/t.me/${ctx.from.username}` : '',
-  })
+  }
+  const telegraphAccount = await telegraph.createAccount('KPIbot', userData)
   const telegraphData = cabinetService.mapTelegraphInfo(telegraphAccount)
   await userService.update(ctx.from.id, { telegraph: telegraphData })
   ctx.reply('Вот и все, теперь ты тоже в теме телеграфа')

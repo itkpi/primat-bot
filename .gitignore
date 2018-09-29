@@ -6,3 +6,4 @@ test-set-env.sh
 test-lecture.html
 ecosystem.config.js
 config/local.js
+.vscode

@@ -45,10 +45,17 @@ Abstract.post('save', async data => {
     [`settings.${config.settings.abstractSubscriber}`]: true,
     tgId: { $ne: authorId },
   }
-  const tasks = [User.findOne({ tgId: authorId }), User.find(groupmatesQuery)]
-  const [author, users] = await Promise.all(tasks)
+  const allStudentsQuery = {
+    [`settings.${config.settings.abstractSubscriberGlobal}`]: true,
+    role: config.roles.student,
+    tgId: { $ne: authorId },
+  }
+  const tasks = [
+    User.findOne({ tgId: authorId }), User.find(groupmatesQuery), User.find(allStudentsQuery)]
+  const [author, users, allUsers] = await Promise.all(tasks)
   const msg = `${extractUsername(author)} сохранил лекцию по предмету ${subject}\n\n${url}`
   users.forEach(({ tgId }) => telegram.sendMessage(tgId, msg))
+  allUsers.forEach(({ tgId }) => telegram.sendMessage(tgId, msg))
 })
 
 const Model = mongoose.model('Abstract', Abstract)

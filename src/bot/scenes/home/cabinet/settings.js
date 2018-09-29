@@ -40,4 +40,9 @@ scene.hears(settings.off.abstractSubscriber,
 scene.hears(settings.on.abstractSubscriber,
   settingHandler(config.settings.abstractSubscriber, true, 'Ты будешь узнавать о новых лекциях первым!'))
 
+scene.hears(settings.off.abstractSubscriberGlobal,
+  settingHandler(config.settings.abstractSubscriberGlobal, false, 'Окей, никаких уведомлений о лекциях'))
+scene.hears(settings.on.abstractSubscriberGlobal,
+  settingHandler(config.settings.abstractSubscriberGlobal, true, 'Ты будешь узнавать о всех новых лекциях первым!'))
+
 module.exports = scene
