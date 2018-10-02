@@ -19,7 +19,7 @@ scene.hears(config.btns.next, async ctx => {
   const telegraphAccount = await telegraph.createAccount('KPIbot', {
     short_name: `KPIbot-${ctx.from.username || ctx.from.first_name}`,
     author_name: `KPIbot-${ctx.from.username || ctx.from.first_name}`,
-    author_url: ctx.from.username ? `https:/t.me/${ctx.from.username}` : '',
+    // author_url: ctx.from.username ? `https:/t.me/${ctx.from.username}` : '',
   })
   const telegraphData = cabinetService.mapTelegraphInfo(telegraphAccount)
   await userService.update(ctx.from.id, { telegraph: telegraphData })
