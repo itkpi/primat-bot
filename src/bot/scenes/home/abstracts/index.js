@@ -35,10 +35,6 @@ scene.enter(async ctx => {
 })
 
 scene.hears(config.btns.loadLecture, protect(config.roles.student), async ctx => {
-  if (ctx.from.id !== config.adminId) {
-    const msg = 'Пока некуда торопиться. Учебный год еще не начался, отдыхай :)'
-    return ctx.reply(msg)
-  }
   if (ctx.session.groupId !== ctx.state.user.groupId) {
     const msg = 'Увы, но загружать лекции можно только от лица своей группы. '
       + 'Можешь вернуть свою группу в кабинете'
