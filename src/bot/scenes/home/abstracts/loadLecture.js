@@ -4,6 +4,7 @@ const Scene = require('telegraf/scenes/base')
 const { Markup } = require('telegraf')
 const abstractService = require('../../../service/abstract')
 const ignoreCommand = require('../../../utils/ignoreCommand')
+const logger = require('../../../../utils/logger')
 
 const sceneName = config.scenes.home.abstracts.loadLecture
 const scene = new Scene(sceneName)
@@ -21,15 +22,15 @@ scene.on('document', async ctx => {
     ctx.reply('Секундочку...'),
     ctx.telegram.getFileLink(ctx.message.document.file_id),
   ])
+  logger.debug('sendedMsg', sendedMsg)
   const { body: lectureText } = await got(lectureLink)
   const pageData = abstractService.parse(lectureText)
   pageData.subject = ctx.scene.state.subject
+  // await ctx.telegram.deleteMessage(sendedMsg.chat.id, sendedMsg.message_id)
   if (pageData.photosAmount > 0) {
-    await ctx.telegram.deleteMessage(sendedMsg.chat.id, sendedMsg.message_id)
     return ctx.scene.enter(config.scenes.home.abstracts.loadPhoto, { pageData })
   }
   const telegraphPage = await abstractService.createTelegraphPage(ctx.state.user, pageData)
-  await ctx.telegram.deleteMessage(sendedMsg.chat.id, sendedMsg.message_id)
   return ctx.finishAbstractLoading(telegraphPage)
 })
 
