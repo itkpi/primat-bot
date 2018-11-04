@@ -29,22 +29,22 @@ app.use(bodyParser())
 app.use(router)
 
 
-if (app.env === 'development') {
-  telegraf.telegram.deleteWebhook()
-    .then(() => telegraf.startPolling())
-    .then(() => logger.info('Bot started polling'))
-    .catch(e => app.emit('error', e))
-} else if (app.env === 'production') {
-  const secretPath = `/bot${config.botToken}`
-  telegraf.telegram.setWebhook(`${config.appUrl}${secretPath}`)
-  logger.info('Bot setted webhook')
-  app.use((ctx, next) => {
-    if (ctx.url === secretPath) {
-      return telegraf.handleUpdate(ctx.request.body, ctx.response)
-    }
-    return next()
-  })
-}
+// if (app.env === 'development') {
+telegraf.telegram.deleteWebhook()
+  .then(() => telegraf.startPolling())
+  .then(() => logger.info('Bot started polling'))
+  .catch(e => app.emit('error', e))
+// } else if (app.env === 'production') {
+//   const secretPath = `/bot${config.botToken}`
+//   telegraf.telegram.setWebhook(`${config.appUrl}${secretPath}`)
+//   logger.info('Bot setted webhook')
+//   app.use((ctx, next) => {
+//     if (ctx.url === secretPath) {
+//       return telegraf.handleUpdate(ctx.request.body, ctx.response)
+//     }
+//     return next()
+//   })
+// }
 
 bot.start()
   .then(() => app.listen(config.port, () => logger.info(`Server is running on port ${config.port}`)))

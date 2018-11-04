@@ -31,7 +31,8 @@ scene.on('photo', async ctx => {
     ctx.reply('Делаю всю магию...'),
     abstractService.createTelegraphPage(ctx.state.user, pageData),
   ])
-  await ctx.telegram.deleteMessage(sendedMsg.chat.id, sendedMsg.message_id)
+  console.log('sendedMsg', sendedMsg) // eslint-disable-line no-console
+  // await ctx.telegram.deleteMessage(sendedMsg.chat.id, sendedMsg.message_id)
   return ctx.finishAbstractLoading(telegraphPage)
 })
 
