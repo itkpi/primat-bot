@@ -32,7 +32,7 @@ describe('group service', () => {
       describe('workable group', () => {
         it('should return valid course', async () => {
           const groupName = 'kv-51'
-          const expectedCourse = 3
+          const expectedCourse = 4
           const course = await service.getCourse(groupName)
           assert.equal(course, expectedCourse)
         })

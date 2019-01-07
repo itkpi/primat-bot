@@ -28,9 +28,10 @@ const service = {
     const year = date.getFullYear() % 10
     const groupYear = Number(group.slice(-2, -1))
     const currSemester = await univerService.getCurrSemester()
+    const isNextYearWithPrevSemester = date.getMonth() === 0
     const course = currSemester === 2
       ? year - groupYear
-      : year - groupYear + 1
+      : year - groupYear + (isNextYearWithPrevSemester ? 0 : 1)
     if (course < 0 || course > 4) {
       return this.getCourseByOther(group)
     }
