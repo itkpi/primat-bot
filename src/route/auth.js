@@ -1,4 +1,3 @@
-const config = require('config')
 const KoaRouter = require('koa-router')
 const cors = require('koa2-cors')
 const User = require('../db/models/user')
@@ -12,10 +11,7 @@ const auth = new KoaRouter()
 module.exports = router => {
   auth.use(cors())
   auth.post('/', async ctx => {
-    const { user: userData } = ctx.request.body
-    if (!userData) {
-      return errors.badRequest('User field doesn\'t provided')
-    }
+    const userData = ctx.request.body
     const dbUser = await User.findOne({ tgId: userData.tgId })
     if (dbUser) {
       return errors.badRequest('User already exists')
@@ -23,14 +19,16 @@ module.exports = router => {
     return ctx.body = await service.register(userData)
   })
   auth.post('/login', async ctx => {
-    if (!service.checkSignature(config.botToken, ctx.request.body)) {
+    if (!service.checkSignature(ctx.request.body)) {
       return errors.logonFailed('Hash or user data is invalid')
     }
+    console.log('checked')
     const user = await User.findOne({ tgId: ctx.request.body.id })
+    console.log('​user', user)
     if (!user) {
       return errors.notFound('User with such telegram id is not registered')
     }
-    return ctx.body = userService.filterSensitiveFields(user)
+    return ctx.body = userService.filterSensitiveFields(user.toObject())
   })
   auth.get('/group/:id', async ctx => ctx.body = await groupService.processGroup(ctx.params.id))
   auth.post('/group', async ctx => ctx.body = await groupService.processGroup(ctx.request.body.group))

@@ -1,8 +1,13 @@
+const config = require('config')
 const { createHash, createHmac } = require('crypto')
 const sessionService = require('../bot/service/session')
 const User = require('../db/models/user')
 const { telegram } = require('../modules/telegraf')
 const getRegMsg = require('../utils/getRegMsg')
+
+const secret = createHash('sha256')
+  .update(config.botToken)
+  .digest()
 
 module.exports = {
   async register(userData) {
@@ -13,17 +18,17 @@ module.exports = {
     telegram.sendMessage(user.tgId, getRegMsg(user.role))
     return user
   },
-  checkSignature(token, { hash, ...data }) {
-    const secret = createHash('sha256')
-      .update(token)
-      .digest()
+  checkSignature({ hash, ...data }) {
+    console.log('​checkSignature -> secret', secret)
     const checkString = Object.keys(data)
       .sort()
       .map(k => `${k}=${data[k]}`)
       .join('\n')
+    console.log('​checkSignature -> checkString', checkString)
     const hmac = createHmac('sha256', secret)
       .update(checkString)
       .digest('hex')
+    console.log('​checkSignature -> hmac', hmac)
     return hmac === hash
   },
 }
