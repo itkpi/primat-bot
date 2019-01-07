@@ -73,7 +73,6 @@ class MongoSession {
       return this.collection.deleteOne({ key })
     }
     if (!data.__dirty) {
-      console.log('???????')
       return false
     }
     return this.collection.updateOne({ key }, data.__changeset, { upsert: true })
