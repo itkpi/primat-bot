@@ -22,9 +22,7 @@ module.exports = router => {
     if (!service.checkSignature(ctx.request.body)) {
       return errors.logonFailed('Hash or user data is invalid')
     }
-    console.log('checked')
     const user = await User.findOne({ tgId: ctx.request.body.id })
-    console.log('​user', user)
     if (!user) {
       return errors.notFound('User with such telegram id is not registered')
     }

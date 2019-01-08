@@ -19,16 +19,13 @@ module.exports = {
     return user
   },
   checkSignature({ hash, ...data }) {
-    console.log('​checkSignature -> secret', secret)
     const checkString = Object.keys(data)
       .sort()
       .map(k => `${k}=${data[k]}`)
       .join('\n')
-    console.log('​checkSignature -> checkString', checkString)
     const hmac = createHmac('sha256', secret)
       .update(checkString)
       .digest('hex')
-    console.log('​checkSignature -> hmac', hmac)
     return hmac === hash
   },
 }
