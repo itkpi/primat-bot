@@ -11,10 +11,10 @@ module.exports = router => {
       let stdout
       let stderr
       if (ref.includes('master')) {
-        ({ stdout, stderr } = await exec(`pm2 deploy ${__dirname}/../../ecosystem.config.js production`))
+        ({ stdout, stderr } = await exec(`pm2 deploy ${__dirname}/../../ecosystem.config.js production --force`))
       }
       if (ref.includes('dev')) {
-        ({ stdout, stderr } = await exec(`pm2 deploy ${__dirname}/../../ecosystem.config.js development`))
+        ({ stdout, stderr } = await exec(`pm2 deploy ${__dirname}/../../ecosystem.config.js development --force`))
       }
       logger.info('stdout:', stdout)
       logger.info('stderr:', stderr)
