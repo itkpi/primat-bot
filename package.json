@@ -1,6 +1,6 @@
 {
   "name": "KPIbot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Bot for university",
   "main": "index.js",
   "scripts": {
