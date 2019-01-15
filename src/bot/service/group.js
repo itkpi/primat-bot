@@ -3,7 +3,7 @@ const userService = require('./user')
 const univerService = require('./univer')
 
 const service = {
-  async processGroup(group) {
+  async processGroup(group, transofrmGroup = true) {
     if (group instanceof Object) {
       return this.transformGroup(group)
     }
@@ -14,7 +14,7 @@ const service = {
     if (!groupInfo || (possibleGroups && possibleGroups.length > 1)) {
       return possibleGroups
     }
-    return this.transformGroup(groupInfo)
+    return transofrmGroup ? this.transformGroup(groupInfo) : groupInfo
   },
   async getCourseByOther(group) {
     const user = await userService.getByGroup(group)
