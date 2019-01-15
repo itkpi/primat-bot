@@ -6,8 +6,6 @@ const commands = require('./commands')
 const logger = require('../utils/logger')
 const callbackQueryHandler = require('./handlers/callbackQuery')
 const inlineQueryHandler = require('./handlers/inlineQuery')
-const chatInviteHandler = require('./handlers/chatInvite')
-const chatLeaveHandler = require('./handlers/chatLeave')
 
 const session = new middlewares.Session(mongoose.connections[0])
 
@@ -23,11 +21,10 @@ module.exports = {
   },
   async start() {
     telegraf.on('inline_query', inlineQueryHandler)
-    telegraf.on('new_chat_members', chatInviteHandler)
-    telegraf.on('left_chat_member', chatLeaveHandler)
     await session.setup()
     this.setMiddlewares()
-    commands.set()
+    commands()
+    // commands.set()
 
     telegraf.on('callback_query', callbackQueryHandler)
 

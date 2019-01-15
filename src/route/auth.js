@@ -28,7 +28,7 @@ module.exports = router => {
     }
     return ctx.body = userService.filterSensitiveFields(user.toObject())
   })
-  auth.get('/group/:id', async ctx => ctx.body = await groupService.processGroup(ctx.params.id, false))
+  auth.get('/group/:id', async ctx => ctx.body = await groupService.processGroup(ctx.params.id, true))
   auth.post('/group', async ctx => ctx.body = await groupService.processGroup(ctx.request.body.group))
   router.use('/auth', auth.routes(), auth.allowedMethods())
 }

@@ -3,13 +3,6 @@ const userService = require('../service/user')
 const sessionService = require('../service/session')
 
 module.exports = async (ctx, next) => {
-  if (ctx.state.chat) {
-    return Object.assign(ctx.session, { isChat: true, tgId: ctx.state.chat.tgId })
-  }
-  if (ctx.session.isChat) {
-    ctx.state.chat = await userService.getChat(ctx.session.tgId)
-    return next()
-  }
   const user = await userService.get(ctx.from.id)
   if (!user) {
     ctx.state.triggerScene = config.scenes.greeter.self

@@ -3,18 +3,20 @@ const userService = require('./user')
 const univerService = require('./univer')
 
 const service = {
-  async processGroup(group, transofrmGroup = true) {
+  async processGroup(group, transofrmPossibleGroups = false) {
     if (group instanceof Object) {
-      return this.transformGroup(group)
+      return service.transformGroup(group)
     }
     const [groupInfo, possibleGroups] = await Promise.all([
       rozklad.groups(group),
       rozklad.groups({ search: { query: group } }),
     ])
     if (!groupInfo || (possibleGroups && possibleGroups.length > 1)) {
-      return possibleGroups
+      return transofrmPossibleGroups
+        ? Promise.all(possibleGroups.map(service.transformGroup))
+        : possibleGroups
     }
-    return transofrmGroup ? this.transformGroup(groupInfo) : groupInfo
+    return service.transformGroup(groupInfo)
   },
   async getCourseByOther(group) {
     const user = await userService.getByGroup(group)
@@ -22,7 +24,7 @@ const service = {
   },
   async getCourse(group) {
     if (!group.match(/^.{2}-[1-9]{2}$/i)) {
-      return this.getCourseByOther(group)
+      return service.getCourseByOther(group)
     }
     const date = new Date()
     const year = date.getFullYear() % 10
@@ -33,7 +35,7 @@ const service = {
       ? year - groupYear
       : year - groupYear + (isNextYearWithPrevSemester ? 0 : 1)
     if (course < 0 || course > 4) {
-      return this.getCourseByOther(group)
+      return service.getCourseByOther(group)
     }
     return course
   },
@@ -45,7 +47,7 @@ const service = {
       groupType: group.group_type,
       group: group.group_full_name,
       groupScheduleUrl: group.group_url,
-      course: await this.getCourse(group.group_full_name),
+      course: await service.getCourse(group.group_full_name),
     }
   },
 }
