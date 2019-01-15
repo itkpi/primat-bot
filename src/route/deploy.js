@@ -2,6 +2,7 @@ const config = require('config')
 const util = require('util')
 const exec = util.promisify(require('child_process').exec)
 const logger = require('../utils/logger')
+const { version } = require('../../package.json')
 
 module.exports = router => {
   if (process.env.NODE_ENV === 'development') {
@@ -20,4 +21,7 @@ module.exports = router => {
       logger.info('stderr:', stderr)
     })
   }
+  router.get('/info', ctx => {
+    ctx.body = { version }
+  })
 }

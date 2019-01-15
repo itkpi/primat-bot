@@ -25,7 +25,7 @@ scene.enter(async ctx => {
   buttons.push(config.btns.back)
   const keyboard = Markup.keyboard(buttons, { columns: 2 }).resize().extra()
   if (subjects.length === 0) {
-    let msg = `Увы, в группе <b>${sessionGroup.toUpperCase()}</b> за ${sessionSemester}-й семестр нет никаких лекций.\n`
+    let msg = `Увы, в группе <b>${sessionGroup.toUpperCase()}</b> за ${sessionSemester}-й семестр учебного года нет никаких лекций.\n`
     if (sessionGroup === userGroup) {
       msg += 'Но ты всегда можешь загрузить первую!'
     }
