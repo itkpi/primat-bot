@@ -53,4 +53,6 @@ module.exports = {
   userSensitiveFields: ['telegraph'],
   inlineCacheTime: 60 * 60 * 24 * 20000, // 20 000 days
   whiteList: [adminId, 250646651, 120689771],
+  primatBotRepoId: 104037504,
+  diplomappRepoId: 167840591,
 }
