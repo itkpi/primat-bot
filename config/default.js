@@ -55,4 +55,7 @@ module.exports = {
   whiteList: [adminId, 250646651, 120689771],
   primatBotRepoId: 104037504,
   diplomappRepoId: 167840591,
+  diplomappDeployCommand: 'pm2 deploy /home/fowi/node/diplomapp/source/ecosystem.config.js production --force',
+  kpibotProdDeployCommand: `pm2 deploy ${process.cwd()}/ecosystem.config.js production --force`,
+  kpibotDevDeployCommand: `pm2 deploy ${process.cwd()}/ecosystem.config.js development --force`,
 }

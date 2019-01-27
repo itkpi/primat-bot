@@ -14,15 +14,15 @@ module.exports = router => {
       switch (repository.id) {
         case config.primatBotRepoId: {
           if (ref.includes('master')) {
-            ({ stdout, stderr } = await exec(`pm2 deploy ${__dirname}/../../ecosystem.config.js production --force`))
+            ({ stdout, stderr } = await exec(config.kpibotProdDeployCommand))
           }
           if (ref.includes('dev')) {
-            ({ stdout, stderr } = await exec(`pm2 deploy ${__dirname}/../../ecosystem.config.js development --force`))
+            ({ stdout, stderr } = await exec(config.kpibotDevDeployCommand))
           }
           break
         }
         case config.diplomappRepoId: {
-          ({ stdout, stderr } = await exec(`pm2 deploy ${__dirname}/../../ecosystem.config.js production --force`))
+          ({ stdout, stderr } = await exec(config.diplomappDeployCommand))
           break
         }
         default:
