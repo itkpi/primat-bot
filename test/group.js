@@ -4,7 +4,7 @@ const service = require('../src/bot/service/group')
 const Univer = require('../src/db/models/univer')
 const User = require('../src/db/models/user')
 
-describe('group service', () => {
+describe.only('group service', () => {
   describe('getCourse', () => {
     describe('current semester = 1', () => {
       before(async () => {
@@ -15,7 +15,7 @@ describe('group service', () => {
       })
       describe('workable group', () => {
         it('should return valid course', async () => {
-          const groupName = 'kv-51'
+          const groupName = 'kv-61'
           const expectedCourse = 4
           const course = await service.getCourse(groupName)
           assert.equal(course, expectedCourse)

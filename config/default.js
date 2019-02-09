@@ -19,7 +19,6 @@ module.exports = {
     prettyPrint: true,
     level: process.env.LOG_LEVEL || 'info',
   },
-  githubHookPath: process.env.GITHUB_HOOK_PATH || '/secret',
   googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
   picasaRefreshToken: process.env.PICASA_REFRESH_TOKEN,
@@ -53,9 +52,21 @@ module.exports = {
   userSensitiveFields: ['telegraph'],
   inlineCacheTime: 60 * 60 * 24 * 20000, // 20 000 days
   whiteList: [adminId, 250646651, 120689771],
-  primatBotRepoId: 104037504,
-  diplomappRepoId: 167840591,
-  diplomappDeployCommand: 'pm2 deploy /home/fowi/node/diplomapp/source/ecosystem.config.js production --force',
-  kpibotProdDeployCommand: `pm2 deploy ${process.cwd()}/ecosystem.config.js production --force`,
-  kpibotDevDeployCommand: `pm2 deploy ${process.cwd()}/ecosystem.config.js development --force`,
+  deploy: {
+    githubHookPath: process.env.GITHUB_HOOK_PATH || '/secret',
+    kpiBot: {
+      repodId: 104037504,
+      devCommand: `pm2 deploy ${process.cwd()}/ecosystem.config.js development --force`,
+      prodCommand: `pm2 deploy ${process.cwd()}/ecosystem.config.js development --force`,
+    },
+    jediBot: {
+      repoId: 168206507,
+      devCommand: 'pm2 deploy /home/fowi/node/jedi-bot/source/ecosystem.config.js development --force',
+      prodCommand: 'pm2 deploy /home/fowi/node/jedi-bot/source/ecosystem.config.js production --force',
+    },
+    diplomapp: {
+      repoId: 167840591,
+      command: 'pm2 deploy /home/fowi/node/diplomapp/source/ecosystem.config.js production --force',
+    },
+  },
 }

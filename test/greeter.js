@@ -11,7 +11,7 @@ describe('greeter service', () => {
   describe('registerByGroup', () => {
     before(async () => {
       telegramMock.sendMessage()
-      this.univerInfo = await Univer.create({ name: config.universityName, currentSemester: 1 })
+      this.univerInfo = await Univer.create({ name: config.universityName, currentSemester: 2 })
     })
     after(async () => {
       await User.collection.drop()
