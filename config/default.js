@@ -61,8 +61,8 @@ module.exports = {
     },
     jediBot: {
       repoId: 168206507,
-      devCommand: 'pm2 deploy /home/fowi/node/jedi-bot/source/ecosystem.config.js development --force',
-      prodCommand: 'pm2 deploy /home/fowi/node/jedi-bot/source/ecosystem.config.js production --force',
+      devCommand: 'pm2 deploy /home/fowi/node/jedi-bot/dev/source/ecosystem.config.js development --force',
+      prodCommand: 'pm2 deploy /home/fowi/node/jedi-bot/prod/source/ecosystem.config.js production --force',
     },
     diplomapp: {
       repoId: 167840591,
