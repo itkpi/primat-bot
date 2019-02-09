@@ -25,7 +25,7 @@ module.exports = router => {
           ({ stdout, stderr } = await exec(deploy.diplomapp.command))
           break
         }
-        case deploy.jediBot: {
+        case deploy.jediBot.repoId: {
           if (ref.includes('master')) {
             ({ stdout, stderr } = await exec(deploy.jediBot.prodCommand))
           }
