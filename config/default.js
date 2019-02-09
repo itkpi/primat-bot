@@ -55,7 +55,7 @@ module.exports = {
   deploy: {
     githubHookPath: process.env.GITHUB_HOOK_PATH || '/secret',
     kpiBot: {
-      repodId: 104037504,
+      repoId: 104037504,
       devCommand: `pm2 deploy ${process.cwd()}/ecosystem.config.js development --force`,
       prodCommand: `pm2 deploy ${process.cwd()}/ecosystem.config.js development --force`,
     },

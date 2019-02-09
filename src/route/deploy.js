@@ -8,7 +8,7 @@ module.exports = router => {
   if (process.env.NODE_ENV === 'development') {
     router.post(deploy.githubHookPath, async ctx => {
       const { ref, repository } = ctx.request.body
-      logger.info(`on commit ${repository.full_name}`)
+      logger.info(`on commit ${repository.full_name} ${repository.id}`)
       let stdout
       let stderr
       switch (repository.id) {
