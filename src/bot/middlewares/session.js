@@ -5,7 +5,7 @@ function getWrappedStorage(storage) {
   const $unset = {}
   let dirty = false
   const access = new Proxy(storage, {
-    get(target, property, receiver) {
+    get(target, property) {
       switch (property) {
         case '__dirty':
           return dirty
@@ -23,20 +23,20 @@ function getWrappedStorage(storage) {
         case 'toJSON':
           return () => target
         default:
-          return Reflect.get(target, property, receiver)
+          return Reflect.get(target, property)
       }
     },
-    set(target, property, value, receiver) {
+    set(target, property, value) {
       if (!target[property] || (target[property] && !deeq(target[property], value))) {
         dirty = true
       }
-      Reflect.set(target, property, value, receiver)
+      Reflect.set(target, property, value)
       $set[`data.${property}`] = value
       delete $unset[`data.${property}`]
       return true
     },
-    deleteProperty(target, property, receiver) {
-      Reflect.deleteProperty(target, property, receiver)
+    deleteProperty(target, property) {
+      Reflect.deleteProperty(target, property)
       delete $set[`data.${property}`]
       $unset[`data.${property}`] = ''
       dirty = true
@@ -59,7 +59,6 @@ class MongoSession {
       },
       store: {},
     }, options)
-    this.client = client
     this.collection = client.collection(this.options.collection)
   }
 
