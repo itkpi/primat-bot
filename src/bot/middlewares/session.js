@@ -1,14 +1,9 @@
-const { deepStrictEqual: deeq } = require('assert').strict
-
 function getWrappedStorage(storage) {
   const $set = {}
   const $unset = {}
-  let dirty = false
   const access = new Proxy(storage, {
     get(target, property) {
       switch (property) {
-        case '__dirty':
-          return dirty
         case '__changeset':
         {
           const ret = {}
@@ -27,9 +22,6 @@ function getWrappedStorage(storage) {
       }
     },
     set(target, property, value) {
-      if (!target[property] || (target[property] && !deeq(target[property], value))) {
-        dirty = true
-      }
       Reflect.set(target, property, value)
       $set[`data.${property}`] = value
       delete $unset[`data.${property}`]
@@ -39,7 +31,6 @@ function getWrappedStorage(storage) {
       Reflect.deleteProperty(target, property)
       delete $set[`data.${property}`]
       $unset[`data.${property}`] = ''
-      dirty = true
       return true
     },
   })
@@ -70,9 +61,6 @@ class MongoSession {
   saveSession(key, data) {
     if (!data || Object.keys(data).length === 0) {
       return this.collection.deleteOne({ key })
-    }
-    if (!data.__dirty) {
-      return false
     }
     return this.collection.updateOne({ key }, data.__changeset, { upsert: true })
   }

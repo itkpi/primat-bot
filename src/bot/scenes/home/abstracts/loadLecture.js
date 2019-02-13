@@ -26,7 +26,6 @@ scene.on('document', async ctx => {
   const { body: lectureText } = await got(lectureLink)
   const pageData = abstractService.parse(lectureText)
   pageData.subject = ctx.scene.state.subject
-  // await ctx.telegram.deleteMessage(sendedMsg.chat.id, sendedMsg.message_id)
   if (pageData.photosAmount > 0) {
     return ctx.scene.enter(config.scenes.home.abstracts.loadPhoto, { pageData })
   }

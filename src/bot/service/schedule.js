@@ -66,10 +66,7 @@ const service = {
     const currDay = (new Date()).getDay()
     const nextDay = (currDay + 1) % 8 ? (currDay + 1) % 8 : 1
     let currWeek = await rozklad.currWeek()
-    // REMOVE SOON!!!!
-    console.log('getLessons -> currWeek from api', currWeek)
-    currWeek = currWeek === 1 ? 2 : 1
-    console.log('TCL: getLessons -> currWeek converted', currWeek)
+    currWeek = currWeek === 1 ? 2 : 1 // TODO: REMOVE SOON (wrong api response)!!!!
     const nextWeek = currWeek === 1 ? 2 : 1
     const cases = {
       [btns.today]: {
