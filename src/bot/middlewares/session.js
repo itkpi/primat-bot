@@ -1,4 +1,4 @@
-const deeq = require('deep-equal')
+const { deepStrictEqual: deeq } = require('assert').strict
 
 function getWrappedStorage(storage) {
   const $set = {}
