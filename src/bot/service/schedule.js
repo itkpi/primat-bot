@@ -65,8 +65,7 @@ const service = {
     }
     const currDay = (new Date()).getDay()
     const nextDay = (currDay + 1) % 8 ? (currDay + 1) % 8 : 1
-    let currWeek = await rozklad.currWeek()
-    currWeek = currWeek === 1 ? 2 : 1 // REMOVE SOON!!!!
+    const currWeek = await rozklad.currWeek()
     const nextWeek = currWeek === 1 ? 2 : 1
     const cases = {
       [btns.today]: {
